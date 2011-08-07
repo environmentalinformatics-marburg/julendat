@@ -31,7 +31,7 @@ import ConfigParser
 from julendat.filetools.stations.dkstations.DKStationDataFile import DKStationDataFile
 import os
 import shutil
-from julendat.metadatatools.stations.StationDataFilename import StationDataFilename
+from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
 from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.guitools.stations.GUIAutoPlotSelection import GUIAutoPlotSelection
 from julendat.guitools.stations.GUIManualPlotSelection import GUIManualPlotSelection
@@ -65,62 +65,6 @@ class DKStation2Level0:
             self.autoconfigure()
         self.run()
             
-    def run(self):
-        '''Execute class functions according to runmode settings. 
-        
-        '''
-        if self.get_runmode() == "manual":
-            pass
-        elif self.get_runmode() == "auto-gui":
-            self.auto_gui()
-
-    def auto_gui(self):
-        '''Execute class functions in default auto-gui mode.
-        
-        '''
-        if self.get_runFlag():
-            gui = Tkinter.Tk()
-            gui.title("Just to be sure...")
-            gui.geometry('600x350+50+50')
-            intro = "\n Please read very carefully. \n"
-            question = "Are you standing on plot " + self.get_plotID() + "?"
-            outro = "\n Press only <Yes> if you are sure."  + \
-                    "\n If you press <No> you can specify the location manually.\n" 
-            app = GUIAutoPlotSelection(gui,intro=intro,question=question,outro=outro)
-            gui.mainloop()
-            correct_plotID =  app.get_correct_plotID()
-            gui.destroy()        
-        
-            if correct_plotID != True:
-                plotID_list = ["cof1", "cof2", "cof3", "cof4", "not sure"]
-                gui = Tkinter.Tk()
-                gui.title("Just to be really sure...")
-                gui.geometry('600x350+50+50')
-                app = GUIManualPlotSelection(gui, plotID_list)
-                gui.mainloop()
-                gui.destroy()
-                manual_plotID = app.get_correct_plotID()
-        
-                if manual_plotID == "not sure":
-                    plotID = "xx000000"
-                    postexflag="autoplot_" + self.get_plotID()
-                else:
-                    plotID = "xx" + manual_plotID
-                    postexflag="autoplot_" + self.get_plotID()
-            
-                self.set_level0_filenames(projectID="ki", \
-                    plotID=plotID,postexflag=postexflag)
-            
-            else:
-                self.set_level0_filenames(projectID="ki")
-
-            self.main()
-        
-        else:
-            print "Nothing to do..."
-            print "...finished."        
-        
-
     def set_runmode(self,runmode):
         '''Set run mode.
         
@@ -141,93 +85,169 @@ class DKStation2Level0:
         self.configFile = configFile
         config = ConfigParser.ConfigParser()
         config.read(self.configFile)
-        self.logger_file = config.get('logger', 'initial_logger_file')
+        self.initial_logger_file = config.get('logger', 'initial_logger_file')
         self.tl_data_path = config.get('repository', 'toplevel_repository_path')
         self.ki_station_inventory = config.get('inventory','ki_station_inventory')
-
 
     def init_StationFile(self):
         '''Initialize D&K station data file.
         '''
         try:
-            self.loggerDataFile = DKStationDataFile(\
-                                  path_to_file=self.logger_file)
-            self.runFlag = self.loggerDataFile.get_ascii_file_exists()
+            self.binary_logger_file = DKStationDataFile(\
+                                      filepath=self.initial_logger_file)
+
+            ascii_file_exsists = False
+            ascii_file = self.binary_logger_file.get_filepath()[:-3] + "asc"
+            if os.path.isfile(ascii_file):
+                ascii_file_exsists = True
+            else:
+                ascii_file = self.binary_logger_file.get_filepath()[:-3] + "ASC"
+                if os.path.isfile(ascii_file):
+                    ascii_file_exsists = True
+            if ascii_file_exsists == True:
+                self.ascii_logger_file = DKStationDataFile(\
+                                         filepath=ascii_file)
+                self.runFlag = self.ascii_logger_file.get_file_exists()
+            else:
+                self.runFlag = False
+
         except:
             self.runFlag = False
-
-    def move_data(self):
-        '''Move files.
-        '''
-        shutil.move(self.source,self.destination)
-
-    def autoconfigure(self):
-        '''Set necessary attributes automatically.
-        '''
-
-        inventory = StationInventory(self.ki_station_inventory)
-        self.plotID, self.loggerID = \
-            inventory.get_Inventory_from_serial_number( \
-                self.loggerDataFile.get_serial_number())
-        self.time_range = self.loggerDataFile.get_time_range()
 
     def get_runFlag(self):
         '''Get runtime flag information.
         '''
         return self.runFlag
 
-    def get_plotID(self):
+    def autoconfigure(self):
+        '''Set necessary attributes automatically.
+        '''
+        inventory = StationInventory(filepath=self.ki_station_inventory, \
+                    serial_number = self.ascii_logger_file.get_serial_number())
+        self.plot_id = inventory.get_plot_id()
+        self.station_id = inventory.get_station_id()
+        self.time_range = self.ascii_logger_file.get_time_range()
+
+
+    def run(self):
+        '''Execute class functions according to runmode settings. 
+        
+        '''
+        if self.get_runmode() == "manual":
+            pass
+        elif self.get_runmode() == "auto-gui":
+            self.auto_gui()
+
+    def auto_gui(self):
+        '''Execute class functions in default auto-gui mode.
+        
+        '''
+        if self.get_runFlag():
+            gui = Tkinter.Tk()
+            gui.title("Just to be sure...")
+            gui.geometry('600x350+50+50')
+            intro = "\n Please read very carefully. \n"
+            question = "Are you standing on plot " + self.get_plot_id() + "?"
+            outro = "\n Press only <Yes> if you are sure."  + \
+                    "\n If you press <No> you can specify the location manually.\n" 
+            app = GUIAutoPlotSelection(gui,intro=intro,question=question,outro=outro)
+            gui.mainloop()
+            correct_plot_id = app.get_correct_plot_id()
+            gui.destroy()        
+        
+            if correct_plot_id != True:
+                plot_id_list = ["cof1", "cof2", "cof3", "cof4", "not sure"]
+                gui = Tkinter.Tk()
+                gui.title("Just to be really sure...")
+                gui.geometry('600x350+50+50')
+                app = GUIManualPlotSelection(gui, plot_id_list)
+                gui.mainloop()
+                gui.destroy()
+                manual_plot_id = app.get_correct_plot_id()
+        
+                if manual_plot_id == "not sure":
+                    plot_id = "xx000000"
+                    postexflag="autoplot_" + self.get_plot_id()
+                else:
+                    plot_id = "xx" + manual_plot_id
+                    postexflag="autoplot_" + self.get_plot_id()
+            
+                self.set_level0_filenames(project_id="ki", \
+                    plot_id=plot_id,postexflag=postexflag)
+            
+            else:
+                self.set_level0_filenames(project_id="ki")
+
+            self.main()
+        
+        else:
+            print "Nothing to do..."
+            print "...finished."        
+        
+
+
+
+
+    def move_data(self):
+        '''Move files.
+        '''
+        shutil.move(self.source,self.destination)
+
+
+
+    def get_plot_id(self):
         '''Get runtime flag information.
         '''
-        return self.plotID
+        return self.plot_id
     
-    def set_level0_filenames(self,projectID=None, \
-                             plotID=None,postexflag=None):
+    def set_level0_filenames(self,project_id=None, \
+                             plot_id=None,postexflag=None):
         '''Set level0 filenames and path information
         '''
-        if plotID == None:
-            plotID = self.plotID
+        if plot_id == None:
+            plot_id = self.plot_id
 
             
-        self.filenames = StationDataFilename(\
+        self.filenames = StationDataFilePath(\
                         toplevel_path=self.tl_data_path, \
-                        projectID=projectID, \
-                        plotID=plotID, \
-                        stationType=self.loggerID, \
-                        startTime=self.time_range[0], \
-                        endTime=self.time_range[1], \
-                        aggregation="nai"+str(self.time_range[1]), \
+                        project_id=project_id, \
+                        plot_id=plot_id, \
+                        station_id=self.station_id, \
+                        start_time=self.time_range[0], \
+                        end_time=self.time_range[1], \
+                        aggregation="nai"+str(self.time_range[2]), \
                         postexflag=postexflag)  
-        self.filenames.set_filenameDictionary()
+        self.filenames.build_filename_dictionary()
 
     def main(self):
         '''Map logger files to level 0 filename and directory structure.
         '''
 
-        print self.filenames.get_filenameDictionary()["level_000_bin-filename"]
-        print self.filenames.get_filenameDictionary()["level_000_bin-path"]
-        print self.filenames.get_filenameDictionary()["level_000_bin-file"]
-        print self.filenames.get_filenameDictionary()["level_001_ascii-filename"]
-        print self.filenames.get_filenameDictionary()["level_001_ascii-path"]
-        print self.filenames.get_filenameDictionary()["level_001_ascii-file"]
+        print self.filenames.get_filename_dictionary()["level_000_bin-filename"]
+        print self.filenames.get_filename_dictionary()["level_000_bin-path"]
+        print self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
+        print self.filenames.get_filename_dictionary()["level_001_ascii-filename"]
+        print self.filenames.get_filename_dictionary()["level_001_ascii-path"]
+        print self.filenames.get_filename_dictionary()["level_001_ascii-filepath"]
 
         # Check if path for level 0 files exists, otherwise create it        
-        if not os.path.isdir(self.filenames.get_filenameDictionary()["level_000_bin-path"]):
-            os.makedirs(self.filenames.get_filenameDictionary()["level_000_bin-path"])
-        if not os.path.isdir(self.filenames.get_filenameDictionary()["level_001_ascii-path"]):
-            os.makedirs(self.filenames.get_filenameDictionary()["level_001_ascii-path"])
+        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_000_bin-path"]):
+            os.makedirs(self.filenames.get_filename_dictionary()["level_000_bin-path"])
+        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_001_ascii-path"]):
+            os.makedirs(self.filenames.get_filename_dictionary()["level_001_ascii-path"])
         
         # Set full path and names of ASCII data files and move them
-        self.source = self.loggerDataFile.ascii_file.get_file()
-        self.destination =  self.filenames.get_filenameDictionary()["level_001_ascii-file"]
+        self.source = self.ascii_logger_file.get_filepath()
+        self.destination =  self.filenames.get_filename_dictionary()["level_001_ascii-filepath"]
         print self.source
         print self.destination
         self.move_data()
         
-        if os.path.isfile(self.loggerDataFile.bin_file.get_file()) and self.loggerDataFile.get_ascii_file_exists():
+        if os.path.isfile(self.binary_logger_file.get_filepath()) and \
+                          self.ascii_logger_file.get_file_exists():
             # Move binary data
-            self.source = self.loggerDataFile.bin_file.get_file()
-            self.destination = self.filenames.get_filenameDictionary()["level_000_bin-file"]
+            self.source = self.binary_logger_file.get_filepath()
+            self.destination = self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
             print self.source
             print self.destination
             self.move_data()

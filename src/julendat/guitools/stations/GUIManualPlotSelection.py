@@ -76,7 +76,7 @@ def destroy():
 '''
 
 class GUIManualPlotSelection:
-    def __init__(self, master=None,plotID_list=None):
+    def __init__(self, master=None,plot_id_list=None):
         # Set background of toplevel window to match
         # current style
         self.master = Frame(master)
@@ -92,8 +92,8 @@ class GUIManualPlotSelection:
         self.scr33.configure(selectbackground="#c4c4c4")
         self.scr33.configure(width="10")
         self.scr33.configure(font=("Helvetica", 16))
-        for plotID in plotID_list:
-            self.scr33.insert(END, plotID)
+        for plot_id in plot_id_list:
+            self.scr33.insert(END, plot_id)
 
         self.tBu35 = Button (master)
         self.tBu35.place(relx=0.5,rely=0.86)
@@ -121,15 +121,15 @@ class GUIManualPlotSelection:
         self.mes33.configure(width="251")
 
     def button_ok(self):
-        self.correct_plotID = self.scr33.get(map(int, self.scr33.curselection())[0])
+        self.correct_plot_id = self.scr33.get(map(int, self.scr33.curselection())[0])
         self.master.quit()
 
     def button_canel(self):
         print "This is not good."
         self.master.quit()
 
-    def get_correct_plotID(self):
-        return self.correct_plotID
+    def get_correct_plot_id(self):
+        return self.correct_plot_id
     
 # The following code is added to facilitate the Scrolled widgets you specified.
 class AutoScroll(object):

@@ -42,12 +42,12 @@ class GUIAutoPlotSelection:
         self.finito = Tkinter.Label(self.frame, font=("Helvetica", 16), text="\n").grid(row=4, column=0, columnspan=2)
 
     def yes(self):
-        self.correct_plotID = True
+        self.correct_plot_id = True
         self.frame.quit()
 
     def no(self):
-        self.correct_plotID = False
+        self.correct_plot_id = False
         self.frame.quit()
 
-    def get_correct_plotID(self):
-        return self.correct_plotID
+    def get_correct_plot_id(self):
+        return self.correct_plot_id
