@@ -1,5 +1,4 @@
-'''
-Class for station data files.
+'''Handle data files from sensor/logger combinations.
 Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
@@ -17,13 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-
-@author: Thomas Nauss
-@license: GNU General Public License
 '''
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>"
-__version__ = "2010-08-04    "
+__version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/."
 
 import os
@@ -31,15 +27,17 @@ from julendat.filetools.DataFile import DataFile
 from julendat.metadatatools.stations.StationDataFilename \
     import StationDataFilename
 
+
 class StationDataFile(DataFile):
+    """Class for handling station data.
 
+    This instance can be used to handle station data files which is a
+    defined combination of one or more sensors and one logger.
+    This is also an abstract class for defining station data file functions.
+    """
+ 
     def set_filename(self):
-        '''Set name of the data file.
-        
+        '''Sets name of the data file.
         '''
-
         self.data_filename = StationDataFilename(\
                             filename=os.path.split(self.get_file())[1]) 
-        
-
-

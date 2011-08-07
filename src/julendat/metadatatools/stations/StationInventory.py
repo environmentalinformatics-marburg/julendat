@@ -37,7 +37,7 @@ class StationInventory(DataFile):
     """
 
     
-    def get_Inventory_from_serialNumber(self,serial_number):
+    def get_Inventory_from_serial_number(self,serial_number):
         '''Get plot ID from serial number
         '''
         foundID = False

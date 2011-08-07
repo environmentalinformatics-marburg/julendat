@@ -150,10 +150,11 @@ class DKStation2Level0:
         '''Initialize D&K station data file.
         '''
         try:
-            self.loggerDataFile = DKStationDataFile(self.logger_file)
-            self.runFlag = self.loggerDataFile.get_asciiFileExists()
+            self.loggerDataFile = DKStationDataFile(\
+                                  path_to_file=self.logger_file)
+            self.runFlag = self.loggerDataFile.get_ascii_file_exists()
         except:
-            self.runFlag = False 
+            self.runFlag = False
 
     def move_data(self):
         '''Move files.
@@ -166,9 +167,9 @@ class DKStation2Level0:
 
         inventory = StationInventory(self.ki_station_inventory)
         self.plotID, self.loggerID = \
-            inventory.get_Inventory_from_serialNumber( \
-                self.loggerDataFile.get_serialNumber())
-        self.time_range = self.loggerDataFile.get_timeRange()
+            inventory.get_Inventory_from_serial_number( \
+                self.loggerDataFile.get_serial_number())
+        self.time_range = self.loggerDataFile.get_time_range()
 
     def get_runFlag(self):
         '''Get runtime flag information.
@@ -217,15 +218,15 @@ class DKStation2Level0:
             os.makedirs(self.filenames.get_filenameDictionary()["level_001_ascii-path"])
         
         # Set full path and names of ASCII data files and move them
-        self.source = self.loggerDataFile.asciiFile.get_file()
+        self.source = self.loggerDataFile.ascii_file.get_file()
         self.destination =  self.filenames.get_filenameDictionary()["level_001_ascii-file"]
         print self.source
         print self.destination
         self.move_data()
         
-        if os.path.isfile(self.loggerDataFile.binFile.get_file()) and self.loggerDataFile.get_asciiFileExists():
+        if os.path.isfile(self.loggerDataFile.bin_file.get_file()) and self.loggerDataFile.get_ascii_file_exists():
             # Move binary data
-            self.source = self.loggerDataFile.binFile.get_file()
+            self.source = self.loggerDataFile.bin_file.get_file()
             self.destination = self.filenames.get_filenameDictionary()["level_000_bin-file"]
             print self.source
             print self.destination

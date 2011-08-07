@@ -1,5 +1,4 @@
-'''
-Handle data files from Driesen & Kern sensor/logger combinations.
+'''Handle data files from Driesen & Kern sensor/logger combinations.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -17,157 +16,169 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-
-@author: Thomas Nauss, Tim Appelhans
-@license: GNU General Public License
 '''
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2010-08-04    "
+__version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/."
 
-import linecache
-import string
 import datetime
-import time
+import linecache
 import os
-
-
+import string
+import time
 from julendat.filetools.stations.StationDataFile import StationDataFile
 
-class DKStationDataFile():
-    """Class for Driesen & Kern climate stations (sensor/logger combination).
-    
-    Constructor:
-    DKStation(filepath="None", filetype="None", io_access="r")
-    
-    For Keyword arguments see __init__().
-    
+
+class DKStationDataFile(object):
+    """Class for handling Driesen & Kern station data (sensor/logger).
+
+    This instance can be used to handle Driesn & Kern station data which is a
+    defined combination of one or more sensors and one logger.
     """
 
-    def __init__(self,binFile):
+    def __init__(self,path_to_file):
+        '''Inits DKStationDataFile.
         
-        '''Constructor of the Data2Map class.
-
-        The function will initialize the D&K climate station class.
+        Based on the initial binary logger data file instance, the associated
+        ASCII file data object will be initialized. In addition, the serial
+        number of the logger and the time range of the data file will be
+        extracted.
         
-        __init__(self)
+        Args:
+            path_to_file: Full path and name of binary logger file.
         '''       
-
-        self.binFile = StationDataFile(binFile)
-        self.set_asciiFile()
-        self.set_serialNumber()
-        self.set_timeRange()
-
-
-    def get_binaryFile(self):
-        '''Get binary file object downloaded from logger.
         
-        '''
-        return self.binFile
+        self.set_binary_file(path_to_file)
+        self.set_ascii_file()
+        self.set_serial_number()
+        self.set_time_range()
 
-    def set_asciiFile(self):
-        '''Set ASCII file object written right after logger data download
+    def set_binary_file(self,path_to_file):
+        '''Creates data file instance of the binary logger file.
         
+        Args:
+            path_to_file: Full path and name of binary logger file.
         '''
-        asciiFileExsists = False
-        asciiFile = self.binFile.get_file()[:-3] + "asc"
-        if os.path.isfile(asciiFile):
-            asciiFileExsists = True
-        if asciiFileExsists != True:
-            asciiFile = self.binFile.get_file()[:-3] + "ASC"
-            if os.path.isfile(asciiFile):
-                asciiFileExsists = True
-        if asciiFileExsists == True:
-            self.asciiFile = StationDataFile(asciiFile)
+        self.bin_file = StationDataFile(path_to_file=path_to_file)
+
+    def get_binary_file(self):
+        '''Gets data file instance of the binary logger file.
+        
+        Returns:
+            Data file object of the initially downloaded logger binary file.
+        '''
+        return self.bin_file
+
+    def set_ascii_file(self):
+        '''Creates data file instance of the ascii logger file.
+        '''
+        ascii_file_exsists = False
+        ascii_file = self.bin_file.get_file()[:-3] + "asc"
+        if os.path.isfile(ascii_file):
+            ascii_file_exsists = True
+        if ascii_file_exsists != True:
+            ascii_file = self.bin_file.get_file()[:-3] + "ASC"
+            if os.path.isfile(ascii_file):
+                ascii_file_exsists = True
+        if ascii_file_exsists == True:
+            self.ascii_file = StationDataFile(path_to_file=ascii_file)
         else:
-            asciiFileExsists = False
-            self.asciiFile = None
+            ascii_file_exsists = False
+            self.ascii_file = None
         
-        self.asciiFileExists = asciiFileExsists
-            
+        self.ascii_file_exists = ascii_file_exsists
 
-    def get_asciiFile(self):
-        '''Get ASCII file object written right after logger data download
+    def get_ascii_file(self):
+        '''Gets ascii logger file instance.
         
+        Returns:
+            Data file object of the ascii logger file.
         '''
-        return self.asciiFile
+        return self.ascii_file
 
+    def get_ascii_file_exists(self):
+        '''Gets information if ASCII file object exists (true/false).
 
-    def get_asciiFileExists(self):
-        '''Get information if ASCII file object exists
-        
+        Returns:
+            Flag (true/false) if ascii logger file exists.
         '''
-        return self.asciiFileExists
+        return self.ascii_file_exists
 
-
-    def set_serialNumber(self):
-        '''Set serial number from level 01 ASCII logger file.
-
+    def set_serial_number(self):
+        '''Sets station serial number extracted from ascii logger file.
         '''
-        line = linecache.getline(self.asciiFile.get_file(), 2)
-        self.serialNumber =  string.strip(line.partition(':')[2])
+        line = linecache.getline(self.ascii_file.get_file(), 2)
+        self.serial_number =  string.strip(line.partition(':')[2])
     
+    def get_serial_number(self):
+        '''Gets station serial number extracted from ascii logger file.
 
-    def get_serialNumber(self):
-        '''Get serial number from level 01 ASCII logger file.
-
+        Returns:
+            Serial number of the logger.
         '''
-        return self.serialNumber
+        return self.serial_number
     
-
-    def set_timeRange(self):
-        '''Set time range from level 01 ASCII file.
-        
+    def set_time_range(self):
+        '''Sets time range extracted from ascii logger file.
         '''
-        if self.asciiFileExists == True:
-            self.startTime = None
-            self.endTime = None
-            timeInterval = False
-            logger_data = open(self.asciiFile.get_file(),'r')
+        if self.ascii_file_exists == True:
+            self.start_time = None
+            self.end_time = None
+            time_interval = False
+            logger_data = open(self.ascii_file.get_file(),'r')
             for line in logger_data:
                 if line[2] == "." and line[5] == ".":
-                    self.endTime = time.strftime("%Y%m%d%H%M",
-                                       time.strptime(
-                                            string.strip(line.split('\t')[0]) + \
-                                            string.strip(line.split('\t')[1]), \
-                                            "%d.%m.%y%H:%M:%S"))
-                    if timeInterval == True:
-                        self.timeStep = str(datetime.datetime.strptime(self.endTime,"%Y%m%d%H%M") - \
-                        datetime.datetime.strptime(self.startTime,"%Y%m%d%H%M"))[2:4]
-                        timeInterval = False
-                    if self.startTime == None:
-                        self.startTime = time.strftime("%Y%m%d%H%M",
-                                        time.strptime(
-                                            string.strip(line.split('\t')[0]) + \
-                                            string.strip(line.split('\t')[1]), \
-                                            "%d.%m.%y%H:%M:%S"))
-                        timeInterval = True
+                    self.end_time = time.strftime("%Y%m%d%H%M",
+                                    time.strptime(\
+                                    string.strip(line.split('\t')[0]) +\
+                                    string.strip(line.split('\t')[1]), \
+                                    "%d.%m.%y%H:%M:%S"))
+                    if time_interval == True:
+                        self.time_step = str(datetime.datetime.strptime(\
+                                        self.end_time,"%Y%m%d%H%M") -\
+                                        datetime.datetime.strptime(\
+                                        self.start_time,"%Y%m%d%H%M"))[2:4]
+                        time_interval = False
+                    if self.start_time == None:
+                        self.start_time = time.strftime("%Y%m%d%H%M",
+                                          time.strptime(
+                                          string.strip(line.split('\t')[0]) + \
+                                          string.strip(line.split('\t')[1]), \
+                                          "%d.%m.%y%H:%M:%S"))
+                        time_interval = True
 
+    def get_time_range(self):
+        '''Gets time range extracted from ascii logger file.
 
-    def get_timeRange(self):
-        '''Get time range from level 01 ASCII file.
-        
+        Returns:
+            Time range of the logger file in the following order:
+                start time
+                end time
+                time step in minutes
         '''
-        return self.startTime, self.endTime, self.timeStep
+        return self.start_time, self.end_time, self.time_step
 
+    def get_start_time(self):
+        '''Gets start time extracted from ascii logger file.
 
-    def get_startTime(self):
-        '''Get start time from level 01 ASCII file.
-
+        Returns:
+            Start time of the logger file.
         '''
-        return self.startTime
+        return self.start_time
 
+    def get_end_time(self):
+        '''Gets end time  extracted from ascii logger file.
 
-    def get_endTime(self):
-        '''Get end time  from level 01 ASCII file.
-        
+        Returns:
+            End time of the logger file.
         '''
-        return self.endTime
+        return self.end_time
 
+    def get_time_interval(self):
+        '''Gets time interval extracted from ascii logger file.
 
-    def get_timeInterval(self):
-        '''Get time interval from level 01 ASCII file.
-        
+        Returns:
+            Time interval in minutes of the logger file.
         '''
-        return self.timeInterval
+        return self.time_interval
