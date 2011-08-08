@@ -1,4 +1,4 @@
-'''GUI to verify if the correct plot ID has been selected automatically.
+"""GUI to verify if the correct plot ID has been selected automatically.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-
-@author: Thomas Nauss, Tim Appelhans
-@license: GNU General Public License
-'''
+"""
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2010-08-04    "
-__license__ = "GNU GPL, see http://www.gnu.org/licenses/."
+__version__ = "2010-08-07"
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 #TODO(tnauss): Comment
 

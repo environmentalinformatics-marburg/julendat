@@ -1,5 +1,5 @@
 # Module eumeltools
-'''Provide general functions for our pyhton modules.
+"""Provide general functions for our pyhton modules.
 
 The current version encompasses the following functions:
 -- function mask_dimensions: Create array mask with respect to dimensions
@@ -28,7 +28,7 @@ criticism, or bug reports are welcome.
 
 From all the errors in this module you can easily build another one.
 
-'''
+"""
 
 import numpy
 import sys
@@ -41,7 +41,7 @@ __license__ = "Creative Commons Attribution-Noncommercial-Share Alike 3.0 " + \
 
 
 def mask_dimensions(datadimensions, dimension_ranges):
-    '''Mask array with respect to array dimensions.
+    """Mask array with respect to array dimensions.
 
     mask_dimensions(datadimensions, dimension_ranges)
     
@@ -49,7 +49,7 @@ def mask_dimensions(datadimensions, dimension_ranges):
     -- datadimensions: Dimensions of the dataset for which the map is created
     -- dimension_ranges: Tuple containing ranges of the dimensions (dim1, dim2)
 
-    '''
+    """
 
     print 'Set map for dataset with respect to array dimensions...'
     row_range, col_range = dimension_ranges
@@ -68,7 +68,7 @@ def mask_dimensions(datadimensions, dimension_ranges):
 
 
 def mask_values(datasets, value_range):
-    '''Mask array with respect to array values.
+    """Mask array with respect to array values.
 
     mask_values(datasets, value_range)
     
@@ -76,7 +76,7 @@ def mask_values(datasets, value_range):
     -- datasets: Array or tuple of arrays containing dataset values
     -- value_range: Value range for which the map should be created (min,max)
 
-    '''
+    """
 
     print 'Set map for dataset with respect to array values...'
     if value_range is None:
@@ -104,7 +104,7 @@ def mask_values(datasets, value_range):
 
 
 def array_read(filename, datatype, skip):
-    '''Read data from an array-like ASCII file
+    """Read data from an array-like ASCII file
     
     Read data from ASCII file with an arbitrary number of columns and arbitrary
     types of data for each column. The data is returned in a multidimensional
@@ -118,7 +118,7 @@ def array_read(filename, datatype, skip):
                  ('string'=string, 'int16'=integer, 'float32'=float)
     -- skip: Number of lines to be skiped in the begining of the file
         
-    '''
+    """
 
     # Check if file exists and open it; exit if not.
     try:
@@ -148,7 +148,7 @@ def array_read(filename, datatype, skip):
 
 
 def string_contains_any(string,search_term):
-    '''Check if string contains any of the search term and return True/False.
+    """Check if string contains any of the search term and return True/False.
     
     string_contains_any(string, search_term)
     
@@ -156,13 +156,13 @@ def string_contains_any(string,search_term):
     -- string: String to be searched.
     -- search_term: Search term.
         
-    '''
+    """
 
     return 1 in [check in string for check in search_term]
 
 
 def string_contains_all(string, search_term):
-    '''Check if string contains all of the search term and return True/False.
+    """Check if string contains all of the search term and return True/False.
     
     string_contains_all(string, search_term)
     
@@ -170,13 +170,13 @@ def string_contains_all(string, search_term):
     -- string: String to be searched.
     -- search_term: Search term.
         
-    '''
+    """
 
     return 0 not in [check in string for check in search_term]
 
 
 def string_matches_all(string, search_term):
-    '''Check if a string contains the exact search term and return True/False.
+    """Check if a string contains the exact search term and return True/False.
     
     string_matches_all(string, search_term)
     
@@ -184,13 +184,13 @@ def string_matches_all(string, search_term):
     -- string: String to be searched.
     -- search_term: Search term.
         
-    '''
+    """
 
     return re.search(search_term, string)
 
 
 def set_bit(value, bit_number):
-    '''Set a specific bit to 1.
+    """Set a specific bit to 1.
     
     set_bit(value, bit_number)
     
@@ -198,13 +198,13 @@ def set_bit(value, bit_number):
     -- value: Value in which bit should be set.
     -- bit_number: Bit number to be set to 1.
         
-    '''
+    """
 
     return value | 1 << (bit_number)
 
 
 def clear_bit(value, bit_number):
-    '''Set a specific bit to 0.
+    """Set a specific bit to 0.
     
     clear_bit(value, bit_number)
     
@@ -212,13 +212,13 @@ def clear_bit(value, bit_number):
     -- value: Value in which bit should be cleared.
     -- bit_number: Bit number to be set to 0.
         
-    '''
+    """
 
     return value & ~( 1 << (bit_number) )
 
 
 def check_bit(value, bit_number):
-    '''Check if a specific bit is 1/0 (True/False).
+    """Check if a specific bit is 1/0 (True/False).
    
     check_bit(value, bit_number)
     
@@ -226,13 +226,13 @@ def check_bit(value, bit_number):
     -- value: Value in which bit should be checked.
     -- bit_number: Bit number to be checked.
         
-    '''
+    """
 
     return (value & (1<<(bit_number))) != 0
 
 
 def next_neighbor(data, target_row, target_col,row_extend,col_extend):
-    '''Compute a next neighbor interpolation.
+    """Compute a next neighbor interpolation.
     
     Set value of the actual row,col position of a 2D array according to a
     next neighbor resampling.
@@ -246,7 +246,7 @@ def next_neighbor(data, target_row, target_col,row_extend,col_extend):
     -- row_extend: Minimum [0] and maximum [1] row in data with valid values.
     -- col_extend: Minimum [0] and maximum [1] col in data with valid values.
         
-    '''
+    """
     
     search_pattern_row = [-1,1,0,0,-1,1,1,-1]
     search_pattern_col = [0,0,-1,1,-1,-1,1,1]

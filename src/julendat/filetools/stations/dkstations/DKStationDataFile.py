@@ -1,4 +1,4 @@
-'''Handle data files from Driesen & Kern sensor/logger combinations.
+"""Handle data files from Driesen & Kern sensor/logger combinations.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-'''
+"""
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-07"
-__license__ = "GNU GPL, see http://www.gnu.org/licenses/."
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import datetime
 import linecache
@@ -37,7 +37,7 @@ class DKStationDataFile(StationDataFile):
     """
 
     def __init__(self, filepath, io_access="r"):
-        '''Inits DKStationDataFile.
+        """Inits DKStationDataFile.
         
         Based on the initial binary logger data file instance, the associated
         ASCII file data object will be initialized. In addition, the serial
@@ -47,7 +47,7 @@ class DKStationDataFile(StationDataFile):
         Args (from class DataFile):
             filepath: Full path and name of the data file
             io_asccess: IO access (r-read,w-write,rw-read/write)
-        '''       
+        """       
         
         StationDataFile.__init__(self, filepath, io_access="r")
         
@@ -57,25 +57,25 @@ class DKStationDataFile(StationDataFile):
             self.set_time_range_ascii()
 
     def check_filetype(self):
-        '''Sets filetype of the logger file (binary/ascii).
-        '''
-        if self.get_file_extension() == 'bin' or \
-            self.get_file_extension() == 'BIN':
+        """Sets filetype of the logger file (binary/ascii).
+        """
+        if self.get_extension() == 'bin' or \
+            self.get_extension() == 'BIN':
             filetype = 'bin'
-        elif self.get_file_extension() == 'asc' or \
-            self.get_file_extension() == 'ASC':
+        elif self.get_extension() == 'asc' or \
+            self.get_extension() == 'ASC':
             filetype = 'ascii'
         self.set_filetype(filetype)
 
     def set_serial_number_ascii(self):
-        '''Sets station serial number extracted from ascii logger file.
-        '''
+        """Sets station serial number extracted from ascii logger file.
+        """
         line = linecache.getline(self.get_filepath(), 2)
         self.set_serial_number(string.strip(line.partition(':')[2]))
     
     def set_time_range_ascii(self):
-        '''Sets time range extracted from ascii logger file.
-        '''
+        """Sets time range extracted from ascii logger file.
+        """
         start_time = None
         end_time = None
         time_interval = False

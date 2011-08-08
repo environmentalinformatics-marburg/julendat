@@ -1,5 +1,5 @@
-'''Automatic filepath, filename and path generation for raster files.
-Copyright (C) 2011 Thomas Nauss, Tim Appelhans
+"""Automatic filepath, filename and path generation for raster files.
+Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-'''
+"""
 
-__author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
+__author__ = "Thomas Nauss <nausst@googlemail.com>"
 __version__ = "2010-08-07"
-__license__ = "GNU GPL, see http://www.gnu.org/licenses/."
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 #TODO(tnauss): Adjust to julendat
 
@@ -31,21 +31,21 @@ import sys
 
 
 def get_extension_from_filename(filename):
-    '''Get extension from filename.
+    """Get extension from filename.
         
     @param filename : Full name of data file 
 
-    '''
+    """
     extension = os.path.splitext(filename)[1]
     return extension
 
 
 def get_product_from_filename(filename):
-    '''Get product information from filename.
+    """Get product information from filename.
         
     @param filename : Full name of data file 
 
-    '''
+    """
     
     if get_extension_from_filename(filename) == '.hdf':
         product = filename.partition('.')[0]
@@ -53,15 +53,15 @@ def get_product_from_filename(filename):
 
 
 def get_convention_time(filename):
-    '''Convert arbitrary time code to code of convention.
+    """Convert arbitrary time code to code of convention.
         
     @param filename : Full name of data file 
 
-    '''
+    """
 
     if get_extension_from_filename(filename) == '.hdf':
         satellite = get_convention_satellite_system(filename)
-        '''
+        """
         # Info: do not bother abouth satellite - just try/error.
         if satellite == 'ta01m':
             timestep = time.strftime("%Y%m%d%H%M",
@@ -69,7 +69,7 @@ def get_convention_time(filename):
         if satellite == 'aq01m':
             timestep = time.strftime("%Y%m%d%H%M",
                        time.strptime(filename[-36:-22],"%Y%j.h%Hv%M"))
-        '''
+        """
         try:
             timestep = time.strftime("%Y%m%d%H%M",
                        time.strptime(filename[-34:-22],"%Y%j.%H%M"))
@@ -81,11 +81,11 @@ def get_convention_time(filename):
 
 
 def get_convention_satellite_system(filename):
-    '''Convert arbitrary satellite code to code of convention.
+    """Convert arbitrary satellite code to code of convention.
         
     @param filename : Full name of data file 
 
-    '''
+    """
     if get_extension_from_filename(filename) == '.hdf':
         if filename.partition('.')[0][0:3] == 'MOD':
             satellite = 'ta01m'
@@ -95,11 +95,11 @@ def get_convention_satellite_system(filename):
 
 
 def get_convention_units(units):
-    '''Get convention units.
+    """Get convention units.
         
     @param units: Units at question. 
 
-    '''
+    """
     
     if units == 'radiance' or units == 'Radiance':
         units = 'rd'
@@ -116,12 +116,12 @@ def get_convention_units(units):
 
 
 def get_convention_idrisi_meta_projection_for_utm(zone, hemisphere):
-    '''Get projection information for Idrisi meta files.
+    """Get projection information for Idrisi meta files.
         
     @param zone: Zone of UTM projection. 
     @param hemisphere: Hemisphere of projection. 
 
-    '''
+    """
     
     if hemisphere == 'n':
         hemisphere = 'n'
@@ -133,11 +133,11 @@ def get_convention_idrisi_meta_projection_for_utm(zone, hemisphere):
 
 
 def get_convention_projection(standard_projection):
-    '''Get projection information for filename.
+    """Get projection information for filename.
         
     @param standard_projection: Name of standard prorjection to be used. 
 
-    '''
+    """
     
     if standard_projection == 'Standard_Germany_00250':
         convention_projection = 'p32nde'
@@ -154,7 +154,7 @@ def get_convention_projection(standard_projection):
 def get_convention_filename(
         filetype, timestep, satellite_system, product, units, band, resolution, 
         projection, projection_resolution='none', quality='na001'):
-    '''Get convention filename
+    """Get convention filename
         
     @param filetype : File type of the data file 
     @param timestep : Timestep of the data file
@@ -167,7 +167,7 @@ def get_convention_filename(
     @param projection_resolution : Resolution of the geographic projection
     @param quality : Quality of the data variable
 
-    '''
+    """
     if isinstance(band,str)!=True:
         band = '%03i' % band
     if resolution != 'none':
@@ -190,11 +190,11 @@ def get_convention_filename(
 
 
 def get_bands_from_hdf_eos(sds_name):
-    '''Get convention filenames for hdf eos datasets.
+    """Get convention filenames for hdf eos datasets.
   
     @param sds_name : SDS name 
     @param projection : GeoFileProjections object 
-    '''
+    """
     if sds_name == 'EV_250_Aggr1km_RefSB':
         bands = []
         for band_id in range(0,2):
@@ -259,11 +259,11 @@ def get_bands_from_hdf_eos(sds_name):
     return bands
 
 def get_product_from_hdf_eos(sds_name, data_units=None):
-    '''Get convention filenames for hdf eos datasets.
+    """Get convention filenames for hdf eos datasets.
   
     @param sds_name : SDS name 
     @param projection : GeoFileProjections object 
-    '''
+    """
 
     if data_units == 'rd':
         product = 'cr01'

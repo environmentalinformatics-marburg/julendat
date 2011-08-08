@@ -1,5 +1,4 @@
-'''
-Move downloaded logger data to level 0 folder structure.
+"""Move downloaded D&K logger data to level 0 folder structure.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -17,14 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-
-@author: Thomas Nauss, Tim Appelhans
-@license: GNU General Public License
-'''
+"""
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2010-08-04    "
-__license__ = "GNU GPL, see http://www.gnu.org/licenses/."
+__version__ = "2010-08-07"
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 
 import ConfigParser
@@ -38,60 +34,56 @@ from julendat.guitools.stations.GUIManualPlotSelection import GUIManualPlotSelec
 import Tkinter
 
 class DKStation2Level0:   
-    """ Move data from initial logger import to level 0 folder structure.
-    
-    Constructor:
-    DataFile(filepath="None", filetype="None", io_access="r")
-    
-    For Keyword arguments see __init__().
-    
+    """Instance for moving downloaded D&K logger data to level 0 folders.
     """
 
-    def __init__(self, configFile,runmode="auto-gui"):
-        '''Constructor of the class.         
-
-        __init__(self, file, filetype,io_access="r")
+    def __init__(self, config_file,run_mode="auto-gui"):
+        """Inits DKStation2Level0. 
         
-        @param file: Full path and name of the data file.
-        @param filetype: Type of the data file.
-        @param io_access: Read/write access to data file ('r' or 'w').
-
-        '''
-
-        self.set_runmode(runmode)
-        self.configure(configFile)
+        Args:
+            config_file: Configuration file.
+            run_mode: Running mode (auto-gui, manual)
+        """
+        self.set_run_mode(run_mode)
+        self.configure(config_file)
         self.init_StationFile()
-        if self.get_runFlag():
-            self.autoconfigure()
+        if self.get_run_flag():
+            self.auto_configure()
         self.run()
             
-    def set_runmode(self,runmode):
-        '''Set run mode.
+    def set_run_mode(self,run_mode):
+        """Sets run mode.
         
-        @param runmode: Running mode (default: auto-gui)
-        '''
-        self.runmode = runmode
+        Args:
+            run_mode: Running mode (default: auto-gui)
+        """
+        self.run_mode = run_mode
 
-    def get_runmode(self):
-        '''Get run mode.
-        '''
-        return self.runmode
+    def get_run_mode(self):
+        """Gets run mode.
+        
+        Returns:
+            Running mode
+        """
+        return self.run_mode
 
-    def configure(self,configFile):
-        '''Read configuration settings and configure object.
+    def configure(self,config_file):
+        """Reads configuration settings and configure object.
     
-        @param configFile: Full path and name of the configuration file.
-        '''
-        self.configFile = configFile
+        Args:
+            config_file: Full path and name of the configuration file.
+        """
+        self.config_file = config_file
         config = ConfigParser.ConfigParser()
-        config.read(self.configFile)
+        config.read(self.config_file)
         self.initial_logger_file = config.get('logger', 'initial_logger_file')
         self.tl_data_path = config.get('repository', 'toplevel_repository_path')
-        self.ki_station_inventory = config.get('inventory','ki_station_inventory')
+        self.station_inventory = config.get('inventory','station_inventory')
+        self.project_id = config.get('project','project_id')
 
     def init_StationFile(self):
-        '''Initialize D&K station data file.
-        '''
+        """Initializes D&K station data file.
+        """
         try:
             self.binary_logger_file = DKStationDataFile(\
                                       filepath=self.initial_logger_file)
@@ -107,22 +99,25 @@ class DKStation2Level0:
             if ascii_file_exsists == True:
                 self.ascii_logger_file = DKStationDataFile(\
                                          filepath=ascii_file)
-                self.runFlag = self.ascii_logger_file.get_file_exists()
+                self.run_flag = self.ascii_logger_file.get_file_exists()
             else:
-                self.runFlag = False
+                self.run_flag = False
 
         except:
-            self.runFlag = False
+            self.run_flag = False
 
-    def get_runFlag(self):
-        '''Get runtime flag information.
-        '''
-        return self.runFlag
+    def get_run_flag(self):
+        """Gets runtime flag information.
+        
+        Returns:
+            Runtime flag.
+        """
+        return self.run_flag
 
-    def autoconfigure(self):
-        '''Set necessary attributes automatically.
-        '''
-        inventory = StationInventory(filepath=self.ki_station_inventory, \
+    def auto_configure(self):
+        """Set necessary attributes automatically.
+        """
+        inventory = StationInventory(filepath=self.station_inventory, \
                     serial_number = self.ascii_logger_file.get_serial_number())
         self.plot_id = inventory.get_plot_id()
         self.station_id = inventory.get_station_id()
@@ -130,19 +125,17 @@ class DKStation2Level0:
 
 
     def run(self):
-        '''Execute class functions according to runmode settings. 
-        
-        '''
-        if self.get_runmode() == "manual":
+        """Executes class functions according to run_mode settings. 
+        """
+        if self.get_run_mode() == "manual":
             pass
-        elif self.get_runmode() == "auto-gui":
+        elif self.get_run_mode() == "auto-gui":
             self.auto_gui()
 
     def auto_gui(self):
-        '''Execute class functions in default auto-gui mode.
-        
-        '''
-        if self.get_runFlag():
+        """Executes class functions in default auto-gui mode.
+        """
+        if self.get_run_flag():
             gui = Tkinter.Tk()
             gui.title("Just to be sure...")
             gui.geometry('600x350+50+50')
@@ -172,38 +165,35 @@ class DKStation2Level0:
                     plot_id = "xx" + manual_plot_id
                     postexflag="autoplot_" + self.get_plot_id()
             
-                self.set_level0_filenames(project_id="ki", \
+                self.set_level0_filenames(project_id=self.project_id, \
                     plot_id=plot_id,postexflag=postexflag)
             
             else:
-                self.set_level0_filenames(project_id="ki")
+                self.set_level0_filenames(project_id=self.project_id)
 
             self.main()
         
         else:
             print "Nothing to do..."
             print "...finished."        
-        
-
-
-
 
     def move_data(self):
-        '''Move files.
-        '''
+        """Moves files.
+        """
         shutil.move(self.source,self.destination)
 
-
-
     def get_plot_id(self):
-        '''Get runtime flag information.
-        '''
+        """Gets coded plot id flag information.
+        
+        Returns:
+            Runtime coded plot ID 
+        """
         return self.plot_id
     
     def set_level0_filenames(self,project_id=None, \
                              plot_id=None,postexflag=None):
-        '''Set level0 filenames and path information
-        '''
+        """Sets level0 filenames and path information
+        """
         if plot_id == None:
             plot_id = self.plot_id
 
@@ -220,9 +210,8 @@ class DKStation2Level0:
         self.filenames.build_filename_dictionary()
 
     def main(self):
-        '''Map logger files to level 0 filename and directory structure.
-        '''
-
+        """Maps logger files to level 0 filename and directory structure.
+        """
         print self.filenames.get_filename_dictionary()["level_000_bin-filename"]
         print self.filenames.get_filename_dictionary()["level_000_bin-path"]
         print self.filenames.get_filename_dictionary()["level_000_bin-filepath"]

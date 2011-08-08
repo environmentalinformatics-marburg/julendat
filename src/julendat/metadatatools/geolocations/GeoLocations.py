@@ -1,5 +1,5 @@
-'''Handle standard projections and map areas.
-Copyright (C) 2011 Thomas Nauss, Tim Appelhans
+"""Handle standard projections and map areas.
+Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,44 +16,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-'''
+"""
 
-__author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
+__author__ = "Thomas Nauss <nausst@googlemail.com>"
 __version__ = "2010-08-07"
-__license__ = "GNU GPL, see http://www.gnu.org/licenses/."
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 #TODO(tnauss): Adjust to julendat
 
 import julendat.metadatatools.raster.RasterDataFilePath as RasterDataFilePath
 
 class GeoLocations(object):
-    '''Provides access to standart projection information.
+    """Provides access to standart projection information.
     
     Constructor:
     GeoFileProjections(standard_projection)
     
     For Keyword arguments see __init__().
     
-    '''
+    """
 
 
     def __init__(self, standard_projection):
-        '''Constructor of the class.         
+        """Constructor of the class.         
         
         @param standard_projection : Standard projection.
 
-        '''
+        """
 
         self.set_standard_projection(standard_projection)
 
     
     
     def set_standard_projection(self, standard_projection):
-        '''Set standard projection.
+        """Set standard projection.
         
         @param standard_projection : Standard projection
         
-        '''
+        """
         self.standard_projection = standard_projection
         if self.standard_projection == 'Standard_Germany_00250':
             self.projection_resolution = 250
@@ -165,9 +165,9 @@ class GeoLocations(object):
 
 
     def get_projection(self):
-        '''Set units of data set.
+        """Set units of data set.
                 
-        '''
+        """
         return self.standard_projection, \
                self.projection_resolution, \
                self.projection, \

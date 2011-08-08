@@ -1,78 +1,63 @@
-# Module data2plot
-'''Create publication-quality scatter and histogram plots.
+"""Create publication-quality plots.
+Copyright (C) 2011 Thomas Nauss
 
-The module provides the following class:
-Data2Plot: Class representation of a plot object.
--- function compute_statistics: Compute basic regression statistics to be
-                                included in histogram plot title
--- function compute_ratio: Compute ratio of the two input datasets to produce
-                           error plots
--- function make_scatterplot: Create a publication-quality scatterplot                      
--- function make_error plot: Create a publication-quality error plot                     
--- function make_hexplot: Create a publication-quality hexagon scatter plot                      
--- function make_hexerrorplot: Create a publication-quality hexagon error plot                      
--- function make_histogramplot: Create a publication-quality histogram plot                    
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-The functions use the python pylab and matplotlib modules and some plots use
-colormaps defined according to the matplotlib.cm module. For an overview of
-the colormaps see http://www.scipy.org/Cookbook/Matplotlib/Show_colormaps.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-The software is distributed under the
-Creative Commons Attribution-Noncommercial-Share Alike 3.0 Germany
-license (see http://creativecommons.org/licenses/by-nc-sa/3.0/de/deed.en) by
-Thomas Nauss <thomas.nauss@uni-bayreuth.de>.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Beside the terms covered by the license above, permission to use this software
-for research and education purposes is granted as long as there is no direct
-return of profit (e. g. I do not classify tuition as commercial).
+Please send any comments, suggestions, criticism, or (for our sake) bug
+reports to nausst@googlemail.com
+"""
 
-The software comes without any warranty and without even the implied warranty
-of merchantability or fitness for a particular purpose. Comments, suggestions,
-criticism, or bug reports are welcome.
-
-From all the errors in this module you can easily build another one.
-
-'''
-
+__author__ = "Thomas Nauss <nausst@googlemail.com>"
+__version__ = "2010-08-07"
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 import pylab
 import matplotlib.cm as cm
 from scipy import stats
 
-__author__ = "Thomas Nauss <thomas.nauss@uni-bayreuth.de>"
-__version__ = "0.1"
-__license__ = "Creative Commons Attribution-Noncommercial-Share Alike 3.0 " + \
-              "Germany"
-
-#TODO(tnauss): Comment
 
 class Data2Plot(object):
-    '''Provides functionality to create publication quality scatter- and 
-    histogram plots in different file formats.
-
-    Constructor:
-    Data2Plot(datasets, plotfile,
-              title=None, xlabel=None, ylabel=None,
-              value_range=None, colormap=None)
+    """Instance for creating publication-quality plots.
     
-    For Keyword arguments see __init__().
+    The instance is a representation of a DTP plot object and includes
+    the following functions:
 
-    '''
+        function compute_statistics: Compute basic regression statistics to be
+            included in histogram plot title
+        function compute_ratio: Compute ratio of the two input datasets to
+            produce error plots
+        function make_scatterplot: Create a publication-quality scatterplot                      
+        function make_error plot: Create a publication-quality error plot                     
+        function make_hexplot: Create a publication-quality hexagon scatter plot                      
+        function make_hexerrorplot: Create a publication-quality hexagon error
+            plot                      
+        function make_histogramplot: Create a publication-quality histogram plot                    
+    """
 
     def __init__(self, datasets, plotfile,
                  title=None, xlabel=None, ylabel=None,
                  value_range=None, colormap=None):
-        '''Constructor of the Data2Map class.         
-
-        @param datasets : Two numpy arrays holding the actual data values
-        @param plotfile : String or tuple with full path of the output plot file(s).
-        @param title : Title of the plot files (default: None)
-        @param xlabel : Label of the x axis (default: None)
-        @param ylabel : Label of the y axis (default: None)
-        @param value_range : Range of values to be plotted (default: all)
-        @param colormap : matplotlib.cm colormap for hexagon plots (default: Greys).
-
-        '''
-
+        """Inits Data2Map.
+        
+        Args:
+            datasets : Two numpy arrays holding the actual data values
+            plotfile : String or tuple with full path of the output plot file(s)
+            title : Title of the plot files (default: None)
+            xlabel : Label of the x axis (default: None)
+            ylabel : Label of the y axis (default: None)
+            value_range : Range of values to be plotted (default: all)
+            colormap : matplotlib.cm colormap for hexagon plots (default: Greys)
+        """
         self.dataset = {}
         self.dataset[0], self.dataset[1] = datasets
         self.plotfile = plotfile
@@ -111,10 +96,8 @@ class Data2Plot(object):
 
 
     def compute_statistics(self):
-        '''Make some statistics that can be included into the histogram plots.
-        
-        '''
-        
+        """Make some statistics that can be included into the histogram plots.
+        """
         self.slope, self.intercept, self.r = \
             stats.linregress(self.dataset[0], self.dataset[1])[0:3]
         self.r2 = self.r**2
@@ -123,19 +106,16 @@ class Data2Plot(object):
 
 
     def compute_ratio(self):
-        '''Compute ratio of the two input datasets in order to 
+        """Compute ratio of the two input datasets in order to 
         produce error plots.
-        
-        '''
+        """
         if self.ratio is None:
             self.ratio = self.dataset[1] / self.dataset[0]
 
 
     def make_scatterplot(self):
-        '''Make scatterplot using the pylab plot function.
-        
-        '''
-
+        """Make scatterplot using the pylab plot function.
+        """
         print 'Creating scatterplot...'
         pylab.clf()
         pylab.figure(figsize=(8,8))
@@ -156,10 +136,8 @@ class Data2Plot(object):
 
 
     def make_errorplot(self):
-        '''Make errorplot using the pylab plot function.
-        
-        '''
-
+        """Make errorplot using the pylab plot function.
+        """
         print 'Creating error plot...'
         self.compute_ratio()
         pylab.clf()
@@ -179,10 +157,8 @@ class Data2Plot(object):
 
     
     def make_hexplot(self):
-        '''Make hexagon scatter plot using the pylab plot function.
-        
-        '''
-
+        """Make hexagon scatter plot using the pylab plot function.
+        """
         print 'Creating hexagon plot...'
         pylab.clf()
         pylab.figure(figsize=(8,8))
@@ -205,10 +181,8 @@ class Data2Plot(object):
 
 
     def make_hexerrorplot(self):
-        '''Make hexagon error plot using the pylab plot function.
-        
-        '''
-
+        """Make hexagon error plot using the pylab plot function.
+        """
         print 'Creating hexagon error plot...'
         self.compute_ratio()
         pylab.clf()
@@ -231,10 +205,8 @@ class Data2Plot(object):
 
 
     def make_histogramplot(self):
-        '''Make histogram plot using the pylab plot function.
-        
-        '''
-
+        """Make histogram plot using the pylab plot function.
+        """
         print 'Creating histogram plot...'
         max_b = (int(self.value_range[1]) + 1)*5
         b = range(0,max_b)

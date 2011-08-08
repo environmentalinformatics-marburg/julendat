@@ -1,4 +1,4 @@
-'''
+"""
 GUI to manually select the plot ID from a list.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
@@ -19,14 +19,11 @@ Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
 
 This GUI has been constructed using PAGE (see http://page.sourceforge.net/).
-
-@author: Thomas Nauss, Tim Appelhans
-@license: GNU General Public License
-'''
+"""
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2010-08-04    "
-__license__ = "GNU GPL, see http://www.gnu.org/licenses/."
+__version__ = "2010-08-07"
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 #TODO(tnauss): Comment
 
@@ -53,7 +50,7 @@ else:
     """)
     sys.exit()
 
-'''
+"""
 
     If you use the following functions, change the names 'w' and
     'w_win'.  Use as a template for creating a new Top-level window.
@@ -75,7 +72,7 @@ def destroy():
     global w
     w.destroy()
     w = None
-'''
+"""
 
 class GUIManualPlotSelection:
     def __init__(self, master=None,plot_id_list=None):
@@ -135,7 +132,7 @@ class GUIManualPlotSelection:
     
 # The following code is added to facilitate the Scrolled widgets you specified.
 class AutoScroll(object):
-    '''Configure the scrollbars for a widget.'''
+    """Configure the scrollbars for a widget."""
 
     def __init__(self, master):
         vsb = ttk.Scrollbar(master, orient='vertical', command=self.yview)
@@ -160,7 +157,7 @@ class AutoScroll(object):
 
     @staticmethod
     def _autoscroll(sbar):
-        '''Hide and show scrollbar as needed.'''
+        """Hide and show scrollbar as needed."""
         def wrapped(first, last):
             first, last = float(first), float(last)
             if first <= 0 and last >= 1:
@@ -174,16 +171,16 @@ class AutoScroll(object):
         return str(self.master)
 
 def _create_container(func):
-    '''Creates a ttk Frame with a given master, and use this new frame to
-    place the scrollbars and the widget.'''
+    """Creates a ttk Frame with a given master, and use this new frame to
+    place the scrollbars and the widget."""
     def wrapped(cls, master, **kw):
         container = ttk.Frame(master)
         return func(cls, container, **kw)
     return wrapped
 
 class ScrolledListBox(AutoScroll, Listbox):
-    '''A standard Tkinter Text widget with scrollbars that will
-    automatically show/hide as needed.'''
+    """A standard Tkinter Text widget with scrollbars that will
+    automatically show/hide as needed."""
     @_create_container
     def __init__(self, master, **kw):
         Listbox.__init__(self, master, **kw)
