@@ -1,0 +1,8 @@
+[logger]
+initial_logger_file = /media/permanent/development/test/kilimanjaro/metstations/infralog/logger/noname.bin
+
+[repository]
+toplevel_repository_path = /media/permanent/development/test/kilimanjaro/metstations/plots
+
+[inventory]
+ki_station_inventory = /media/permanent/development/test/kilimanjaro/metstations/ki_station_inventory.dat
