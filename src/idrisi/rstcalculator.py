@@ -1,4 +1,4 @@
-'''Compute calculations with Idrisi raster files.
+"""Compute calculations with Idrisi raster files.
 Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-'''
+"""
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>"
 __version__ = "2010-08-06"
-__license__ = "GNU GPL, see http://www.gnu.org/licenses/."
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import numpy
 import optparse

@@ -20,7 +20,7 @@ reports to nausst@googlemail.com
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>"
 __version__ = "2010-08-06"
-__license__ = "GNU GPL, see http://www.gnu.org/licenses/."
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import numpy
 import array
@@ -38,11 +38,11 @@ print
 
 
 def read_rasterdata(scene):    
-    '''Read data from Idrisi raster file and return a 2D array.
+    """Read data from Idrisi raster file and return a 2D array.
 
     read_rasterdata(self)
 
-    '''
+    """
     atype = 'B'
     ntype = numpy.int8
     file = open(scene, mode='rb')

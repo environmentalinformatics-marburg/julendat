@@ -1,4 +1,4 @@
-'''Create publication quality plots from Idrisi raster files.
+"""Create publication quality plots from Idrisi raster files.
 Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-'''
+"""
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>"
 __version__ = "2010-08-06"
@@ -32,9 +32,9 @@ from julendat.processtools import eumeltools
 #TODO(tnauss): Adjust to julendat.
 
 def main():
-    '''Main program function
+    """Main program function
     Create publication quality maps from Idrisi raster files.
-    '''
+    """
     print
     print 'Module: rst2plot'
     print 'Version: ' + __version__
