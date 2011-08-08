@@ -1,5 +1,4 @@
-'''
-Automatic filepath, filename and path generation.
+'''Automatic filepath, filename and path generation for raster files.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -27,6 +26,8 @@ __license__ = "GNU GPL, see http://www.gnu.org/licenses/."
 
 import time
 import os
+import sys
+
 
 
 def get_extension_from_filename(filename):
@@ -250,6 +251,10 @@ def get_bands_from_hdf_eos(sds_name):
         bands = []
         for band_id in range(0,1):
             bands.append(band_id+1)
+    else:
+        bands = []
+        for band_id in range(0,1):
+            bands.append(band_id+1)
 
     return bands
 
@@ -276,7 +281,7 @@ def get_product_from_hdf_eos(sds_name, data_units=None):
         product = 'pv71'
     elif sds_name == '250m 16 days EVI':
         product = 'pv72'
+    elif sds_name == 'MODIS_Grid_16DAY_250m_500m_VI:250m 16 days EVI':
+        product = 'pv72'
     
     return product
-
-

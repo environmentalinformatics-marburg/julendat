@@ -159,6 +159,81 @@ class DataFile:
         '''Gets filetype of the station file (binary/ascii).
         
         Returns
-            Filetype (binary/ascii of the logger file.
+            Filetype (binary/ascii of the data file.
         '''
         return self.filetype
+
+    def get_time_range(self):
+        '''Gets time range extracted from data file.
+
+        Returns:
+            Time range of the data file in the following order:
+                start time
+                end time
+                time step in minutes
+        '''
+        return self.start_time, self.end_time, self.time_step
+
+    def set_start_time(self, start_time=None):
+        '''Sets start time extracted from data file.
+
+        Args:
+            Start time of the data file.
+        '''
+        self.start_time = start_time
+
+    def get_start_time(self):
+        '''Gets start time extracted from data file.
+
+        Returns:
+            Start time of the data file.
+        '''
+        return self.start_time
+
+    def set_end_time(self, end_time=None):
+        '''Sets end time  extracted from data file.
+
+        Args:
+            End time of the data file.
+        '''
+        self.end_time = end_time
+
+    def get_end_time(self):
+        '''Gets end time  extracted from data file.
+
+        Returns:
+            End time of the data file.
+        '''
+        return self.end_time
+
+    def set_time_step(self, time_step=None):
+        '''Sets time step extracted from data file.
+
+        Args:
+            Time interval in minutes of the data file.
+        '''
+        self.time_step = time_step
+
+    def get_time_step(self):
+        '''Gets time step extracted from data file.
+
+        Returns:
+            Time step in minutes of the data file.
+        '''
+        return self.time_step    
+
+    def set_quality(self, quality=None):
+        '''Sets quality flag of the data file.
+        
+        Args:
+            quality: Coded quality level of the data file
+        '''
+        self.quality = quality
+    
+    def get_quality(self):
+        '''Gets quality flag of the data file.
+        
+        Returns:
+            Coded quality level of the data file
+        '''
+        return self.quality

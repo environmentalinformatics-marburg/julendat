@@ -28,12 +28,12 @@ from julendat.filetools.stations.StationDataFile import StationDataFile
 
 
 class StationDataFilePath(StationDataFile):   
-    """Instance for generating station data filenames.
+    ''''Instance for generating station data filenames.
     
     The filenames, paths and filepaths (full path and filename) are generated
     according to the filename convention of the Environmental Informatics
     department at Marburg University.
-    """
+    '''
     def __init__(self, filepath=None, io_access="r", serial_number=None, \
                  toplevel_path=None, filename=None, project_id=None, \
                  plot_id=None, station_id=None, start_time=None, \

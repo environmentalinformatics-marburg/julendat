@@ -1,5 +1,4 @@
-'''
-Automatic filepath, filename and path generation.
+'''Handle standard projections and map areas.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -47,7 +46,6 @@ class GeoLocations(object):
 
         self.set_standard_projection(standard_projection)
 
-
     
     
     def set_standard_projection(self, standard_projection):
@@ -62,7 +60,7 @@ class GeoLocations(object):
             self.projection = 'UTM'
             self.zone = 32
             self.hemisphere = 'n'
-            self.width= 2672
+            self.width = 2672
             self.height = 5612
             self.latitude_min = 42.5312448
             self.latitude_max = 55.2714587
@@ -79,6 +77,10 @@ class GeoLocations(object):
             self.convention_idrisi_meta_projection = \
                     RasterDataFilePath.get_convention_idrisi_meta_projection_for_utm(
                                                 self.zone, self.hemisphere)
+            self.epsg = 32632
+            self.xresolution = 250
+            self.yresolution = 250
+
 
         elif self.standard_projection == 'Standard_Germany_00500':
             self.projection_resolution = 500
@@ -102,6 +104,10 @@ class GeoLocations(object):
             self.convention_idrisi_meta_projection = \
                     RasterDataFilePath.get_convention_idrisi_meta_projection_for_utm(
                                                 self.zone, self.hemisphere)
+            self.epsg = 32632
+            self.xresolution = 500
+            self.yresolution = 500
+
 
         elif self.standard_projection == 'Standard_Germany_01000':
             self.projection_resolution = 1000
@@ -125,6 +131,9 @@ class GeoLocations(object):
             self.convention_idrisi_meta_projection = \
                     RasterDataFilePath.get_convention_idrisi_meta_projection_for_utm(
                                                 self.zone, self.hemisphere)
+            self.epsg = 32632
+            self.xresolution = 1000
+            self.yresolution = 1000
 
 
         elif self.standard_projection == 'Standard_French_Guyana_01000':
@@ -150,6 +159,10 @@ class GeoLocations(object):
                     RasterDataFilePath.get_convention_idrisi_meta_projection_for_utm(
                                                 self.zone, self.hemisphere)
 
+            self.epsg = 32703
+            self.xresolution = 1000
+            self.yresolution = 1000
+
 
     def get_projection(self):
         '''Set units of data set.
@@ -172,4 +185,7 @@ class GeoLocations(object):
                self.coord_ymin, \
                self.coord_ymax, \
                self.convention_projection, \
-               self.convention_idrisi_meta_projection
+               self.convention_idrisi_meta_projection, \
+               self.epsg, \
+               self.xresolution, \
+               self.yresolution

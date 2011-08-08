@@ -1,5 +1,5 @@
-'''Handle data files from Driesen & Kern sensor/logger combinations.
-Copyright (C) 2011 Thomas Nauss, Tim Appelhans
+"""Handle Idrisi data files.
+Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,20 +16,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
-'''
+"""
 
-__author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
+__author__ = "Thomas Nauss <nausst@googlemail.com>"
 __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/."
-
-#TODO(tnauss): Adjust to julendat.
 
 import array
 import numpy
 import sys
 import datetime
 from julendat.filetools.raster.RasterDataFile import RasterDataFile
-
 
 __author__ = "Thomas Nauss <thomas.nauss@uni-bayreuth.de>"
 __version__ = "2009-01-03"
@@ -38,24 +35,20 @@ __license__ = "Creative Commons Attribution-Noncommercial-Share Alike 3.0 " + \
 
 
 class IdrisiDataFile(RasterDataFile):
-    '''Provides access to Idrisi raster data files.
-    
-    Constructor:
-    IdrisiGeoFile(filepath, filetype, io_access="r")
-    
-    For Keyword arguments see geofile.GeoFile.__init__().
-    
-    '''
+    """'Instance for handling Idrisi data files.
 
-    def initialize(self):
-        '''Constructor of the Data2Map class.
+    This instance can be used to handle Idrisi files and their data/metadata.
+    """
 
-        The function will initialize the metadata and data variables of the
-        class instance if file access is set to read (i. e. io_access='r').
+    def __init__(self, filepath, filetype, io_access="r"):
+        """Inits StationInventory.
         
-        __init__(self)       
-
-        '''
+        Args (from class RasterDataFile):
+            filepath: Full path and name of the data file.
+            filetype: Type of the data file.
+            io_access: Read/write access to data file ('r' or 'w').
+        """       
+        RasterDataFile.__init__(self, filepath, filetype, io_access="r")
 
         self.set_metadata_file()
         if self.get_io_access() == 'r':
@@ -63,22 +56,20 @@ class IdrisiDataFile(RasterDataFile):
             self.set_variable_name()
             self.set_data()
 
-
     def set_metadata_file(self, metafilepath=None):
-        '''Set full path and name of the metadata file
+        """Sets full path and name of the metadata file
         
-        @param  metafilepath: Full path and name to the metadata file (otherwise
+        Args:
+            metafilepath: Full path and name to the metadata file (otherwise
                               filename is generated from data filename) 
-        
-        '''
+        """
         if metafilepath is None:
-            self.metadata_file = self.get_data_file()[:-4] + '.rdc'
+            self.metadata_file = self.get_filepath()[:-4] + '.rdc'
         else:
             self.metadata_file = metafilepath
         self.set_metadata_filename()
         self.set_metadata_path()
 
-        
     def set_metadata(self, title=None,
                      datatype=None, filetype="IDRISI Raster A.1",
                      ncols=None, nrows=None,
@@ -87,28 +78,27 @@ class IdrisiDataFile(RasterDataFile):
                      min_val=None, max_val=None,
                      min_disp_val=None, max_disp_val=None,
                      data=None):
-        '''Set metadata of an Idrisi raster file.
+        """Sets metadata of an Idrisi raster file.
 
         Set metadata info in a dictionary. If file access is read, the metadata
         will be read from the Idrisi metadata file.
         
-        @param title: Title of the file
-        @param datatype: Datatype of the file
-        @param filetype: Filetype
-        @param ncols: Number of self.ncols
-        @param nrows: Number of self.nrows
-        @param ref_system: Reference system
-        @param ref_units: Reference units
-        @param unit_distance: Unit distance
-        @param min_x: Minimum X coordinate
-        @param max_x: Maximum X coordinate
-        @param min_y: Minimum Y coordinate
-        @param max_y: Maximum Y coordinate
-        @param min_disp_val: Minimum display value
-        @param max_disp_val: Maximum display value
-        
-        '''
-        
+        Args:
+            title: Title of the file
+            datatype: Datatype of the file
+            filetype: Filetype
+            ncols: Number of self.ncols
+            nrows: Number of self.nrows
+            ref_system: Reference system
+            ref_units: Reference units
+            unit_distance: Unit distance
+            min_x: Minimum X coordinate
+            max_x: Maximum X coordinate
+            min_y: Minimum Y coordinate
+            max_y: Maximum Y coordinate
+            min_disp_val: Minimum display value
+            max_disp_val: Maximum display value
+        """
         if self.get_io_access() == 'r':
             self.metadata = self.read_metadata()
         else:
@@ -138,30 +128,26 @@ class IdrisiDataFile(RasterDataFile):
         self.set_variable_shape(variable_shape)
         self.set_array_datatype()
 
-
     def set_variable_name(self, variable_name=None):
-        '''Set variable name.
+        """Sets variable name.
         
-        @param variable_name: Name of the data variable (otherwise variable name
-                              is generated from filename convention)
-        
-        '''
-
+        Args:
+            variable_name: Name of the data variable (otherwise variable name
+                is generated from filename convention)
+        """
         if self.get_io_access() == 'r' and variable_name is None:
-            self.variable_name = self.get_data_filename()[-38:-29]
+            self.variable_name = self.get_filepath()[-38:-29]
         else:
             self.variable_name = variable_name
         self.set_variable_names(variable_name)
 
-
     def set_timestep(self, timestep=False):
-        '''Set variable name.
+        """Sets variable name.
         
-        @param timestep: Time code of the data file (otherwise timecode is 
-                         generated from file name convention)
-        
-        '''
-
+        Args:
+            timestep: Time code of the data file (otherwise timecode is 
+                generated from file name convention)
+        """
         if self.get_io_access() == 'r' and timestep is None:
             self.timestep = datetime.datetime.strptime(
                                 self.get_filename()[0:11] + "00","%Y%m%d%H%M%S")
@@ -170,28 +156,22 @@ class IdrisiDataFile(RasterDataFile):
         self.set_start_timestep(self.get_timestep())
         self.set_end_timestep(self.get_timestep())
 
-
     def open_data_file(self):
-        '''Open the data file for read/write.
-        
-        '''
-        
+        """Opens the data file for read/write.
+        """
         try:
             if self.get_io_access() == 'r':
-                file = open(self.get_data_file(), mode='rb')
+                file = open(self.get_filepath(), mode='rb')
             else:
-                file = open(self.get_data_file(), mode='wb')
+                file = open(self.get_filepath(), mode='wb')
             return file
         except IOError:
             print 'File not found: ' + self.filename
             sys.exit()
 
-
     def open_metadata_file(self):
-        '''Open the metadata file for read/write.
-        
-        '''
-
+        """Opens the metadata file for read/write.
+        """
         try:
             file = open(self.get_metadata_file(),self.get_io_access())
             return file
@@ -199,12 +179,9 @@ class IdrisiDataFile(RasterDataFile):
             print 'File not found: ' + self.filename
             sys.exit()
 
-
     def set_array_datatype(self):
-        '''Set array settings with respect to datatype
-        
-        '''
-        
+        """Sets array settings with respect to datatype
+        """
         if self.get_metadata()['datatype'] == 'byte':
             self.atype = 'B'
             self.ntype = numpy.int8    
@@ -215,24 +192,23 @@ class IdrisiDataFile(RasterDataFile):
             self.atype = 'f'
             self.ntype = numpy.float32
 
-
     def get_array_datatype(self):
-        '''Get array settings with respect to datatype
+        """Gets array settings with respect to datatype
         
-        '''
-        
+        Returns:
+            Array type.
+        """
         return self.atype, self.ntype
 
-
     def set_data(self, datavalues=None):
-        '''Set numpy array containing the data values
+        """Sets numpy array containing the data values
         
         If file access is read and datavlaues is None, the dataset is read
         from the Idrisi file.
         
-        @param datavalues: 2D numpy array containing the data values.
-        
-        '''
+        Args:
+            datavalues: 2D numpy array containing the data values.
+        """
         
         if self.get_io_access() == 'r' and datavalues is None:
             self.data = self.read_rasterdata()
@@ -241,38 +217,36 @@ class IdrisiDataFile(RasterDataFile):
 
 
     def read_metadata(self):
-        '''Read metadata from an Idrisi file and return a dictionary.
+        """Reads metadata from an Idrisi file and return a dictionary.
         
-        @param title: Title of the file
-        @param datatype: Datatype of the file
-        @param filetype: Filetype
-        @param ncols: Number of self.ncols
-        @param nrows: Number of self.nrows
-        @param ref_system: Reference system
-        @param ref_units: Reference units
-        @param unit_distance: Unit distance
-        @param min_x: Minimum X coordinate
-        @param max_x: Maximum X coordinate
-        @param min_y: Minimum Y coordinate
-        @param max_y: Maximum Y coordinate
-        @param min_disp_val: Minimum display value
-        @param max_disp_val: Maximum display value
+        Args:
+            title: Title of the file
+            datatype: Datatype of the file
+            filetype: Filetype
+            ncols: Number of self.ncols
+            nrows: Number of self.nrows
+            ref_system: Reference system
+            ref_units: Reference units
+            unit_distance: Unit distance
+            min_x: Minimum X coordinate
+            max_x: Maximum X coordinate
+            min_y: Minimum Y coordinate
+            max_y: Maximum Y coordinate
+            min_disp_val: Minimum display value
+            max_disp_val: Maximum display value
 
         Thanks to Jan Cermak (http://www.iac.ethz.ch/people/cermakj)
         who counted all the lines.
-        
-        '''
-
-        # Read file line by line and store metadatarmation in metadata
+        """
         metadata = {}
-        metadata['name'] = self.set_data_filename()
+        metadata['name'] = self.set_filename()
         file = self.open_metadata_file()
         for line in file:
             if line.find('file title') != -1:
                 metadata['title'] = line[13:].strip()
             elif line.find('data type') != -1:
                 metadata['datatype'] = line[13:].strip()
-                '''
+                """
                 self.datatype = line[13:].strip()
                 if self.datatype == 'real':
                     metadata['datatype'] = 4
@@ -280,7 +254,7 @@ class IdrisiDataFile(RasterDataFile):
                     metadata['datatype'] = 2
                 elif self.datatype == 'byte':
                     metadata['datatype'] = 1
-                '''
+                """
             elif line.find('file type') != -1:
                 metadata['filetype'] = line[13:].strip()
             elif line.find('columns') != -1:
@@ -308,11 +282,12 @@ class IdrisiDataFile(RasterDataFile):
         file.close()
         return metadata
 
-
     def read_rasterdata(self):    
-        '''Read data from Idrisi raster file and return a 2D array.
-    
-        '''
+        """Reads data from Idrisi raster file and return a 2D array.
+        
+        Returns:
+            Data of Idrisi file.
+        """
         
         atype, ntype = self.get_array_datatype()
         file = self.open_data_file()
@@ -325,14 +300,10 @@ class IdrisiDataFile(RasterDataFile):
 
 
     def write_meta(self):
-        '''Write metadata for an Idrisi raster file.
-
-        '''
-
-        # Set line break option
+        """Writes metadata for an Idrisi raster file.
+        """
         linebreak = '\r\n'
 
-        # Write metadata to Idrisi *.rdc file.
         atype, ntype = self.get_array_datatype()
         file = self.open_metadata_file()
         file.write('file format : IDRISI Raster A.1' + linebreak)
@@ -360,19 +331,16 @@ class IdrisiDataFile(RasterDataFile):
         file.write('flag def`n  : none' + linebreak)
         file.write('legend cats : 0 ' + linebreak)
         file.close()
-
             
     def write_data(self, datavalues=None):
-        '''Write data to an Idrisi raster file (including meta data).
-
-        @param datavalues: 2D numpy array (if None, self.datavalues is used)
-    
-        '''
-
+        """Write data to an Idrisi raster file (including meta data).
+        
+        Args:
+            datavalues: 2D numpy array (if None, self.datavalues is used)
+        """
         if datavalues is None:
             datavalues = self.get_data()
             
-        # Set line break option
         linebreak = '\r\n'
     
         # Write datavalues from 2D array to Idrisi *.rst file.

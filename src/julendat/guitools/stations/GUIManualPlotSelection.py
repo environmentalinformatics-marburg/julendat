@@ -28,6 +28,8 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-04    "
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/."
 
+#TODO(tnauss): Comment
+
 import sys
 
 py2 = py30 = py31 = False

@@ -1,4 +1,4 @@
-'''Handle data files.
+'''Handle conversion of HDF EOS to Idrisi raster files.
 Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
@@ -69,8 +69,39 @@ class HDFEOS2RSTConverter(DataConverter):
         self.set_output_bands()
         self.set_output_product()
         self.set_output_filenames()            
-        self.hdflook()
-        self.clean_up()
+        #self.hdflook()
+        self.reproject()
+        #self.clean_up()
+
+
+    def reproject(self):
+        '''Reproject hdf file using gdalwarp.
+        
+        '''
+
+        for counter in range(0, len(self.get_sds_index())):
+            command = 'gdalwarp -t_srs EPSG:' + \
+                      str(self.get_output_projection().get_projection()[18]) + \
+                      ' -te ' + \
+                      str(self.get_output_projection().get_projection()[12]) + \
+                      ' ' + \
+                      str(self.get_output_projection().get_projection()[14]) + \
+                      ' ' + \
+                      str(self.get_output_projection().get_projection()[13]) + \
+                      ' ' + \
+                      str(self.get_output_projection().get_projection()[15]) + \
+                      ' -tr ' +\
+                      str(self.get_output_projection().get_projection()[19]) + \
+                      ' ' + \
+                      str(self.get_output_projection().get_projection()[20]) + \
+                      " -of RST 'HDF4_EOS:EOS_GRID:" + \
+                      '"' + \
+                      self.get_input_data_filename() + \
+                      '":' + \
+                      self.get_sds_name() + \
+                      "' " + \
+                      self.get_output_filenames()[counter]
+            os.system(command)
     
 
     def hdflook(self):

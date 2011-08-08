@@ -1,5 +1,4 @@
-'''
-GUI to verify if the correct plot ID has been selected automatically.
+'''GUI to verify if the correct plot ID has been selected automatically.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -25,6 +24,8 @@ reports to nausst@googlemail.com
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-04    "
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/."
+
+#TODO(tnauss): Comment
 
 import Tkinter
 
