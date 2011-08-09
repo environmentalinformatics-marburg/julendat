@@ -130,7 +130,7 @@ class DKStationLevel02Level1:
     def main(self):
         """Maps logger files to level 0 filename and directory structure.
         """
-        print self.filenames.get_filename_dictionary()["level_00_ascii-filepath"]
+        #print self.filenames.get_filename_dictionary()["level_00_ascii-filepath"]
         #print self.filenames.get_filename_dictionary()["level_05_ascii-filepath"]
         #for i in range(0,len(self.filenames.get_filename_dictionary()["level_06_ascii-filepath"])):
         #    print self.filenames.get_filename_dictionary()["level_06_ascii-filepath"][i]
@@ -145,7 +145,6 @@ class DKStationLevel02Level1:
     def get_calibartion_coefficients(self):
         filepath=self.filenames.get_filename_dictionary()[\
                                                 "level_00_ascii-filepath"]
-        print filepath
         try:
             level_00_ascii_file = DKStationDataFile(filepath=filepath)
             self.run_flag = level_00_ascii_file.get_file_exists()
@@ -179,6 +178,65 @@ class DKStationLevel02Level1:
             level01_standards.get_level01_column_entries()
         
     def level_05(self):
+            
+            r_source = 'source("D:/kili_data/testing/individual.r")'
+            r_keyword = "individual"
+            r_input_filepath = \
+                'asciipath="' + \
+                self.filenames.get_filename_dictionary()\
+                ["level_00_ascii-filepath"] + '",'
+            r_output_filepath = 'outpath="' + \
+                self.filenames.get_filename_dictionary()\
+                ["level_05_ascii-filepath"] + '",'
+            r_plot_id = 'plotID="' + self.filenames.get_raw_plot_id() + '",'
+            r_station_id = 'loggertype="' + \
+                self.filenames.get_station_id() + '",'
+            r_calibration_coefficients = 'cf=c('  + \
+                self.convert_floatlist2string(self.calib_coefficients) + '),'
+            self.reorder_station_coloumn_entries()
+            r_reorder = 'reorder=c('+ self.convert_floatlist2string(self.reorder) + ')'
+            r_skip = 'skip=' + self.line_skip + ','
+            r_order_out = 'order_out=c(' + self.convert_list2string(self.level01_column_entries) + '))'
+            
+            r_cmd = r_source + "\n" + \
+                r_keyword + "\n" + \
+                r_input_filepath + "\n" + \
+                r_output_filepath + "\n" + \
+                r_plot_id + "\n" + \
+                r_station_id + "\n" + \
+                r_calibration_coefficients + "\n" + \
+                r_reorder + "\n" + \
+                r_skip + "\n" + \
+                r_order_out  + "\n"
+            f = open("individual.r","w")
+            f.write(r_cmd)
+            f.close()
+            
+             
+            
+    def convert_list2string(self,list):
+        output = list[0]
+        for i in range(1, len(list)):
+            output = output + "," + list[i]
+        return output
+
+    def convert_floatlist2string(self,list):
+        output = str(list[0])
+        for i in range(1, len(list)):
+            output = output + "," + str(list[i])
+        return output
+            
+    def reorder_station_coloumn_entries(self):
+            reorder = [1,2]
+            for entry_sce in range (2,len(self.station_column_entries)):
+                for entry_lce in range(0,len(self.level01_column_entries)):
+                    if self.level01_column_entries[entry_lce] ==  \
+                        self.station_column_entries[entry_sce]:
+                            reorder.append(entry_lce+1) 
+            self.reorder = reorder
+                     
+
+            """
             print 'source("D:/kili_data/testing/individual.r")'
             print "individual("
             print 'asciipath="' + self.filenames.get_filename_dictionary()["level_00_ascii-filepath"] + '",'
@@ -197,8 +255,4 @@ class DKStationLevel02Level1:
             print "order_out=c(" , self.level01_column_entries[:] , "))"
             #print self.station_column_entries
             #print self.level01_column_entries
-            
-            
-            
-
-        
+            """
