@@ -25,15 +25,11 @@ __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
 from julendat.filetools.stations.dkstations.DKStationDataFile import DKStationDataFile
-import os
 import shutil
 from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
 from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.metadatatools.stations.StationEntries import StationEntries
 from julendat.metadatatools.stations.Level01Standards import Level01Standards
-from julendat.guitools.stations.GUIAutoPlotSelection import GUIAutoPlotSelection
-from julendat.guitools.stations.GUIManualPlotSelection import GUIManualPlotSelection
-import Tkinter
 
 class DKStationLevel02Level1:   
     """Instance for converting D&K logger level 0 to level 1data.
@@ -130,30 +126,32 @@ class DKStationLevel02Level1:
     def main(self):
         """Maps logger files to level 0 filename and directory structure.
         """
-        #print self.filenames.get_filename_dictionary()["level_00_ascii-filepath"]
-        #print self.filenames.get_filename_dictionary()["level_05_ascii-filepath"]
-        #for i in range(0,len(self.filenames.get_filename_dictionary()["level_06_ascii-filepath"])):
-        #    print self.filenames.get_filename_dictionary()["level_06_ascii-filepath"][i]
-        #print self.filenames.get_filename_dictionary()["level_06_ascii-filepath"]
-        #print self.filenames.get_filename_dictionary()["level_10_ascii-filepath"]
+        #print self.filenames.get_filename_dictionary()["level_000_ascii-filepath"]
+        #print self.filenames.get_filename_dictionary()["level_005_ascii-filepath"]
+        #for i in range(0,len(self.filenames.get_filename_dictionary()["level_006_ascii-filepath"])):
+        #    print self.filenames.get_filename_dictionary()["level_006_ascii-filepath"][i]
+        #print self.filenames.get_filename_dictionary()["level_006_ascii-filepath"]
+        #print self.filenames.get_filename_dictionary()["level_010_ascii-filepath"]
         
-        self.get_calibartion_coefficients()
-        self.get_station_entries()
-        self.get_level01_standards()
+        self.set_calibration_coefficients()
+        self.set_station_entries()
+        self.set_level01_standards()
         self.level_05()
 
-    def get_calibartion_coefficients(self):
+    def set_calibration_coefficients(self):
+        """Sets calibration coefficients for the recorded logger parameters
+        """
         filepath=self.filenames.get_filename_dictionary()[\
-                                                "level_00_ascii-filepath"]
+                                                "level_000_ascii-filepath"]
         try:
-            level_00_ascii_file = DKStationDataFile(filepath=filepath)
-            self.run_flag = level_00_ascii_file.get_file_exists()
+            level_000_ascii_file = DKStationDataFile(filepath=filepath)
+            self.run_flag = level_000_ascii_file.get_file_exists()
         except:
             self.run_flag = False
         
         if self.get_run_flag():
             inventory = StationInventory(filepath=self.station_inventory, \
-                    serial_number = level_00_ascii_file.get_serial_number())
+                    serial_number = level_000_ascii_file.get_serial_number())
             if self.filenames.get_raw_plot_id() != inventory.get_plot_id():
                 self.run_flag = False
             elif self.filenames.get_station_id() != inventory.get_station_id():
@@ -164,95 +162,90 @@ class DKStationLevel02Level1:
             self.calib_coefficients_headers, self.calib_coefficients = \
             inventory.get_calibration_coefficients()
         
-    def get_station_entries(self):
+    def set_station_entries(self):
+        """Sets station logger entries (meaning of coloumns)
+        """
         station_entries = StationEntries(filepath=self.station_entries, \
                                     station_id=self.filenames.get_station_id())
         self.line_skip = station_entries.get_line_skip()
         self.station_column_entries = \
             station_entries.get_station_column_entries()
 
-    def get_level01_standards(self):
+    def set_level01_standards(self):
+        """Sets format standards for level 1 station data files
+        """
         level01_standards = Level01Standards(\
                                     filepath=self.level01_standards)
-        self.level01_column_entries = \
+        self.level10_column_entries = \
             level01_standards.get_level01_column_entries()
         
     def level_05(self):
+        """Compute level 0.5 station data sets
+        """
+        r_source = 'source("D:/kili_data/testing/individual.r")'
+        r_keyword = "individual"
+        r_input_filepath = \
+           'asciipath="' + \
+            self.filenames.get_filename_dictionary()\
+            ["level_000_ascii-filepath"] + '",'
+        r_output_filepath = 'outpath="' + \
+            self.filenames.get_filename_dictionary()\
+            ["level_005_ascii-filepath"] + '",'
+        r_plot_id = 'plotID="' + self.filenames.get_raw_plot_id() + '",'
+        r_station_id = 'loggertype="' + \
+            self.filenames.get_station_id() + '",'
+        r_calibration_coefficients = 'cf=c('  + \
+           self.convert_floatlist2string(self.calib_coefficients) + '),'
+        self.reorder_station_coloumn_entries()
+        r_reorder = 'reorder=c('+ self.convert_floatlist2string(self.reorder) + ')'
+        r_skip = 'skip=' + self.line_skip + ','
+        r_order_out = 'order_out=c(' + self.convert_list2string(self.level10_column_entries) + '))'
             
-            r_source = 'source("D:/kili_data/testing/individual.r")'
-            r_keyword = "individual"
-            r_input_filepath = \
-                'asciipath="' + \
-                self.filenames.get_filename_dictionary()\
-                ["level_00_ascii-filepath"] + '",'
-            r_output_filepath = 'outpath="' + \
-                self.filenames.get_filename_dictionary()\
-                ["level_05_ascii-filepath"] + '",'
-            r_plot_id = 'plotID="' + self.filenames.get_raw_plot_id() + '",'
-            r_station_id = 'loggertype="' + \
-                self.filenames.get_station_id() + '",'
-            r_calibration_coefficients = 'cf=c('  + \
-                self.convert_floatlist2string(self.calib_coefficients) + '),'
-            self.reorder_station_coloumn_entries()
-            r_reorder = 'reorder=c('+ self.convert_floatlist2string(self.reorder) + ')'
-            r_skip = 'skip=' + self.line_skip + ','
-            r_order_out = 'order_out=c(' + self.convert_list2string(self.level01_column_entries) + '))'
+        r_cmd = r_source + "\n" + \
+            r_keyword + "\n" + \
+            r_input_filepath + "\n" + \
+            r_output_filepath + "\n" + \
+            r_plot_id + "\n" + \
+            r_station_id + "\n" + \
+            r_calibration_coefficients + "\n" + \
+            r_reorder + "\n" + \
+            r_skip + "\n" + \
+            r_order_out  + "\n"
+        f = open("individual.r","w")
+        f.write(r_cmd)
+        f.close()
             
-            r_cmd = r_source + "\n" + \
-                r_keyword + "\n" + \
-                r_input_filepath + "\n" + \
-                r_output_filepath + "\n" + \
-                r_plot_id + "\n" + \
-                r_station_id + "\n" + \
-                r_calibration_coefficients + "\n" + \
-                r_reorder + "\n" + \
-                r_skip + "\n" + \
-                r_order_out  + "\n"
-            f = open("individual.r","w")
-            f.write(r_cmd)
-            f.close()
-            
-             
+        print "...finished."
             
     def convert_list2string(self,list):
+        """Convert list of strings to one string.
+        
+        Returns:
+            Combined string extracted from list.
+        """
         output = list[0]
         for i in range(1, len(list)):
             output = output + "," + list[i]
         return output
 
     def convert_floatlist2string(self,list):
+        """Convert list of floats to one string.
+        
+        Returns:
+            Combined string extracted from float value list.
+        """
         output = str(list[0])
         for i in range(1, len(list)):
             output = output + "," + str(list[i])
         return output
             
     def reorder_station_coloumn_entries(self):
-            reorder = [1,2]
-            for entry_sce in range (2,len(self.station_column_entries)):
-                for entry_lce in range(0,len(self.level01_column_entries)):
-                    if self.level01_column_entries[entry_lce] ==  \
-                        self.station_column_entries[entry_sce]:
-                            reorder.append(entry_lce+1) 
-            self.reorder = reorder
-                     
-
-            """
-            print 'source("D:/kili_data/testing/individual.r")'
-            print "individual("
-            print 'asciipath="' + self.filenames.get_filename_dictionary()["level_00_ascii-filepath"] + '",'
-            print 'outpath="' + self.filenames.get_filename_dictionary()["level_05_ascii-filepath"] + '",'
-            print 'plotID="' + self.filenames.get_raw_plot_id() + '",'
-            print 'loggertype="' + self.filenames.get_station_id() + '",'
-            print "cf=c(" , [float(li) for li in self.calib_coefficients] , "),"
-            print "reorder=c(1,2,"
-            for e in range (2,len(self.station_column_entries)):
-                for i in range(0,len(self.level01_column_entries)):
-                    if self.level01_column_entries[i] ==  \
-                        self.station_column_entries[e]:
-                            print i+1 
-            print "),"
-            print  "skip=" + self.line_skip + ","
-            print "order_out=c(" , self.level01_column_entries[:] , "))"
-            #print self.station_column_entries
-            #print self.level01_column_entries
-            """
+        """Reorder station coloumn entries to match the level 1 standards.
+        """
+        reorder = [1,2]
+        for entry_sce in range (2,len(self.station_column_entries)):
+            for entry_lce in range(0,len(self.level10_column_entries)):
+                if self.level10_column_entries[entry_lce] ==  \
+                    self.station_column_entries[entry_sce]:
+                        reorder.append(entry_lce+1) 
+        self.reorder = reorder

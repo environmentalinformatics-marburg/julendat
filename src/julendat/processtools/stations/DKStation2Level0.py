@@ -214,19 +214,19 @@ class DKStation2Level0:
         print self.filenames.get_filename_dictionary()["level_000_bin-filename"]
         print self.filenames.get_filename_dictionary()["level_000_bin-path"]
         print self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
-        print self.filenames.get_filename_dictionary()["level_00_ascii-filename"]
-        print self.filenames.get_filename_dictionary()["level_00_ascii-path"]
-        print self.filenames.get_filename_dictionary()["level_00_ascii-filepath"]
+        print self.filenames.get_filename_dictionary()["level_000_ascii-filename"]
+        print self.filenames.get_filename_dictionary()["level_000_ascii-path"]
+        print self.filenames.get_filename_dictionary()["level_000_ascii-filepath"]
 
         # Check if path for level 0 files exists, otherwise create it        
         if not os.path.isdir(self.filenames.get_filename_dictionary()["level_000_bin-path"]):
             os.makedirs(self.filenames.get_filename_dictionary()["level_000_bin-path"])
-        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_00_ascii-path"]):
-            os.makedirs(self.filenames.get_filename_dictionary()["level_00_ascii-path"])
+        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_000_ascii-path"]):
+            os.makedirs(self.filenames.get_filename_dictionary()["level_000_ascii-path"])
         
         # Set full path and names of ASCII data files and move them
         self.source = self.ascii_logger_file.get_filepath()
-        self.destination =  self.filenames.get_filename_dictionary()["level_00_ascii-filepath"]
+        self.destination =  self.filenames.get_filename_dictionary()["level_000_ascii-filepath"]
         print self.source
         print self.destination
         self.move_data()

@@ -115,35 +115,35 @@ class StationDataFilePath(StationDataFile):
         calibration_level="ra01"
         quality = "0000"
         extension="asc"
-        self.filename_dictionary['level_00_ascii-filename'] = \
+        self.filename_dictionary['level_000_ascii-filename'] = \
             self.build_filename(\
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
-        self.filename_dictionary['level_00_ascii-path'] = \
+        self.filename_dictionary['level_000_ascii-path'] = \
             self.build_path(\
                 calibration_level=calibration_level, \
                 quality=quality)
-        self.filename_dictionary['level_00_ascii-filepath'] = \
-            self.filename_dictionary['level_00_ascii-path'] + \
-            self.filename_dictionary['level_00_ascii-filename']
+        self.filename_dictionary['level_000_ascii-filepath'] = \
+            self.filename_dictionary['level_000_ascii-path'] + \
+            self.filename_dictionary['level_000_ascii-filename']
 
         #Level 0.5 (ascii)
         calibration_level="ca01"
         quality = "0000"
         extension="dat"
-        self.filename_dictionary['level_05_ascii-filename'] = \
+        self.filename_dictionary['level_005_ascii-filename'] = \
             self.build_filename(\
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
-        self.filename_dictionary['level_05_ascii-path'] = \
+        self.filename_dictionary['level_005_ascii-path'] = \
             self.build_path(\
                 calibration_level=calibration_level, \
                 quality=quality)
-        self.filename_dictionary['level_05_ascii-filepath'] = \
-            self.filename_dictionary['level_05_ascii-path'] + \
-            self.filename_dictionary['level_05_ascii-filename']
+        self.filename_dictionary['level_005_ascii-filepath'] = \
+            self.filename_dictionary['level_005_ascii-path'] + \
+            self.filename_dictionary['level_005_ascii-filename']
 
         #Level 0.6 (ascii)
         calibration_level="ca01"
@@ -151,9 +151,9 @@ class StationDataFilePath(StationDataFile):
         extension="dat"
         self.get_month_range()
         
-        self.filename_dictionary['level_06_ascii-filename'], \
-        self.filename_dictionary['level_06_ascii-path'], \
-        self.filename_dictionary['level_06_ascii-filepath'] = \
+        self.filename_dictionary['level_006_ascii-filename'], \
+        self.filename_dictionary['level_006_ascii-path'], \
+        self.filename_dictionary['level_006_ascii-filepath'] = \
             self.get_monthly_filepath(calibration_level=calibration_level, \
                 quality=quality, extension=extension)
 
@@ -161,18 +161,18 @@ class StationDataFilePath(StationDataFile):
         calibration_level="ca01"
         quality = "0010"
         extension="dat"
-        self.filename_dictionary['level_10_ascii-filename'] = \
+        self.filename_dictionary['level_010_ascii-filename'] = \
             self.build_filename(\
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
-        self.filename_dictionary['level_10_ascii-path'] = \
+        self.filename_dictionary['level_010_ascii-path'] = \
             self.build_path(\
                 calibration_level=calibration_level, \
                 quality=quality)
-        self.filename_dictionary['level_10_ascii-filepath'] = \
-            self.filename_dictionary['level_10_ascii-path'] + \
-            self.filename_dictionary['level_10_ascii-filename']
+        self.filename_dictionary['level_010_ascii-filepath'] = \
+            self.filename_dictionary['level_010_ascii-path'] + \
+            self.filename_dictionary['level_010_ascii-filename']
     
     def get_filename_dictionary(self):
         """Gets dictionary for data filenames of different levels.
