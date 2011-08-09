@@ -23,6 +23,9 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
+import calendar
+import datetime
+import time
 import os
 from julendat.filetools.stations.StationDataFile import StationDataFile
 
@@ -68,24 +71,17 @@ class StationDataFilePath(StationDataFile):
         """       
         if filepath == None:
             filepath = filename
-            if filepath != None:
-                StationDataFile.__init__(self, filepath=None, io_access="r")
-                self.check_standard()
-                if self.standard_name:
-                    self.disassemble_filename
-                
-        if filepath == None:
-            self.build_project_id(project_id)
-            self.build_plot_id(plot_id)
-            self.build_station_id(station_id)
-            self.build_start_time(start_time)
-            self.build_end_time(end_time)
-            self.build_calibration_level(calibration_level)
-            self.build_aggregation(aggregation)
-            self.build_quality(quality)
-            self.set_extension(extension)
-            self.build_postexflag(postexflag)
-            self.build_initial_filename()
+        
+        if filepath != None:
+            StationDataFile.__init__(self, filepath=filepath, io_access="r")
+            self.check_standard()
+            if self.standard_name:
+                self.disassemble_filename()
+        else:
+            self.build_initial_filename(project_id, plot_id, station_id, \
+                                    start_time, end_time, calibration_level, \
+                                    aggregation, quality, extension, postexflag)
+            self.check_standard()
         
         self.set_toplevel_path(toplevel_path)
         
@@ -98,6 +94,7 @@ class StationDataFilePath(StationDataFile):
                
         self.filename_dictionary = {}
 
+        #Level 0 (binary)
         calibration_level="rb01"
         quality = "0000"
         extension="bin"
@@ -114,22 +111,69 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_000_bin-path'] + \
             self.filename_dictionary['level_000_bin-filename']
 
+        #Level 0 (ascii)
         calibration_level="ra01"
         quality = "0000"
         extension="asc"
-        self.filename_dictionary['level_001_ascii-filename'] = \
+        self.filename_dictionary['level_00_ascii-filename'] = \
             self.build_filename(\
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
-        self.filename_dictionary['level_001_ascii-path'] = \
+        self.filename_dictionary['level_00_ascii-path'] = \
             self.build_path(\
                 calibration_level=calibration_level, \
                 quality=quality)
-        self.filename_dictionary['level_001_ascii-filepath'] = \
-            self.filename_dictionary['level_001_ascii-path'] + \
-            self.filename_dictionary['level_001_ascii-filename']
+        self.filename_dictionary['level_00_ascii-filepath'] = \
+            self.filename_dictionary['level_00_ascii-path'] + \
+            self.filename_dictionary['level_00_ascii-filename']
 
+        #Level 0.5 (ascii)
+        calibration_level="ca01"
+        quality = "0000"
+        extension="dat"
+        self.filename_dictionary['level_05_ascii-filename'] = \
+            self.build_filename(\
+                calibration_level=calibration_level, \
+                quality=quality, \
+                extension=extension)
+        self.filename_dictionary['level_05_ascii-path'] = \
+            self.build_path(\
+                calibration_level=calibration_level, \
+                quality=quality)
+        self.filename_dictionary['level_05_ascii-filepath'] = \
+            self.filename_dictionary['level_05_ascii-path'] + \
+            self.filename_dictionary['level_05_ascii-filename']
+
+        #Level 0.6 (ascii)
+        calibration_level="ca01"
+        quality = "0000"
+        extension="dat"
+        self.get_month_range()
+        
+        self.filename_dictionary['level_06_ascii-filename'], \
+        self.filename_dictionary['level_06_ascii-path'], \
+        self.filename_dictionary['level_06_ascii-filepath'] = \
+            self.get_monthly_filepath(calibration_level=calibration_level, \
+                quality=quality, extension=extension)
+
+        #Level 1.0 (filled)
+        calibration_level="ca01"
+        quality = "0010"
+        extension="dat"
+        self.filename_dictionary['level_10_ascii-filename'] = \
+            self.build_filename(\
+                calibration_level=calibration_level, \
+                quality=quality, \
+                extension=extension)
+        self.filename_dictionary['level_10_ascii-path'] = \
+            self.build_path(\
+                calibration_level=calibration_level, \
+                quality=quality)
+        self.filename_dictionary['level_10_ascii-filepath'] = \
+            self.filename_dictionary['level_10_ascii-path'] + \
+            self.filename_dictionary['level_10_ascii-filename']
+    
     def get_filename_dictionary(self):
         """Gets dictionary for data filenames of different levels.
         
@@ -142,6 +186,81 @@ class StationDataFilePath(StationDataFile):
         """
         return self.filename_dictionary
 
+    def get_month_range(self):
+        """Gets month range of t file.
+        """
+        start_time = datetime.datetime.strptime(\
+                            self.get_start_time(),"%Y%m%d%H%M")
+        end_time = datetime.datetime.strptime(\
+                            self.get_end_time(),"%Y%m%d%H%M")
+        month_number = end_time.month-start_time.month
+        start_year = str(start_time.year)
+        start_month = str(start_time.month)
+        start_month = start_month.zfill(2)
+        start_time = time.strftime("%Y%m%d%H%M",
+                             time.strptime(start_year+start_month+"010000",\
+                             "%Y%m%d%H%M"))
+        last_time_of_month = "23" + str(60 - int(self.get_aggregation()[3:5]))
+        self.set_start_time(start_time)
+        self.month_number = month_number
+        self.last_time_of_month = last_time_of_month
+
+    def get_monthly_filepath(self, project_id=None, plot_id=None, \
+                 station_id=None, start_time=None, end_time=None, \
+                 calibration_level=None, aggregation=None, \
+                 quality=None, extension=None, postexflag=None):
+        """Builds monthly filepathes, filenames and path.
+
+        Args:
+            project_id: Coded ID of the project
+            plot_id: Coded ID of the station plot
+            station_id: Type of the station (sensor/logger combination)
+            start_time: Recording time of the first data set in the file
+            end_time: Recording time of the last data set in the file
+            calibration_level: Coded calibration procedures applied to the data
+            aggregation: Coded time aggregation of the data set
+            quality: Coded quality level of the data file
+            extension: Filename extension (3 characters)
+            postexflag: Additional information sticked after the extension
+        
+        Returns:
+            filename: Array encomassing all filenames
+            path: Array encomassing all paths
+            filepath: Array encomassing all filepaths
+        """
+        filename = []
+        path = []
+        filepath = []
+        for i in range(0,self.month_number+1):
+            act_time = datetime.datetime.strptime(\
+                                self.get_start_time(),"%Y%m%d%H%M")
+            act_month = str((act_time.month+i)%12)
+            act_year = str(act_time.year+(act_time.month+i)/12)
+            start_time = time.strftime("%Y%m%d%H%M",
+                                 time.strptime(act_year + act_month + "010000",\
+                                 "%Y%m%d%H%M"))
+            end_time = time.strftime("%Y%m%d%H%M",
+                           time.strptime(act_year + act_month + \
+                           str(calendar.monthrange(int(act_year), \
+                                                   int(act_month))[1]) + \
+                            self.last_time_of_month,"%Y%m%d%H%M"))
+            filename.append( \
+                self.build_filename(\
+                    start_time=start_time, \
+                    end_time=end_time, \
+                    calibration_level=calibration_level, \
+                    quality=quality, \
+                    extension=extension))
+            path.append( \
+                self.build_path(\
+                    calibration_level=calibration_level, \
+                    quality=quality))
+            filepath.append( \
+                path[i] + \
+                filename[i])
+
+        return filename, path, filepath
+        
     def build_filename(self, project_id=None, plot_id=None, \
                  station_id=None, start_time=None, end_time=None, \
                  calibration_level=None, aggregation=None, \
@@ -183,7 +302,7 @@ class StationDataFilePath(StationDataFile):
             extension = self.get_extension()
         if postexflag == None:
             postexflag = self.get_postexflag()
-        
+
         filename = project_id + "_" + \
                    plot_id + "_" + \
                    station_id + "_" + \
@@ -238,7 +357,6 @@ class StationDataFilePath(StationDataFile):
     def check_standard(self):
         """Checks if file is named according to the naming convention.
         """
-        print "HALI", self.filename
         filename = self.get_filename()
         if filename[2] == "_" and filename[11] == "_" \
             and filename[15] == "_" and filename[28]  == "_" \
@@ -249,12 +367,34 @@ class StationDataFilePath(StationDataFile):
         else:
             self.standard_name = False
     
-    def build_initial_filename(self):
+    def build_initial_filename(self,project_id, plot_id, station_id, \
+                               start_time, end_time, calibration_level, \
+                               aggregation, quality, extension, postexflag):
         """Sets filename of the data file.
 
         Args:
-            filename: Filename
+            project_id: Coded ID of the project
+            plot_id: Coded ID of the station plot
+            station_id: Type of the station (sensor/logger combination)
+            start_time: Recording time of the first data set in the file
+            end_time: Recording time of the last data set in the file
+            calibration_level: Coded calibration procedures applied to the data
+            aggregation: Coded time aggregation of the data set
+            quality: Coded quality level of the data file
+            extension: Filename extension (3 characters)
+            postexflag: Additional information sticked after the extension
         """
+        self.build_project_id(project_id)
+        self.build_plot_id(plot_id)
+        self.build_station_id(station_id)
+        self.build_start_time(start_time)
+        self.build_end_time(end_time)
+        self.build_calibration_level(calibration_level)
+        self.build_aggregation(aggregation)
+        self.build_quality(quality)
+        self.set_extension(extension)
+        self.build_postexflag(postexflag)
+
         filename = self.get_project_id() + "_" + \
                         self.get_plot_id() + "_" + \
                         self.get_station_id() + "_" + \
@@ -408,4 +548,6 @@ class StationDataFilePath(StationDataFile):
         self.set_quality(filename[53:57])
         self.set_extension(filename[58:61])
         self.set_postexflag(filename[62:])
+        if len(self.get_postexflag()) == 0:
+            self.set_postexflag(postexflag=None)
         

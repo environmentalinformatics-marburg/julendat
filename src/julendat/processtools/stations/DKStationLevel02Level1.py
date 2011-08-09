@@ -29,6 +29,8 @@ import os
 import shutil
 from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
 from julendat.metadatatools.stations.StationInventory import StationInventory
+from julendat.metadatatools.stations.StationEntries import StationEntries
+from julendat.metadatatools.stations.Level01Standards import Level01Standards
 from julendat.guitools.stations.GUIAutoPlotSelection import GUIAutoPlotSelection
 from julendat.guitools.stations.GUIManualPlotSelection import GUIManualPlotSelection
 import Tkinter
@@ -76,9 +78,13 @@ class DKStationLevel02Level1:
         self.config_file = config_file
         config = ConfigParser.ConfigParser()
         config.read(self.config_file)
+        self.station_entries = config.get('logger', 'station_entries')
+
+        
         self.tl_data_path = config.get('repository', 'toplevel_repository_path')
         self.station_inventory = config.get('inventory','station_inventory')
         self.project_id = config.get('project','project_id')
+        self.level01_standards = config.get('general','level01_standards')
 
     def init_filenames(self, filepath):
         """Initializes D&K station data file.
@@ -88,9 +94,11 @@ class DKStationLevel02Level1:
         """
         try:
             self.filenames = StationDataFilePath(filepath=filepath, \
-                                tl_data_path = self.tl_data_path)
+                                toplevel_path=self.tl_data_path)
             self.run_flag = True
         except:
+            self.filenames = StationDataFilePath(filepath=filepath, \
+                                toplevel_path=self.tl_data_path)
             self.run_flag = False
 
     def get_run_flag(self):
@@ -122,31 +130,75 @@ class DKStationLevel02Level1:
     def main(self):
         """Maps logger files to level 0 filename and directory structure.
         """
-        print self.filenames.get_filename_dictionary()["level_000_bin-filename"]
-        print self.filenames.get_filename_dictionary()["level_000_bin-path"]
-        print self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
-        print self.filenames.get_filename_dictionary()["level_001_ascii-filename"]
-        print self.filenames.get_filename_dictionary()["level_001_ascii-path"]
-        print self.filenames.get_filename_dictionary()["level_001_ascii-filepath"]
+        print self.filenames.get_filename_dictionary()["level_00_ascii-filepath"]
+        #print self.filenames.get_filename_dictionary()["level_05_ascii-filepath"]
+        #for i in range(0,len(self.filenames.get_filename_dictionary()["level_06_ascii-filepath"])):
+        #    print self.filenames.get_filename_dictionary()["level_06_ascii-filepath"][i]
+        #print self.filenames.get_filename_dictionary()["level_06_ascii-filepath"]
+        #print self.filenames.get_filename_dictionary()["level_10_ascii-filepath"]
+        
+        self.get_calibartion_coefficients()
+        self.get_station_entries()
+        self.get_level01_standards()
+        self.level_05()
 
-        # Check if path for level 0 files exists, otherwise create it        
-        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_000_bin-path"]):
-            os.makedirs(self.filenames.get_filename_dictionary()["level_000_bin-path"])
-        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_001_ascii-path"]):
-            os.makedirs(self.filenames.get_filename_dictionary()["level_001_ascii-path"])
+    def get_calibartion_coefficients(self):
+        filepath=self.filenames.get_filename_dictionary()[\
+                                                "level_00_ascii-filepath"]
+        print filepath
+        try:
+            level_00_ascii_file = DKStationDataFile(filepath=filepath)
+            self.run_flag = level_00_ascii_file.get_file_exists()
+        except:
+            self.run_flag = False
         
-        # Set full path and names of ASCII data files and move them
-        self.source = self.level0_file.get_filepath()
-        self.destination =  self.filenames.get_filename_dictionary()["level_001_ascii-filepath"]
-        print self.source
-        print self.destination
-        self.move_data()
+        if self.get_run_flag():
+            inventory = StationInventory(filepath=self.station_inventory, \
+                    serial_number = level_00_ascii_file.get_serial_number())
+            if self.filenames.get_raw_plot_id() != inventory.get_plot_id():
+                self.run_flag = False
+            elif self.filenames.get_station_id() != inventory.get_station_id():
+                print self.filenames.get_station_id()
+                print inventory.get_station_id()
+                self.run_flag = False
+        if self.get_run_flag():
+            self.calib_coefficients_headers, self.calib_coefficients = \
+            inventory.get_calibration_coefficients()
         
-        if os.path.isfile(self.binary_logger_file.get_filepath()) and \
-                          self.level0_file.get_file_exists():
-            # Move binary data
-            self.source = self.binary_logger_file.get_filepath()
-            self.destination = self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
-            print self.source
-            print self.destination
-            self.move_data()
+    def get_station_entries(self):
+        station_entries = StationEntries(filepath=self.station_entries, \
+                                    station_id=self.filenames.get_station_id())
+        self.line_skip = station_entries.get_line_skip()
+        self.station_column_entries = \
+            station_entries.get_station_column_entries()
+
+    def get_level01_standards(self):
+        level01_standards = Level01Standards(\
+                                    filepath=self.level01_standards)
+        self.level01_column_entries = \
+            level01_standards.get_level01_column_entries()
+        
+    def level_05(self):
+            print 'source("D:/kili_data/testing/individual.r")'
+            print "individual("
+            print 'asciipath="' + self.filenames.get_filename_dictionary()["level_00_ascii-filepath"] + '",'
+            print 'outpath="' + self.filenames.get_filename_dictionary()["level_05_ascii-filepath"] + '",'
+            print 'plotID="' + self.filenames.get_raw_plot_id() + '",'
+            print 'loggertype="' + self.filenames.get_station_id() + '",'
+            print "cf=c(" , [float(li) for li in self.calib_coefficients] , "),"
+            print "reorder=c(1,2,"
+            for e in range (2,len(self.station_column_entries)):
+                for i in range(0,len(self.level01_column_entries)):
+                    if self.level01_column_entries[i] ==  \
+                        self.station_column_entries[e]:
+                            print i+1 
+            print "),"
+            print  "skip=" + self.line_skip + ","
+            print "order_out=c(" , self.level01_column_entries[:] , "))"
+            #print self.station_column_entries
+            #print self.level01_column_entries
+            
+            
+            
+
+        

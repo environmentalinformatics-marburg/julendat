@@ -1,4 +1,4 @@
-"""Handle station inventory information.
+"""Handle station entries information.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -27,14 +27,14 @@ from julendat.filetools.stations.StationInventoryFile import \
     StationInventoryFile
 
 
-class StationInventory(StationInventoryFile):   
+class StationEntries(StationInventoryFile):   
     """Instance for handling station inventory information.
     
     This instance handles station inventory information based on the serial
     number of the station.
     """
-    def __init__(self, filepath, io_access="r", serial_number=None):
-        """Inits StationInventory.
+    def __init__(self, filepath, io_access="r", station_id=None):
+        """Inits StationEntries.
         
         Args (from class DataFile):
             filepath: Full path and name of the data file
@@ -44,52 +44,42 @@ class StationInventory(StationInventoryFile):
             serial_number: Serial number of the station
         """       
         StationInventoryFile.__init__(self, filepath, io_access="r")
-        self.set_serial_number(serial_number)
-        self.set_station_inventory_from_serial_number()
+        self.set_station_id(station_id)
+        self.set_station_entries_from_station_id()
         
-    def set_station_inventory_from_serial_number(self):
-        """Sets station inventory information from serial number
+    def set_station_entries_from_station_id(self):
+        """Sets station entries information from station id
         """
         #TODO(tnauss): Implement error handling by end of 2011
         foundID = False
         error = False
-        inventory_data = open(self.get_filepath(),'r')
-        counter = 0
-        for line in inventory_data:
-            counter = counter + 1
-            if counter == 1:
-                act_line = line.rstrip()
-                calib_coefficents_headers = act_line.rsplit(',')[8:]
-            if string.strip(line.rsplit(',')[7]) == self.get_serial_number():
+        entries_data = open(self.get_filepath(),'r')
+        for line in entries_data:
+            if string.strip(line.rsplit(',')[0])[1:4] == self.get_station_id():
                 if foundID == True:
                     print "The same serial number has been found at least twice!"
                     error = True
                 else:
                     act_line = line.rstrip()
-                    plot_id = string.strip(line.rsplit(',')[5][1:5])
-                    logger_id = string.strip(line.rsplit(',')[6][1:4])
-                    calib_coefficents = act_line.rsplit(',')[8:]
+                    line_skip = string.strip(line.rsplit(',')[1])
+                    station_column_entries = calib_coefficents = act_line.rsplit(',')[2:]
                     foundID = True
-        inventory_data.close()
-        self.plot_id = plot_id
-        self.station_id = logger_id
-        self.calib_coefficents_headers =calib_coefficents_headers 
-        self.calib_coefficents =calib_coefficents 
+        entries_data.close()
+        self.line_skip = line_skip
+        self.station_column_entries = station_column_entries
 
-    def set_plot_id_from_serial_number(self):
-        """Sets plot ID from serial number
-        """
-        self.set_station_inventory_from_serial_number()
-
-    def set_calibration_coefficients(self):
-        """Sets calibration coefficients from serial number
-        """
-        self.set_station_inventory_from_serial_number()
-        
-    def get_calibration_coefficients(self):
-        """Gets calibration coefficients from serial number
+    def get_line_skip(self):
+        """Gets number of lines in the station file before the dataset  starts
         
         Returns:
-            Calibration coefficients and header names
+            Number of lines in the station logger file before the data starts
         """
-        return self.calib_coefficents_headers, self.calib_coefficents
+        return self.line_skip
+
+    def get_station_column_entries(self):
+        """Gets column entries of the station looger file
+        
+        Returns:
+            Column entries of the station looger file
+        """
+        return self.station_column_entries

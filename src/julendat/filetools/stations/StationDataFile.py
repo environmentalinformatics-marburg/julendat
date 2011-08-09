@@ -97,7 +97,14 @@ class StationDataFile(DataFile):
         """
         return self.plot_id
 
-
+    def get_raw_plot_id(self):
+        """Gets raw plot ID of the data file (i. e. without leading zeros).
+        
+        Returns:
+            Coded ID of the station plot without leading zeros
+        """
+        
+        return self.plot_id.rpartition("0")[2]
 
     def set_calibration_level(self, calibration_level=None):
         """Sets calibration level of the data file.
