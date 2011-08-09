@@ -1,4 +1,4 @@
-"""Move Driesen and Kern logger data to level 0 folder structure (DFG-Kilimanjaro).
+"""Process D&K logger data from level 0 to level 1 (DFG-Kilimanjaro).
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -22,22 +22,22 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
-from julendat.processtools.stations.DKStation2Level0 import DKStation2Level0
+from julendat.processtools.stations.DKStationLevel02Level1 import \
+    DKStationLevel02Level1
 
 def main():
     """Main program function
-    Move data from initial logger import to level 0 folder structure.
+    Process data from level 0 to level 1.
     """
     print
-    print 'Module: ki_dkstation2level0_gui'
+    print 'Module: ki_dkstationlevel02level1'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
     print   
     
-    config_file = "ki_stations.cnf"
-    DKStation2Level0(config_file=config_file)
-    
+    filepath = '/media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201106010000_201107071350_ra01_nai05_0000.asc' 
+    DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
         
 if __name__ == '__main__':
     main()
