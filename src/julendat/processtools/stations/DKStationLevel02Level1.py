@@ -83,6 +83,7 @@ class DKStationLevel02Level1:
         self.station_inventory = config.get('inventory','station_inventory')
         self.project_id = config.get('project','project_id')
         self.level01_standards = config.get('general','level01_standards')
+        self.r_filepath = config.get('general','r_filepath')
 
     def init_filenames(self, filepath):
         """Initializes D&K station data file.
@@ -95,8 +96,6 @@ class DKStationLevel02Level1:
                                 toplevel_path=self.tl_data_path)
             self.run_flag = True
         except:
-            self.filenames = StationDataFilePath(filepath=filepath, \
-                                toplevel_path=self.tl_data_path)
             self.run_flag = False
 
     def get_run_flag(self):
@@ -186,7 +185,8 @@ class DKStationLevel02Level1:
     def level_005(self):
         """Compute level 0.5 station data sets
         """
-        r_source = 'source("D:/kili_data/testing/compute_level_005_file.r")'
+        r_source = 'source("' + self.r_filepath + os.sep + \
+            'init_level_005_file.r")'
         r_keyword = "compute_level_005_file"
         r_input_filepath = \
            'asciipath="' + \
@@ -203,6 +203,8 @@ class DKStationLevel02Level1:
         self.reorder_station_coloumn_entries()
         r_reorder = 'reorder=c('+ self.convert_floatlist2string(self.reorder) + ')'
         r_skip = 'skip=' + self.line_skip + ','
+        r_quality = 'quality=' + self.filenames.get_quality() + ','
+        r_adjust_time = 'adjust_time=' + str(2*60*60) + ','
         r_order_out = 'order_out=c(' + \
             self.convert_list2string(self.level10_column_entries) + ')'
             
@@ -215,11 +217,16 @@ class DKStationLevel02Level1:
             r_calibration_coefficients + "\n" + \
             r_reorder + "\n" + \
             r_skip + "\n" + \
+            r_quality + "\n" + \
+            r_adjust_time + "\n" + \
             r_order_out  + ") \n"
-        f = open("compute_level_005_file.r","w")
+        r_script = "compute_level_005_file.r" 
+        f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
+        r_cmd = "R --no-save < " + r_script
         print r_cmd
+        #os.system(r_cmd)
             
     def level_010(self):
         """Compute level 1.0 station data sets
@@ -246,7 +253,8 @@ class DKStationLevel02Level1:
     def init_level_010_file(self, filepath):
         """Init level 1.0 file
         """
-        r_source = 'source("D:/kili_data/testing/init_level_010_file.r")'
+        r_source = 'source("' + self.r_filepath + os.sep + \
+            'init_level_010_file.r")'
         r_keyword = "init_level_010_file"
         r_output_filepath = 'outpath="' + filepath + '",'
         r_start_time = 'start_time=' + os.path.split(filepath)[1][16:28] + ','
@@ -259,26 +267,35 @@ class DKStationLevel02Level1:
             r_start_time + "\n" + \
             r_end_time + "\n" + \
             r_time_step + ")\n"
-        f = open("init_level_010_file.r","w")
+        r_script = "init_level_010_file.r" 
+        f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
+        r_cmd = "R --no-save < " + r_script
         print r_cmd
+        #os.system(r_cmd)
 
     def compute_level_010_file(self,station_file,level_010_file):
         """Fill level 1.0 file
         """
-        r_source = 'source("D:/kili_data/testing/compute_level_010_file.r")'
+        r_source = 'source("' + self.r_filepath + os.sep + \
+            'compute_level_010_file.r")'
         r_keyword = "compute_level_010_file"
         r_station_file = 'station_file="' + station_file + '",'
         r_level_010_file = 'level_010_file="' + level_010_file + '"'
+        r_quality = 'quality=' + self.filenames.get_quality() + ','
         r_cmd = r_source + "\n" + \
             r_keyword + " (\n" + \
             r_station_file + "\n" + \
-            r_level_010_file + ")\n"
-        f = open("compute_level_010_file.r","w")
+            r_level_010_file + "\n" + \
+            r_quality + ")\n"
+        r_script = "compute_level_010_file.r" 
+        f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
+        r_cmd = "R --no-save < " + r_script
         print r_cmd
+        #os.system(r_cmd)
            
     def convert_list2string(self,list):
         """Convert list of strings to one string.

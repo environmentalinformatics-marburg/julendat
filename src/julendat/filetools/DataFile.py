@@ -206,6 +206,22 @@ class DataFile:
         """
         return self.end_time
 
+    def set_time_zone(self, time_zone=None):
+        """Sets time zone extracted from data file.
+
+        Args:
+            Time zone of the data file.
+        """
+        self.time_zone = time_zone
+
+    def get_time_zone(self):
+        """Gets time zone extracted from data file.
+
+        Returns:
+            Time zone of the data file.
+        """
+        return self.time_zone
+
     def set_time_step(self, time_step=None):
         """Sets time step extracted from data file.
 

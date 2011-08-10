@@ -40,8 +40,9 @@ class StationDataFilePath(StationDataFile):
     def __init__(self, filepath=None, io_access="r", serial_number=None, \
                  toplevel_path=None, filename=None, project_id=None, \
                  plot_id=None, station_id=None, start_time=None, \
-                 end_time=None, calibration_level=None, aggregation=None, \
-                 quality=None, extension=None, postexflag=None):
+                 end_time=None, time_zone=None, calibration_level=None, \
+                 aggregation=None, quality=None, extension=None, \
+                 postexflag=None):
         """Inits StationDataFilename.
         
         The instiance can be initialized with 
@@ -63,6 +64,7 @@ class StationDataFilePath(StationDataFile):
             station_id: Type of the station (sensor/logger combination)
             start_time: Recording time of the first data set in the file
             end_time: Recording time of the last data set in the file
+            time_zone: Time zone of the time values
             calibration_level: Coded calibration procedures applied to the data
             aggregation: Coded time aggregation of the data set
             quality: Coded quality level of the data file
@@ -71,7 +73,6 @@ class StationDataFilePath(StationDataFile):
         """       
         if filepath == None:
             filepath = filename
-        
         if filepath != None:
             StationDataFile.__init__(self, filepath=filepath, io_access="r")
             self.check_standard()
@@ -79,8 +80,9 @@ class StationDataFilePath(StationDataFile):
                 self.disassemble_filename()
         else:
             self.build_initial_filename(project_id, plot_id, station_id, \
-                                    start_time, end_time, calibration_level, \
-                                    aggregation, quality, extension, postexflag)
+                                    start_time, end_time, time_zone, \
+                                    calibration_level, aggregation, quality, \
+                                    extension, postexflag)
             self.check_standard()
         
         self.set_toplevel_path(toplevel_path)
@@ -95,11 +97,13 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary = {}
 
         #Level 0 (binary)
+        time_zone = "mez"
         calibration_level="rb01"
         quality = "0000"
         extension="bin"
         self.filename_dictionary['level_000_bin-filename'] = \
             self.build_filename(\
+                time_zone = time_zone, \
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
@@ -112,11 +116,13 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_000_bin-filename']
 
         #Level 0 (ascii)
+        time_zone = "mez"
         calibration_level="ra01"
         quality = "0000"
         extension="asc"
         self.filename_dictionary['level_000_ascii-filename'] = \
             self.build_filename(\
+                time_zone = time_zone, \
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
@@ -129,11 +135,13 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_000_ascii-filename']
 
         #Level 0.5 (calibrated data values, standard format)
+        time_zone = "eat"
         calibration_level="ca01"
-        quality = "0000"
+        quality = "0005"
         extension="dat"
         self.filename_dictionary['level_005_ascii-filename'] = \
             self.build_filename(\
+                time_zone = time_zone, \
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
@@ -146,6 +154,7 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_005_ascii-filename']
 
         #Level 1.0 (monthly aggregated, time-filled files)
+        time_zone = "eat"
         calibration_level="ca01"
         quality = "0010"
         extension="dat"
@@ -154,7 +163,8 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary['level_010_ascii-filename'], \
         self.filename_dictionary['level_010_ascii-path'], \
         self.filename_dictionary['level_010_ascii-filepath'] = \
-            self.get_monthly_filepath(calibration_level=calibration_level, \
+            self.get_monthly_filepath(time_zone=time_zone, \
+                calibration_level=calibration_level, \
                 quality=quality, extension=extension)
     
     def get_filename_dictionary(self):
@@ -190,7 +200,7 @@ class StationDataFilePath(StationDataFile):
 
     def get_monthly_filepath(self, project_id=None, plot_id=None, \
                  station_id=None, start_time=None, end_time=None, \
-                 calibration_level=None, aggregation=None, \
+                 time_zone=None, calibration_level=None, aggregation=None, \
                  quality=None, extension=None, postexflag=None):
         """Builds monthly filepathes, filenames and path.
 
@@ -200,6 +210,7 @@ class StationDataFilePath(StationDataFile):
             station_id: Type of the station (sensor/logger combination)
             start_time: Recording time of the first data set in the file
             end_time: Recording time of the last data set in the file
+            time_zone: Time zone of the time values
             calibration_level: Coded calibration procedures applied to the data
             aggregation: Coded time aggregation of the data set
             quality: Coded quality level of the data file
@@ -222,6 +233,7 @@ class StationDataFilePath(StationDataFile):
             start_time = time.strftime("%Y%m%d%H%M",
                                  time.strptime(act_year + act_month + "010000",\
                                  "%Y%m%d%H%M"))
+            print act_year, act_month, self.last_time_of_month
             end_time = time.strftime("%Y%m%d%H%M",
                            time.strptime(act_year + act_month + \
                            str(calendar.monthrange(int(act_year), \
@@ -231,6 +243,7 @@ class StationDataFilePath(StationDataFile):
                 self.build_filename(\
                     start_time=start_time, \
                     end_time=end_time, \
+                    time_zone=time_zone, \
                     calibration_level=calibration_level, \
                     quality=quality, \
                     extension=extension))
@@ -246,7 +259,7 @@ class StationDataFilePath(StationDataFile):
         
     def build_filename(self, project_id=None, plot_id=None, \
                  station_id=None, start_time=None, end_time=None, \
-                 calibration_level=None, aggregation=None, \
+                 time_zone=None, calibration_level=None, aggregation=None, \
                  quality=None, extension=None, postexflag=None):
         """Builds filename.
 
@@ -256,6 +269,7 @@ class StationDataFilePath(StationDataFile):
             station_id: Type of the station (sensor/logger combination)
             start_time: Recording time of the first data set in the file
             end_time: Recording time of the last data set in the file
+            time_zone: Time zone of the time values
             calibration_level: Coded calibration procedures applied to the data
             aggregation: Coded time aggregation of the data set
             quality: Coded quality level of the data file
@@ -275,6 +289,8 @@ class StationDataFilePath(StationDataFile):
             start_time = self.get_start_time()
         if end_time == None:
             end_time = self.get_end_time()
+        if time_zone == None:
+            time_zone = self.get_time_zone()
         if calibration_level == None:
             calibration_level = self.get_calibration_level()
         if aggregation == None:
@@ -291,6 +307,7 @@ class StationDataFilePath(StationDataFile):
                    station_id + "_" + \
                    start_time + "_" + \
                    end_time + "_" + \
+                   time_zone + "_" + \
                    calibration_level + "_" + \
                    aggregation + "_" + \
                    quality + "." + \
@@ -343,16 +360,17 @@ class StationDataFilePath(StationDataFile):
         filename = self.get_filename()
         if filename[2] == "_" and filename[11] == "_" \
             and filename[15] == "_" and filename[28]  == "_" \
-            and filename[41] == "_" and filename[46] == "_" \
-            and filename[52] == "_":
+            and filename[41] == "_" and filename[45] == "_" \
+            and filename[50] == "_" and filename[56] == "_":
             self.standard_name  = True
             
         else:
             self.standard_name = False
     
     def build_initial_filename(self,project_id, plot_id, station_id, \
-                               start_time, end_time, calibration_level, \
-                               aggregation, quality, extension, postexflag):
+                               start_time, end_time, time_zone, \
+                               calibration_level, aggregation, quality, \
+                               extension, postexflag):
         """Sets filename of the data file.
 
         Args:
@@ -361,6 +379,7 @@ class StationDataFilePath(StationDataFile):
             station_id: Type of the station (sensor/logger combination)
             start_time: Recording time of the first data set in the file
             end_time: Recording time of the last data set in the file
+            time_zone: Time zone of the time values
             calibration_level: Coded calibration procedures applied to the data
             aggregation: Coded time aggregation of the data set
             quality: Coded quality level of the data file
@@ -372,6 +391,7 @@ class StationDataFilePath(StationDataFile):
         self.build_station_id(station_id)
         self.build_start_time(start_time)
         self.build_end_time(end_time)
+        self.build_time_zone(time_zone)
         self.build_calibration_level(calibration_level)
         self.build_aggregation(aggregation)
         self.build_quality(quality)
@@ -383,6 +403,7 @@ class StationDataFilePath(StationDataFile):
                         self.get_station_id() + "_" + \
                         self.get_start_time() + "_" + \
                         self.get_end_time() + "_" + \
+                        self.get_time_zone() + "_" + \
                         self.get_calibration_level() + "_" + \
                         self.get_aggregation() + "_" + \
                         self.get_quality() + "." + \
@@ -445,6 +466,16 @@ class StationDataFilePath(StationDataFile):
         if end_time == None:
             end_time = "000000000000"
         self.set_end_time(end_time)
+
+    def build_time_zone(self, time_zone):
+        """Sets time zone of the data file.
+
+        Args:
+            time_zone: Recording time zone of the data set
+        """
+        if time_zone == None:
+            time_zone = "000"
+        self.set_time_zone(time_zone)
 
     def build_calibration_level(self, calibration_level):
         """Set calibration level of the data file.
@@ -511,6 +542,7 @@ class StationDataFilePath(StationDataFile):
             station_id: Type of the station (sensor/logger combination)
             start_time: Recording time of the first data set in the file
             end_time: Recording time of the last data set in the file
+            time_zone: Time zone of the time values
             calibration_level: Coded calibration procedures applied to the data
             aggregation: Coded time aggregation of the data set
             quality: Coded quality level of the data file
@@ -526,12 +558,20 @@ class StationDataFilePath(StationDataFile):
         self.set_station_id(filename[12:15])
         self.set_start_time(filename[16:28])
         self.set_end_time(filename[29:41])
-        self.set_calibration_level(filename[42:46])
-        self.set_aggregation(filename[47:52])
+        self.set_time_zone(filename[42:45])
+        self.set_calibration_level(filename[46:50])
+        self.set_aggregation(filename[51:56])
         self.set_time_step(self.get_aggregation()[3:5])
-        self.set_quality(filename[53:57])
-        self.set_extension(filename[58:61])
-        self.set_postexflag(filename[62:])
+        self.set_quality(filename[57:61])
+        self.set_extension(filename[56:56])
+        self.set_postexflag(filename[66:])
         if len(self.get_postexflag()) == 0:
             self.set_postexflag(postexflag=None)
+        print self.get_time_zone()
+        print self.get_calibration_level()
+        print self.get_aggregation()
+        print self.get_time_step()
+        print self.get_quality()
+        print self.get_extension()
+        print self.get_postexflag()
         

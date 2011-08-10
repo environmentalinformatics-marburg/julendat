@@ -72,7 +72,7 @@ class DKStationDataFile(StationDataFile):
         """
         line = linecache.getline(self.get_filepath(), 2)
         self.set_serial_number(string.strip(line.partition(':')[2]))
-    
+
     def set_time_range_ascii(self):
         """Sets time range extracted from ascii logger file.
         """
