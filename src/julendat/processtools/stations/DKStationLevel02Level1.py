@@ -23,6 +23,7 @@ __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 
+import os
 import ConfigParser
 from julendat.filetools.stations.dkstations.DKStationDataFile import DKStationDataFile
 import shutil
@@ -30,6 +31,7 @@ from julendat.metadatatools.stations.StationDataFilePath import StationDataFileP
 from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.metadatatools.stations.StationEntries import StationEntries
 from julendat.metadatatools.stations.Level01Standards import Level01Standards
+from julendat.filetools.DataFile import DataFile
 
 class DKStationLevel02Level1:   
     """Instance for converting D&K logger level 0 to level 1data.
@@ -128,15 +130,17 @@ class DKStationLevel02Level1:
         """
         #print self.filenames.get_filename_dictionary()["level_000_ascii-filepath"]
         #print self.filenames.get_filename_dictionary()["level_005_ascii-filepath"]
-        #for i in range(0,len(self.filenames.get_filename_dictionary()["level_006_ascii-filepath"])):
-        #    print self.filenames.get_filename_dictionary()["level_006_ascii-filepath"][i]
-        #print self.filenames.get_filename_dictionary()["level_006_ascii-filepath"]
+        #for i in range(0,len(self.filenames.get_filename_dictionary()["level_010_ascii-filepath"])):
+        #    print self.filenames.get_filename_dictionary()["level_010_ascii-filepath"][i]
+        #print self.filenames.get_filename_dictionary()["level_010_ascii-filepath"]
         #print self.filenames.get_filename_dictionary()["level_010_ascii-filepath"]
         
         self.set_calibration_coefficients()
         self.set_station_entries()
         self.set_level01_standards()
-        self.level_05()
+        self.level_005()
+        self.level_010()
+        print "...finished."
 
     def set_calibration_coefficients(self):
         """Sets calibration coefficients for the recorded logger parameters
@@ -179,11 +183,11 @@ class DKStationLevel02Level1:
         self.level10_column_entries = \
             level01_standards.get_level01_column_entries()
         
-    def level_05(self):
+    def level_005(self):
         """Compute level 0.5 station data sets
         """
-        r_source = 'source("D:/kili_data/testing/individual.r")'
-        r_keyword = "individual"
+        r_source = 'source("D:/kili_data/testing/compute_level_005_file.r")'
+        r_keyword = "compute_level_005_file"
         r_input_filepath = \
            'asciipath="' + \
             self.filenames.get_filename_dictionary()\
@@ -199,10 +203,11 @@ class DKStationLevel02Level1:
         self.reorder_station_coloumn_entries()
         r_reorder = 'reorder=c('+ self.convert_floatlist2string(self.reorder) + ')'
         r_skip = 'skip=' + self.line_skip + ','
-        r_order_out = 'order_out=c(' + self.convert_list2string(self.level10_column_entries) + '))'
+        r_order_out = 'order_out=c(' + \
+            self.convert_list2string(self.level10_column_entries) + ')'
             
         r_cmd = r_source + "\n" + \
-            r_keyword + "\n" + \
+            r_keyword + " (\n" + \
             r_input_filepath + "\n" + \
             r_output_filepath + "\n" + \
             r_plot_id + "\n" + \
@@ -210,13 +215,71 @@ class DKStationLevel02Level1:
             r_calibration_coefficients + "\n" + \
             r_reorder + "\n" + \
             r_skip + "\n" + \
-            r_order_out  + "\n"
-        f = open("individual.r","w")
+            r_order_out  + ") \n"
+        f = open("compute_level_005_file.r","w")
         f.write(r_cmd)
         f.close()
+        print r_cmd
             
-        print "...finished."
+    def level_010(self):
+        """Compute level 1.0 station data sets
+        """
+        #Check if monthly combined target file for level 0.6 already exists
+        filenumber = len(self.filenames.get_filename_dictionary()\
+                         ["level_010_ascii-filepath"])
+        level_010_file = []
+        for act_file in range(0, filenumber):
+            print "Act_File, ", act_file
+            level_010_file.append(DataFile(\
+                 self.filenames.get_filename_dictionary()\
+                 ["level_010_ascii-filepath"][act_file]))
+            if level_010_file[act_file].check_file_exists() != True:
+                self.init_level_010_file(level_010_file[act_file].get_filepath())
+            if not os.path.isdir(self.filenames.get_filename_dictionary()["level_010_ascii-path"][act_file]):
+                os.makedirs(self.filenames.get_filename_dictionary()["level_010_ascii-path"][act_file])
+                
+            self.compute_level_010_file(\
+                 self.filenames.get_filename_dictionary()\
+                 ["level_005_ascii-filepath"], \
+                 level_010_file[act_file].get_filepath())
             
+    def init_level_010_file(self, filepath):
+        """Init level 1.0 file
+        """
+        r_source = 'source("D:/kili_data/testing/init_level_010_file.r")'
+        r_keyword = "init_level_010_file"
+        r_output_filepath = 'outpath="' + filepath + '",'
+        r_start_time = 'start_time=' + os.path.split(filepath)[1][16:28] + ','
+        r_end_time = 'end_time=' + os.path.split(filepath)[1][29:41] + ','
+        r_time_step = 'time_step=' + str(float(self.filenames.get_time_step())*60.0) + ''
+            
+        r_cmd = r_source + "\n" + \
+            r_keyword + " (\n" + \
+            r_output_filepath + "\n" + \
+            r_start_time + "\n" + \
+            r_end_time + "\n" + \
+            r_time_step + ")\n"
+        f = open("init_level_010_file.r","w")
+        f.write(r_cmd)
+        f.close()
+        print r_cmd
+
+    def compute_level_010_file(self,station_file,level_010_file):
+        """Fill level 1.0 file
+        """
+        r_source = 'source("D:/kili_data/testing/compute_level_010_file.r")'
+        r_keyword = "compute_level_010_file"
+        r_station_file = 'station_file="' + station_file + '",'
+        r_level_010_file = 'level_010_file="' + level_010_file + '"'
+        r_cmd = r_source + "\n" + \
+            r_keyword + " (\n" + \
+            r_station_file + "\n" + \
+            r_level_010_file + ")\n"
+        f = open("compute_level_010_file.r","w")
+        f.write(r_cmd)
+        f.close()
+        print r_cmd
+           
     def convert_list2string(self,list):
         """Convert list of strings to one string.
         
