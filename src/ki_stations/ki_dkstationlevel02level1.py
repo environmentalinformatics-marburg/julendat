@@ -36,7 +36,7 @@ def main():
     print 'License: ' + __license__
     print   
     
-    filepath = '/media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201106010000_201107071350_ra01_nai05_0000.asc' 
+    filepath = '/media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201106230955_201107071350_mez_ra01_nai05_0000.asc' 
     DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
         
 if __name__ == '__main__':

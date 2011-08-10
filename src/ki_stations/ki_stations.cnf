@@ -13,5 +13,6 @@ project_id = ki
 
 [general]
 level01_standards = ki_level01_standards.cnf
+r_filepath = /media/permanent/development/released/julendat-processing-packages/src/ki_stations
 
 
