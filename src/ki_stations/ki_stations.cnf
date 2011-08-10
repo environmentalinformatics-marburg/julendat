@@ -1,16 +1,17 @@
 [logger]
 initial_logger_file = /media/permanent/development/test/kilimanjaro/metstations/infralog/logger/noname.bin
-station_entries = logger_entries.dat
+station_entries = logger_entries.cnf
 
 [repository]
 toplevel_repository_path = /media/permanent/development/test/kilimanjaro/metstations/plots
 
 [inventory]
-station_inventory = ki_station_inventory.dat
+station_inventory = ki_station_inventory.cnf
 
 [project]
 project_id = ki
 
 [general]
-level01_standards = ki_level01_standards.dat
+level01_standards = ki_level01_standards.cnf
+
 
