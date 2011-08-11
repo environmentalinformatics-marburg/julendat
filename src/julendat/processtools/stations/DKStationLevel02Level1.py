@@ -22,8 +22,10 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
-
+import sys
+import csv
 import os
+import string
 import ConfigParser
 from julendat.filetools.stations.dkstations.DKStationDataFile import DKStationDataFile
 import shutil
@@ -185,8 +187,11 @@ class DKStationLevel02Level1:
     def level_005(self):
         """Compute level 0.5 station data sets
         """
+        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_005_ascii-path"]):
+            os.makedirs(self.filenames.get_filename_dictionary()["level_005_ascii-path"])
+        
         r_source = 'source("' + self.r_filepath + os.sep + \
-            'init_level_005_file.r")'
+            'ComputeLevel005File.R")'
         r_keyword = "compute_level_005_file"
         r_input_filepath = \
            'asciipath="' + \
@@ -201,7 +206,7 @@ class DKStationLevel02Level1:
         r_calibration_coefficients = 'cf=c('  + \
            self.convert_floatlist2string(self.calib_coefficients) + '),'
         self.reorder_station_coloumn_entries()
-        r_reorder = 'reorder=c('+ self.convert_floatlist2string(self.reorder) + ')'
+        r_reorder = 'reorder=c('+ self.convert_floatlist2string(self.reorder) + '),'
         r_skip = 'skip=' + self.line_skip + ','
         r_quality = 'quality=' + self.filenames.get_quality() + ','
         r_adjust_time = 'adjust_time=' + str(2*60*60) + ','
@@ -220,13 +225,13 @@ class DKStationLevel02Level1:
             r_quality + "\n" + \
             r_adjust_time + "\n" + \
             r_order_out  + ") \n"
-        r_script = "compute_level_005_file.r" 
+        r_script = "compute_level_005_file.R" 
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
         r_cmd = "R --no-save < " + r_script
         print r_cmd
-        #os.system(r_cmd)
+        os.system(r_cmd)
             
     def level_010(self):
         """Compute level 1.0 station data sets
@@ -240,10 +245,12 @@ class DKStationLevel02Level1:
             level_010_file.append(DataFile(\
                  self.filenames.get_filename_dictionary()\
                  ["level_010_ascii-filepath"][act_file]))
-            if level_010_file[act_file].check_file_exists() != True:
-                self.init_level_010_file(level_010_file[act_file].get_filepath())
             if not os.path.isdir(self.filenames.get_filename_dictionary()["level_010_ascii-path"][act_file]):
                 os.makedirs(self.filenames.get_filename_dictionary()["level_010_ascii-path"][act_file])
+            print "Exist: ", level_010_file[act_file].get_filepath()
+            if level_010_file[act_file].get_file_exists() != True:
+                "Mir egal"
+                self.init_level_010_file(level_010_file[act_file].get_filepath())
                 
             self.compute_level_010_file(\
                  self.filenames.get_filename_dictionary()\
@@ -254,7 +261,7 @@ class DKStationLevel02Level1:
         """Init level 1.0 file
         """
         r_source = 'source("' + self.r_filepath + os.sep + \
-            'init_level_010_file.r")'
+            'InitLevel010File.R")'
         r_keyword = "init_level_010_file"
         r_output_filepath = 'outpath="' + filepath + '",'
         r_start_time = 'start_time=' + os.path.split(filepath)[1][16:28] + ','
@@ -267,19 +274,67 @@ class DKStationLevel02Level1:
             r_start_time + "\n" + \
             r_end_time + "\n" + \
             r_time_step + ")\n"
-        r_script = "init_level_010_file.r" 
+        r_script = "init_level_010_file.R" 
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
         r_cmd = "R --no-save < " + r_script
         print r_cmd
-        #os.system(r_cmd)
+        os.system(r_cmd)
 
-    def compute_level_010_file(self,station_file,level_010_file):
+    def compute_level_010_file(self,station_filepath,level_010_filepath):
         """Fill level 1.0 file
         """
+        station_file = open(station_filepath)
+        for header_lines in range (0,1):
+            station_header = station_file.next()
+        reader = csv.reader(station_file,delimiter=',', \
+                            quoting=csv.QUOTE_NONNUMERIC)
+        station_input =[]
+        for row in reader:
+            station_input.append(row)
+        station_file.close()
+
+        level_010_file = open(level_010_filepath)
+        for header_lines in range (0,1):
+            level_010_header = level_010_file.next()
+        reader = csv.reader(level_010_file,delimiter=',', \
+                            quoting=csv.QUOTE_NONNUMERIC)
+        level_10_input =[]
+        for row in reader:
+            level_10_input.append(row)
+        level_010_file.close()
+
+        level_10_counter = 0
+        out = []
+        for level_10_row in level_10_input:
+            #print level_10_input[level_10_counter][0]
+            found = False
+            station_counter = 0
+            for station_10_row in station_input:
+                #print level_10_input[level_10_counter][0], station_input[station_counter][0]
+                #print station_input[station_counter][0]
+                if level_10_input[level_10_counter][0] == station_input[station_counter][0]:
+                    #print "hallo"
+                    out.append(station_input[station_counter])
+                    found = True
+                    break
+                station_counter = station_counter + 1
+            if found != True:
+                out.append(level_10_input[level_10_counter])
+            level_10_counter = level_10_counter + 1
+
+
+        outfile = open(level_010_filepath,"w")
+        outfile.write(station_header)
+        writer = csv.writer(outfile,delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
+        for row in out:
+            writer.writerow(row)
+        outfile.close()
+        
+        """
         r_source = 'source("' + self.r_filepath + os.sep + \
-            'compute_level_010_file.r")'
+            'ComputeLevel010File.R")'
         r_keyword = "compute_level_010_file"
         r_station_file = 'station_file="' + station_file + '",'
         r_level_010_file = 'level_010_file="' + level_010_file + '"'
@@ -289,13 +344,14 @@ class DKStationLevel02Level1:
             r_station_file + "\n" + \
             r_level_010_file + "\n" + \
             r_quality + ")\n"
-        r_script = "compute_level_010_file.r" 
+        r_script = "compute_level_010_file.R" 
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
         r_cmd = "R --no-save < " + r_script
         print r_cmd
         #os.system(r_cmd)
+        """
            
     def convert_list2string(self,list):
         """Convert list of strings to one string.
@@ -323,9 +379,10 @@ class DKStationLevel02Level1:
         """Reorder station coloumn entries to match the level 1 standards.
         """
         reorder = [1,2]
-        for entry_sce in range (2,len(self.station_column_entries)):
+        for entry_sce in range (0,len(self.station_column_entries)):
             for entry_lce in range(0,len(self.level10_column_entries)):
-                if self.level10_column_entries[entry_lce] ==  \
-                    self.station_column_entries[entry_sce]:
-                        reorder.append(entry_lce+1) 
+                if string.strip(self.level10_column_entries[entry_lce]) ==  \
+                    string.strip(self.station_column_entries[entry_sce]):
+                        print self.level10_column_entries[entry_lce]
+                        reorder.append(entry_lce+1)
         self.reorder = reorder

@@ -22,6 +22,7 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
+import csv
 import datetime
 import linecache
 import string
@@ -103,3 +104,16 @@ class DKStationDataFile(StationDataFile):
         self.set_start_time(start_time)
         self.set_end_time(end_time)
         self.set_time_step(time_step)
+
+    #TODO(tnauss): Implement csv routine
+    def test(self):
+        print self.get_filepath()
+        infile = open(self.get_filepath())
+        for i in range (0,6):
+            infile.next()
+        file = csv.reader(infile,delimiter='\t')
+        #quoting=csv.QUOTE_NONNUMERIC)
+        test =[]
+        for row in file:
+            test.append(row)
+        print test[0][0], test[0][1], test[0][2], float(test[0][2])*2
