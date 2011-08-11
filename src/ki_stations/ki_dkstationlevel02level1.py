@@ -36,7 +36,12 @@ def main():
     print 'License: ' + __license__
     print   
     
-    filepath = '/media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201106230955_201107071350_mez_ra01_nai05_0000.asc' 
+    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201104180810_201106280940_mez_ra01_nai05_0000.asc'
+    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000gra2/ra01_nai12_0000/ki_0000gra2_rug_201012141000_201102082236_mez_ra01_nai12_0000.asc'
+    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000gra2/ra01_nai05_0000/ki_0000gra2_rug_201106230955_201107071350_mez_ra01_nai05_0000.asc'
+    filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_wxt_201104052200_201107191250_mez_ra01_nai05_0000.asc'
+    
+    
     DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
         
 if __name__ == '__main__':
