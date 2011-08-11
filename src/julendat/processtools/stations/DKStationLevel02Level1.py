@@ -98,6 +98,8 @@ class DKStationLevel02Level1:
                                 toplevel_path=self.tl_data_path)
             self.run_flag = True
         except:
+            self.filenames = StationDataFilePath(filepath=filepath, \
+                                toplevel_path=self.tl_data_path)
             self.run_flag = False
 
     def get_run_flag(self):
@@ -239,8 +241,10 @@ class DKStationLevel02Level1:
         #Check if monthly combined target file for level 0.6 already exists
         filenumber = len(self.filenames.get_filename_dictionary()\
                          ["level_010_ascii-filepath"])
+
         level_010_file = []
         for act_file in range(0, filenumber):
+            print "Filenumber, ", filenumber
             print "Act_File, ", act_file
             level_010_file.append(DataFile(\
                  self.filenames.get_filename_dictionary()\
@@ -251,7 +255,6 @@ class DKStationLevel02Level1:
             if level_010_file[act_file].get_file_exists() != True:
                 "Mir egal"
                 self.init_level_010_file(level_010_file[act_file].get_filepath())
-                
             self.compute_level_010_file(\
                  self.filenames.get_filename_dictionary()\
                  ["level_005_ascii-filepath"], \
@@ -267,7 +270,7 @@ class DKStationLevel02Level1:
         r_start_time = 'start_time=' + os.path.split(filepath)[1][16:28] + ','
         r_end_time = 'end_time=' + os.path.split(filepath)[1][29:41] + ','
         r_time_step = 'time_step=' + str(float(self.filenames.get_time_step())*60.0) + ''
-            
+        print "HALLO, ", self.filenames.get_time_step()
         r_cmd = r_source + "\n" + \
             r_keyword + " (\n" + \
             r_output_filepath + "\n" + \

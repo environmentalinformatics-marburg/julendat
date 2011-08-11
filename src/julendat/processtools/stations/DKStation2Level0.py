@@ -22,7 +22,7 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
-
+import sys
 import ConfigParser
 from julendat.filetools.stations.dkstations.DKStationDataFile import DKStationDataFile
 import os
@@ -202,11 +202,13 @@ class DKStation2Level0:
                         project_id=project_id, \
                         plot_id=plot_id, \
                         station_id=self.station_id, \
-                        start_time=self.time_range[0], \
-                        end_time=self.time_range[1], \
+                        start_time=self.ascii_logger_file.get_start_time(), \
+                        end_time=self.ascii_logger_file.get_end_time(), \
+                        #start_time=self.time_range[0], \
+                        #end_time=self.time_range[1], \
                         aggregation="nai"+str(self.time_range[2]), \
                         postexflag=postexflag)  
-        self.filenames.build_filename_dictionary()
+        #self.filenames.build_filename_dictionary()
 
     def main(self):
         """Maps logger files to level 0 filename and directory structure.

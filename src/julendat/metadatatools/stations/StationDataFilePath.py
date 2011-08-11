@@ -23,6 +23,7 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
+import sys
 import calendar
 import datetime
 import time
@@ -133,14 +134,26 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary['level_000_ascii-filepath'] = \
             self.filename_dictionary['level_000_ascii-path'] + \
             self.filename_dictionary['level_000_ascii-filename']
-
+        
         #Level 0.5 (calibrated data values, standard format)
         time_zone = "eat"
+        if time_zone == "eat": 
+            start_time = datetime.datetime.strptime(\
+                            self.get_start_time(),"%Y%m%d%H%M")
+            end_time = datetime.datetime.strptime(\
+                            self.get_end_time(),"%Y%m%d%H%M")
+            start_time = start_time + datetime.timedelta(minutes=120)
+            end_time = end_time + datetime.timedelta(minutes=120)
+            start_time = start_time.strftime("%Y%m%d%H%M")
+            end_time = end_time.strftime("%Y%m%d%H%M")
+        
         calibration_level="ca01"
         quality = "0005"
         extension="dat"
         self.filename_dictionary['level_005_ascii-filename'] = \
             self.build_filename(\
+                start_time = start_time, \
+                end_time = end_time, \
                 time_zone = time_zone, \
                 calibration_level=calibration_level, \
                 quality=quality, \
@@ -160,12 +173,15 @@ class StationDataFilePath(StationDataFile):
         extension="dat"
         self.get_month_range()
         
+        print "filename, " , self.get_start_time(), self.get_end_time()
+        print self.filename_dictionary['level_000_ascii-filepath']
         self.filename_dictionary['level_010_ascii-filename'], \
         self.filename_dictionary['level_010_ascii-path'], \
         self.filename_dictionary['level_010_ascii-filepath'] = \
-            self.get_monthly_filepath(time_zone=time_zone, \
-                calibration_level=calibration_level, \
+            self.get_monthly_filepath(start_time=start_time, end_time=end_time,\
+                time_zone=time_zone, calibration_level=calibration_level, \
                 quality=quality, extension=extension)
+
     
     def get_filename_dictionary(self):
         """Gets dictionary for data filenames of different levels.
@@ -186,7 +202,12 @@ class StationDataFilePath(StationDataFile):
                             self.get_start_time(),"%Y%m%d%H%M")
         end_time = datetime.datetime.strptime(\
                             self.get_end_time(),"%Y%m%d%H%M")
-        month_number = end_time.month-start_time.month
+        print "Start-End-Time, ", start_time, end_time
+        if end_time.year - start_time.year > 0:
+            month_number = 13-start_time.month + end_time.month
+        else:
+            month_number = end_time.month-start_time.month+1
+        print "Month, ", month_number
         start_year = str(start_time.year)
         start_month = str(start_time.month)
         start_month = start_month.zfill(2)
@@ -225,20 +246,30 @@ class StationDataFilePath(StationDataFile):
         filename = []
         path = []
         filepath = []
-        for i in range(0,self.month_number+1):
+        print "month_number, ", self.month_number
+        for i in range(0,self.month_number):
+            print " "
             act_time = datetime.datetime.strptime(\
                                 self.get_start_time(),"%Y%m%d%H%M")
-            act_month = str((act_time.month+i)%12)
-            act_year = str(act_time.year+(act_time.month+i)/12)
+            #act_month = str((act_time.month+i)%12)
+            act_month = act_time.month+i
+            if act_month > 12:
+                print "act_month_initial, ", act_month
+                act_month = act_month-12
+            act_month = str(act_month).zfill(2)
+            print "act_month, ", act_month
+            act_month = str(act_month)
+            act_year = str(act_time.year+(act_time.month+i)/13)
             start_time = time.strftime("%Y%m%d%H%M",
                                  time.strptime(act_year + act_month + "010000",\
                                  "%Y%m%d%H%M"))
-            print act_year, act_month, self.last_time_of_month
             end_time = time.strftime("%Y%m%d%H%M",
                            time.strptime(act_year + act_month + \
                            str(calendar.monthrange(int(act_year), \
                                                    int(act_month))[1]) + \
                             self.last_time_of_month,"%Y%m%d%H%M"))
+            print "Stuff, ", act_year, act_month
+            print "Stuff2, ", start_time, end_time
             filename.append( \
                 self.build_filename(\
                     start_time=start_time, \
@@ -254,7 +285,7 @@ class StationDataFilePath(StationDataFile):
             filepath.append( \
                 path[i] + \
                 filename[i])
-
+        #sys.exit()
         return filename, path, filepath
         
     def build_filename(self, project_id=None, plot_id=None, \
