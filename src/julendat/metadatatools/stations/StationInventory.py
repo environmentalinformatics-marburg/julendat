@@ -54,22 +54,25 @@ class StationInventory(StationInventoryFile):
         foundID = False
         error = False
         inventory_data = open(self.get_filepath(),'r')
+        plot_id_list = []
         counter = 0
         for line in inventory_data:
             counter = counter + 1
             if counter == 1:
                 act_line = line.rstrip()
                 calib_coefficents_headers = act_line.rsplit(',')[8:]
-            if string.strip(line.rsplit(',')[7]).lstrip('0') == self.get_serial_number():
-                if foundID == True:
-                    print "The same serial number has been found at least twice!"
-                    error = True
-                else:
-                    act_line = line.rstrip()
-                    plot_id = string.strip(line.rsplit(',')[5][1:5])
-                    logger_id = string.strip(line.rsplit(',')[6][1:4])
-                    calib_coefficents = act_line.rsplit(',')[8:]
-                    foundID = True
+            else:
+                plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
+                if string.strip(line.rsplit(',')[7]).lstrip('0') == self.get_serial_number():
+                    if foundID == True:
+                        print "The same serial number has been found at least twice!"
+                        error = True
+                    else:
+                        act_line = line.rstrip()
+                        plot_id = string.strip(line.rsplit(',')[5][1:5])
+                        logger_id = string.strip(line.rsplit(',')[6][1:4])
+                        calib_coefficents = act_line.rsplit(',')[8:]
+                        foundID = True
         inventory_data.close()
         self.found_station_inventory = foundID
         if self.get_found_station_inventory():
@@ -77,6 +80,8 @@ class StationInventory(StationInventoryFile):
             self.station_id = logger_id
             self.calib_coefficents_headers =calib_coefficents_headers 
             self.calib_coefficents =calib_coefficents
+            plot_id_list.append("not sure")
+            self.plot_id_list = plot_id_list
 
     def get_found_station_inventory(self):
         """Gets flag if actual station has been found within station inventory.
@@ -85,6 +90,14 @@ class StationInventory(StationInventoryFile):
             Flag if station is in station inventory.
         """
         return self.found_station_inventory
+
+    def get_plot_id_list(self):
+        """Gets list of all plot ids.
+        
+        Returns:
+            Returns list of plot ids.
+        """
+        return self.plot_id_list
 
     def set_plot_id_from_serial_number(self):
         """Sets plot ID from serial number

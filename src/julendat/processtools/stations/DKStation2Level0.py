@@ -156,7 +156,8 @@ class DKStation2Level0:
                 correct_plot_id = False
         
             if correct_plot_id != True:
-                plot_id_list = ["cof1", "cof2", "cof3", "cof4", "not sure"]
+                #plot_id_list = ["cof1", "cof2", "cof3", "cof4", "not sure"]
+                plot_id_list = self.inventory.get_plot_id_list()
                 gui = Tkinter.Tk()
                 if auto_plot_selection:
                     gui.title("Just to be really sure...")
