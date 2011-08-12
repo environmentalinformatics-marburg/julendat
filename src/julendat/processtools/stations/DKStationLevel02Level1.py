@@ -157,6 +157,7 @@ class DKStationLevel02Level1:
             self.run_flag = False
         
         if self.get_run_flag():
+            self.line_skip = level_000_ascii_file.get_line_skip()
             inventory = StationInventory(filepath=self.station_inventory, \
                     serial_number = level_000_ascii_file.get_serial_number())
             if self.filenames.get_raw_plot_id() != inventory.get_plot_id():
@@ -174,7 +175,7 @@ class DKStationLevel02Level1:
         """
         station_entries = StationEntries(filepath=self.station_entries, \
                                     station_id=self.filenames.get_station_id())
-        self.line_skip = station_entries.get_line_skip()
+        #self.line_skip = station_entries.get_line_skip()
         self.station_column_entries = \
             station_entries.get_station_column_entries()
 

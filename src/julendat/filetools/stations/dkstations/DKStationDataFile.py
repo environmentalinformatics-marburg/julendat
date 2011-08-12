@@ -81,7 +81,9 @@ class DKStationDataFile(StationDataFile):
         end_time = None
         time_interval = False
         logger_data = open(self.get_filepath(),'r')
+        line_counter = 0
         for line in logger_data:
+            line_counter = line_counter + 1
             if line[2] == "." and line[5] == ".":
                 end_time = time.strftime("%Y%m%d%H%M",
                            time.strptime(\
@@ -95,6 +97,7 @@ class DKStationDataFile(StationDataFile):
                                 start_time,"%Y%m%d%H%M"))[2:4]
                     time_interval = False
                 if start_time == None:
+                    line_skip = line_counter -1
                     start_time = time.strftime("%Y%m%d%H%M",
                                  time.strptime(
                                  string.strip(line.split('\t')[0]) + \
@@ -104,6 +107,15 @@ class DKStationDataFile(StationDataFile):
         self.set_start_time(start_time)
         self.set_end_time(end_time)
         self.set_time_step(time_step)
+        self.line_skip = str(line_skip)
+
+    def get_line_skip(self):
+        """Gets number of lines to be skiped at the beginning of the logger file
+        
+        Returns:
+            Number of lines to be skiped until data section.
+        """
+        return self.line_skip
 
     #TODO(tnauss): Implement csv routine
     def test(self):
@@ -117,3 +129,4 @@ class DKStationDataFile(StationDataFile):
         for row in file:
             test.append(row)
         print test[0][0], test[0][1], test[0][2], float(test[0][2])*2
+                
