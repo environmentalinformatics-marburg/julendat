@@ -37,7 +37,7 @@ class DKStation2Level0:
     """Instance for moving downloaded D&K logger data to level 0 folders.
     """
 
-    def __init__(self, config_file,run_mode="auto-gui"):
+    def __init__(self, config_file, run_mode="auto-gui"):
         """Inits DKStation2Level0. 
         
         Args:
@@ -49,9 +49,9 @@ class DKStation2Level0:
         self.init_StationFile()
         if self.get_run_flag():
             self.auto_configure()
-        self.run()
-            
-    def set_run_mode(self,run_mode):
+            self.run()
+
+    def set_run_mode(self, run_mode):
         """Sets run mode.
         
         Args:
@@ -67,7 +67,7 @@ class DKStation2Level0:
         """
         return self.run_mode
 
-    def configure(self,config_file):
+    def configure(self, config_file):
         """Reads configuration settings and configure object.
     
         Args:
@@ -78,8 +78,8 @@ class DKStation2Level0:
         config.read(self.config_file)
         self.initial_logger_file = config.get('logger', 'initial_logger_file')
         self.tl_data_path = config.get('repository', 'toplevel_repository_path')
-        self.station_inventory = config.get('inventory','station_inventory')
-        self.project_id = config.get('project','project_id')
+        self.station_inventory = config.get('inventory', 'station_inventory')
+        self.project_id = config.get('project', 'project_id')
 
     def init_StationFile(self):
         """Initializes D&K station data file.
@@ -99,6 +99,7 @@ class DKStation2Level0:
             if ascii_file_exsists == True:
                 self.ascii_logger_file = DKStationDataFile(\
                                          filepath=ascii_file)
+                self.time_range = self.ascii_logger_file.get_time_range()
                 self.run_flag = self.ascii_logger_file.get_file_exists()
             else:
                 self.run_flag = False
@@ -117,12 +118,13 @@ class DKStation2Level0:
     def auto_configure(self):
         """Set necessary attributes automatically.
         """
-        inventory = StationInventory(filepath=self.station_inventory, \
-                    serial_number = self.ascii_logger_file.get_serial_number())
-        self.plot_id = inventory.get_plot_id()
-        self.station_id = inventory.get_station_id()
-        self.time_range = self.ascii_logger_file.get_time_range()
-
+        self.inventory = StationInventory(filepath=self.station_inventory, \
+                    serial_number=self.ascii_logger_file.get_serial_number())
+        
+        
+        if self.inventory.get_found_station_inventory():
+            self.plot_id = self.inventory.get_plot_id()
+            self.station_id = self.inventory.get_station_id()
 
     def run(self):
         """Executes class functions according to run_mode settings. 
@@ -135,38 +137,56 @@ class DKStation2Level0:
     def auto_gui(self):
         """Executes class functions in default auto-gui mode.
         """
+        auto_plot_selection = self.inventory.get_found_station_inventory()
+            
         if self.get_run_flag():
-            gui = Tkinter.Tk()
-            gui.title("Just to be sure...")
-            gui.geometry('600x350+50+50')
-            intro = "\n Please read very carefully. \n"
-            question = "Are you standing on plot " + self.get_plot_id() + "?"
-            outro = "\n Press only <Yes> if you are sure."  + \
-                    "\n If you press <No> you can specify the location manually.\n" 
-            app = GUIAutoPlotSelection(gui,intro=intro,question=question,outro=outro)
-            gui.mainloop()
-            correct_plot_id = app.get_correct_plot_id()
-            gui.destroy()        
+            if auto_plot_selection:
+                gui = Tkinter.Tk()
+                gui.title("Just to be sure...")
+                gui.geometry('600x350+50+50')
+                intro = "\n Please read very carefully. \n"
+                question = "Are you standing on plot " + self.get_plot_id() + "?"
+                outro = "\n Press only <Yes> if you are sure." + \
+                        "\n If you press <No> you can specify the location manually.\n" 
+                app = GUIAutoPlotSelection(gui, intro=intro, question=question, outro=outro)
+                gui.mainloop()
+                correct_plot_id = app.get_correct_plot_id()
+                gui.destroy()        
+            else:
+                correct_plot_id = False
         
             if correct_plot_id != True:
                 plot_id_list = ["cof1", "cof2", "cof3", "cof4", "not sure"]
                 gui = Tkinter.Tk()
-                gui.title("Just to be really sure...")
+                if auto_plot_selection:
+                    gui.title("Just to be really sure...")
+                    message="ARE YOU SURE?"
+                else:
+                    gui.title("Manual plot selection...")
+                    message="The station/logger serial number has not been " +\
+                            "found in the station inventory file. \n" + \
+                            "Please select the plot from the list. \n" + \
+                            "Please inform us that the station file is not " +\
+                            "up to date."
                 gui.geometry('600x350+50+50')
-                app = GUIManualPlotSelection(gui, plot_id_list)
+                app = GUIManualPlotSelection(gui, plot_id_list,message)
                 gui.mainloop()
                 gui.destroy()
                 manual_plot_id = app.get_correct_plot_id()
         
                 if manual_plot_id == "not sure":
                     plot_id = "xx000000"
-                    postexflag="autoplot_" + self.get_plot_id()
-                else:
+                    postexflag = "autoplot_" + self.get_plot_id()
+                elif self.inventory.get_found_station_inventory():
                     plot_id = "xx" + manual_plot_id
-                    postexflag="autoplot_" + self.get_plot_id()
+                    postexflag = "autoplot_" + self.get_plot_id()
+                elif self.inventory.get_found_station_inventory() == False:
+                    plot_id = "xx" + manual_plot_id
+                    self.station_id = "xxx"
+                    postexflag = "not_in_inventory"
             
                 self.set_level0_filenames(project_id=self.project_id, \
-                    plot_id=plot_id,postexflag=postexflag)
+                    plot_id=plot_id, postexflag=postexflag)
             
             else:
                 self.set_level0_filenames(project_id=self.project_id)
@@ -180,7 +200,7 @@ class DKStation2Level0:
     def move_data(self):
         """Moves files.
         """
-        shutil.move(self.source,self.destination)
+        shutil.move(self.source, self.destination)
 
     def get_plot_id(self):
         """Gets coded plot id flag information.
@@ -190,8 +210,8 @@ class DKStation2Level0:
         """
         return self.plot_id
     
-    def set_level0_filenames(self,project_id=None, \
-                             plot_id=None,postexflag=None):
+    def set_level0_filenames(self, project_id=None, \
+                             plot_id=None, postexflag=None):
         """Sets level0 filenames and path information
         """
         if plot_id == None:
@@ -206,7 +226,7 @@ class DKStation2Level0:
                         end_time=self.ascii_logger_file.get_end_time(), \
                         #start_time=self.time_range[0], \
                         #end_time=self.time_range[1], \
-                        aggregation="nai"+str(self.time_range[2]), \
+                        aggregation="nai" + str(self.time_range[2]), \
                         postexflag=postexflag)  
         #self.filenames.build_filename_dictionary()
 
@@ -228,7 +248,7 @@ class DKStation2Level0:
         
         # Set full path and names of ASCII data files and move them
         self.source = self.ascii_logger_file.get_filepath()
-        self.destination =  self.filenames.get_filename_dictionary()["level_000_ascii-filepath"]
+        self.destination = self.filenames.get_filename_dictionary()["level_000_ascii-filepath"]
         print self.source
         print self.destination
         self.move_data()

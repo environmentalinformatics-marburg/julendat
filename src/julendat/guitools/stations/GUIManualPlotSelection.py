@@ -75,7 +75,7 @@ def destroy():
 """
 
 class GUIManualPlotSelection:
-    def __init__(self, master=None,plot_id_list=None):
+    def __init__(self, master=None,plot_id_list=None, message=None):
         # Set background of toplevel window to match
         # current style
         self.master = Frame(master)
@@ -116,7 +116,7 @@ class GUIManualPlotSelection:
 
         self.mes33 = Message (master)
         self.mes33.place(relx=0.52,rely=0.03,relheight=0.78,relwidth=0.42)
-        self.mes33.configure(text="ARE YOU SURE?")
+        self.mes33.configure(text=message)
         self.mes33.configure(width="251")
 
     def button_ok(self):

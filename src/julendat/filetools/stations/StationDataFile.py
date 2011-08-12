@@ -47,7 +47,7 @@ class StationDataFile(DataFile):
         Returns:
             Serial number of the logger.
         """
-        return self.serial_number
+        return self.serial_number.lstrip('0')
 
     def set_project_id(self, project_id=None):
         """Sets project ID of the data file.
