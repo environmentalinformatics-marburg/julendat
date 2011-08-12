@@ -50,6 +50,9 @@ class DKStation2Level0:
         if self.get_run_flag():
             self.auto_configure()
             self.run()
+        else:
+            print "Nothing to do..."
+            print "...finished."        
 
     def set_run_mode(self, run_mode):
         """Sets run mode.
@@ -197,10 +200,6 @@ class DKStation2Level0:
 
             self.main()
         
-        else:
-            print "Nothing to do..."
-            print "...finished."        
-
     def move_data(self):
         """Moves files.
         """
