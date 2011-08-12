@@ -218,6 +218,7 @@ class StationDataFilePath(StationDataFile):
         self.set_start_time(start_time)
         self.month_number = month_number
         self.last_time_of_month = last_time_of_month
+        print "aggregation, ",  self.get_aggregation()
 
     def get_monthly_filepath(self, project_id=None, plot_id=None, \
                  station_id=None, start_time=None, end_time=None, \

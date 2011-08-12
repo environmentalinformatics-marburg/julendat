@@ -175,16 +175,19 @@ class DKStation2Level0:
                 gui.destroy()
                 manual_plot_id = app.get_correct_plot_id()
         
-                if manual_plot_id == "not sure":
+                if self.inventory.get_found_station_inventory() == False:
+                    if manual_plot_id == "not sure":
+                        plot_id = "xx000000"
+                    else:
+                        plot_id = "xx" + manual_plot_id
+                    self.station_id = "xxx"
+                    postexflag = "not_in_inventory"
+                elif manual_plot_id == "not sure":
                     plot_id = "xx000000"
                     postexflag = "autoplot_" + self.get_plot_id()
                 elif self.inventory.get_found_station_inventory():
                     plot_id = "xx" + manual_plot_id
                     postexflag = "autoplot_" + self.get_plot_id()
-                elif self.inventory.get_found_station_inventory() == False:
-                    plot_id = "xx" + manual_plot_id
-                    self.station_id = "xxx"
-                    postexflag = "not_in_inventory"
             
                 self.set_level0_filenames(project_id=self.project_id, \
                     plot_id=plot_id, postexflag=postexflag)
