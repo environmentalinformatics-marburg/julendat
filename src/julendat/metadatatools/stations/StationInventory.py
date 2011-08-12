@@ -74,14 +74,14 @@ class StationInventory(StationInventoryFile):
                         calib_coefficents = act_line.rsplit(',')[8:]
                         foundID = True
         inventory_data.close()
+        plot_id_list.append("not sure")
+        self.plot_id_list = plot_id_list
         self.found_station_inventory = foundID
         if self.get_found_station_inventory():
             self.plot_id = plot_id
             self.station_id = logger_id
             self.calib_coefficents_headers =calib_coefficents_headers 
             self.calib_coefficents =calib_coefficents
-            plot_id_list.append("not sure")
-            self.plot_id_list = plot_id_list
 
     def get_found_station_inventory(self):
         """Gets flag if actual station has been found within station inventory.
