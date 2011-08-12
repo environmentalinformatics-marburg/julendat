@@ -1,6 +1,6 @@
 [logger]
 initial_logger_file = /media/permanent/development/test/kilimanjaro/metstations/infralog/logger/noname.bin
-station_entries = logger_entries.cnf
+station_entries = dk_station_entries.cnf
 
 [repository]
 toplevel_repository_path = /media/permanent/development/test/kilimanjaro/metstations/plots
