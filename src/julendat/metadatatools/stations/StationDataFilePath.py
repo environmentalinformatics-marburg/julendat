@@ -252,12 +252,14 @@ class StationDataFilePath(StationDataFile):
             act_time = datetime.datetime.strptime(\
                                 self.get_start_time(),"%Y%m%d%H%M")
             #act_month = str((act_time.month+i)%12)
+            print i
             act_month = act_time.month+i
+            print act_month
+
             if act_month > 12:
                 print "act_month_initial, ", act_month
                 act_month = act_month-12
             act_month = str(act_month).zfill(2)
-            print "act_month, ", act_month
             act_month = str(act_month)
             act_year = str(act_time.year+(act_time.month+i)/13)
             start_time = time.strftime("%Y%m%d%H%M",
@@ -268,6 +270,7 @@ class StationDataFilePath(StationDataFile):
                            str(calendar.monthrange(int(act_year), \
                                                    int(act_month))[1]) + \
                             self.last_time_of_month,"%Y%m%d%H%M"))
+            print end_time
             print "Stuff, ", act_year, act_month
             print "Stuff2, ", start_time, end_time
             filename.append( \

@@ -63,7 +63,7 @@ class StationInventory(StationInventoryFile):
                 calib_coefficents_headers = act_line.rsplit(',')[8:]
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
-                if string.strip(line.rsplit(',')[7]).lstrip('0') == self.get_serial_number():
+                if string.strip(line.rsplit(',')[7]).strip('"').lstrip('0') == self.get_serial_number():
                     if foundID == True:
                         print "The same serial number has been found at least twice!"
                         error = True
@@ -74,8 +74,9 @@ class StationInventory(StationInventoryFile):
                         calib_coefficents = act_line.rsplit(',')[8:]
                         foundID = True
         inventory_data.close()
+        plot_id_list = sorted(set(plot_id_list))
         plot_id_list.append("not sure")
-        self.plot_id_list = plot_id_list
+        self.plot_id_list = plot_id_list 
         self.found_station_inventory = foundID
         if self.get_found_station_inventory():
             self.plot_id = plot_id
