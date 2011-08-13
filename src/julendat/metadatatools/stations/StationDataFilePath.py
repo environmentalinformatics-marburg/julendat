@@ -212,7 +212,7 @@ class StationDataFilePath(StationDataFile):
         start_datetime = datetime.datetime.strptime(start_year+start_month+"010000",\
                              "%Y%m%d%H%M")
         #last_time_of_month = "23" + str(60 - int(self.get_aggregation()[3:5]))
-        last_time_of_month = str(23 + 60 - int(self.get_aggregation()[3:5]))
+        last_time_of_month = "23" + str(60 - int(self.get_aggregation()[3:5]))
         
         self.set_start_datetime(start_datetime)
         self.month_number = month_number
