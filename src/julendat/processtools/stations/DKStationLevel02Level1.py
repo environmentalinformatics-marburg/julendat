@@ -270,8 +270,8 @@ class DKStationLevel02Level1:
         r_output_filepath = 'outpath="' + filepath + '",'
         r_start_time = 'start_time=' + os.path.split(filepath)[1][16:28] + ','
         r_end_time = 'end_time=' + os.path.split(filepath)[1][29:41] + ','
-        r_time_step = 'time_step=' + str(float(self.filenames.get_time_step())*60.0) + ''
-        print "HALLO, ", self.filenames.get_time_step()
+        r_time_step = 'time_step=' + str(float(self.filenames.get_time_step_delta_str())*60.0) + ''
+        print "HALLO, ", r_time_step
         r_cmd = r_source + "\n" + \
             r_keyword + " (\n" + \
             r_output_filepath + "\n" + \

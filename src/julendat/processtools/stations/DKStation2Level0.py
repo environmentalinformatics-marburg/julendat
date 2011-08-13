@@ -22,23 +22,32 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
-import sys
 import ConfigParser
-from julendat.filetools.stations.dkstations.DKStationDataFile import DKStationDataFile
 import os
+import sys
 import shutil
-from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
+import Tkinter
+from julendat.filetools.stations.dkstations.DKStationDataFile import \
+    DKStationDataFile
+from julendat.metadatatools.stations.StationDataFilePath import \
+    StationDataFilePath
 from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.guitools.stations.GUIAutoPlotSelection import GUIAutoPlotSelection
-from julendat.guitools.stations.GUIManualPlotSelection import GUIManualPlotSelection
-import Tkinter
+from julendat.guitools.stations.GUIManualPlotSelection import \
+    GUIManualPlotSelection
+
 
 class DKStation2Level0:   
     """Instance for moving downloaded D&K logger data to level 0 folders.
     """
 
     def __init__(self, config_file, run_mode="auto-gui"):
-        """Inits DKStation2Level0. 
+        """Inits DKStation2Level0.
+        The instance is initialized by reading a configuration file and the 
+        initialization of the proprietary station data file instance.
+        If the run mode is set to "auto-gui", this is followed by an automatic
+        configuration of filenames and filepathes and the movement of the
+        station data file to the processing path structure.  
         
         Args:
             config_file: Configuration file.
@@ -75,40 +84,43 @@ class DKStation2Level0:
     
         Args:
             config_file: Full path and name of the configuration file.
+            
         """
         self.config_file = config_file
         config = ConfigParser.ConfigParser()
         config.read(self.config_file)
-        self.initial_logger_file = config.get('logger', 'initial_logger_file')
+        self.initial_logger_filepath = config.get('logger', 'initial_logger_filepath')
         self.tl_data_path = config.get('repository', 'toplevel_repository_path')
-        self.station_inventory = config.get('inventory', 'station_inventory')
         self.project_id = config.get('project', 'project_id')
+        self.station_inventory = config.get('inventory', 'station_inventory')
 
     def init_StationFile(self):
         """Initializes D&K station data file.
         """
         try:
             self.binary_logger_file = DKStationDataFile(\
-                                      filepath=self.initial_logger_file)
+                                      filepath=self.initial_logger_filepath)
 
             ascii_file_exsists = False
-            ascii_file = self.binary_logger_file.get_filepath()[:-3] + "asc"
-            if os.path.isfile(ascii_file):
+            ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + "asc"
+            if os.path.isfile(ascii_filepath):
                 ascii_file_exsists = True
             else:
-                ascii_file = self.binary_logger_file.get_filepath()[:-3] + "ASC"
-                if os.path.isfile(ascii_file):
+                ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + "ASC"
+                if os.path.isfile(ascii_filepath):
                     ascii_file_exsists = True
+
             if ascii_file_exsists == True:
                 self.ascii_logger_file = DKStationDataFile(\
-                                         filepath=ascii_file)
-                self.time_range = self.ascii_logger_file.get_time_range()
+                                         filepath=ascii_filepath)
                 self.run_flag = self.ascii_logger_file.get_file_exists()
             else:
                 self.run_flag = False
 
         except:
             self.run_flag = False
+            self.ascii_logger_file = DKStationDataFile(\
+                                         filepath=ascii_filepath)
 
     def get_run_flag(self):
         """Gets runtime flag information.
@@ -124,7 +136,7 @@ class DKStation2Level0:
         self.inventory = StationInventory(filepath=self.station_inventory, \
                     serial_number=self.ascii_logger_file.get_serial_number())
         
-        
+        self.time_range = self.ascii_logger_file.get_time_range()
         if self.inventory.get_found_station_inventory():
             self.plot_id = self.inventory.get_plot_id()
             self.station_id = self.inventory.get_station_id()
@@ -219,18 +231,17 @@ class DKStation2Level0:
         """
         if plot_id == None:
             plot_id = self.plot_id
-
         self.filenames = StationDataFilePath(\
                         toplevel_path=self.tl_data_path, \
                         project_id=project_id, \
                         plot_id=plot_id, \
                         station_id=self.station_id, \
-                        start_time=self.ascii_logger_file.get_start_time(), \
-                        end_time=self.ascii_logger_file.get_end_time(), \
-                        #start_time=self.time_range[0], \
-                        #end_time=self.time_range[1], \
-                        aggregation="nai" + str(self.time_range[2]), \
+                        start_datetime=self.ascii_logger_file.get_start_datetime(), \
+                        end_datetime=self.ascii_logger_file.get_end_datetime(), \
+                        time_step_delta = self.ascii_logger_file.get_time_step_delta(), \
+                        aggregation_level="na", \
                         postexflag=postexflag)  
+        
         #self.filenames.build_filename_dictionary()
 
     def main(self):

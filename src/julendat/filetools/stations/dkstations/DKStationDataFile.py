@@ -23,7 +23,7 @@ __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import csv
-import datetime
+from datetime import datetime
 import linecache
 import string
 import time
@@ -77,23 +77,39 @@ class DKStationDataFile(StationDataFile):
     def set_time_range_ascii(self):
         """Sets time range extracted from ascii logger file.
         """
-        start_time = None
-        end_time = None
-        time_interval = False
+        start_datetime = None
+        end_datetime = None
+        compute_time_interval = False
         logger_data = open(self.get_filepath(),'r')
         line_counter = 0
         for line in logger_data:
             line_counter = line_counter + 1
             if line[2] == "." and line[5] == ".":
+                end_datetime = datetime.strptime(\
+                           string.strip(line.split('\t')[0]) +\
+                           string.strip(line.split('\t')[1]), \
+                           "%d.%m.%y%H:%M:%S")
+                if compute_time_interval == True:
+                    time_step_delta = end_datetime - start_datetime
+                    compute_time_interval = False
+                if start_datetime == None:
+                    line_skip = line_counter -1
+                    start_datetime = datetime.strptime(
+                                 string.strip(line.split('\t')[0]) + \
+                                 string.strip(line.split('\t')[1]), \
+                                 "%d.%m.%y%H:%M:%S")
+                    compute_time_interval = True
+
+                """
                 end_time = time.strftime("%Y%m%d%H%M",
                            time.strptime(\
                            string.strip(line.split('\t')[0]) +\
                            string.strip(line.split('\t')[1]), \
                            "%d.%m.%y%H:%M:%S"))
                 if time_interval == True:
-                    time_step = str(datetime.datetime.strptime(\
+                    time_step = str(datetime.strptime(\
                                 end_time,"%Y%m%d%H%M") -\
-                                datetime.datetime.strptime(\
+                                datetime.strptime(\
                                 start_time,"%Y%m%d%H%M"))[2:4]
                     time_interval = False
                 if start_time == None:
@@ -104,9 +120,10 @@ class DKStationDataFile(StationDataFile):
                                  string.strip(line.split('\t')[1]), \
                                  "%d.%m.%y%H:%M:%S"))
                     time_interval = True
-        self.set_start_time(start_time)
-        self.set_end_time(end_time)
-        self.set_time_step(time_step)
+                """
+        self.set_start_datetime(start_datetime)
+        self.set_end_datetime(end_datetime)
+        self.set_time_step_delta(time_step_delta)
         self.line_skip = str(line_skip)
 
     def get_line_skip(self):

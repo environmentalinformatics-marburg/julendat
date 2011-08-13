@@ -23,7 +23,8 @@ __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import os
-
+import datetime
+import time
 
 class DataFile:   
     """Instance for handling data files.
@@ -164,47 +165,99 @@ class DataFile:
         return self.filetype
 
     def get_time_range(self):
-        """Gets time range extracted from data file.
+        """Gets time range extracted from data file as time object.
 
         Returns:
-            Time range of the data file in the following order:
+            Time range of the data file as time object in the following order:
                 start time
                 end time
                 time step in minutes
         """
-        return self.start_time, self.end_time, self.time_step
+        return self.start_datetime, self.end_datetime, self.time_step_delta
 
-    def set_start_time(self, start_time=None):
+    def get_time_range_str(self):
+        """Gets time range extracted from data file as string.
+
+        Returns:
+            Time range of the data file as string in the following order:
+                start time
+                end time
+                time step in minutes
+        """
+        return self.start_datetime_str, self.end_datetime_str, \
+            self.time_step_delta_str
+
+    def set_start_datetime(self, start_datetime=None):
+        """Sets start time of the data file as datetime object.
+
+        Args:
+            Start time of the data file.
+        """
+        if  isinstance(start_datetime, str):
+            start_datetime = datetime.datetime.strptime(start_datetime, "%Y%m%d%H%M")
+        self.start_datetime = start_datetime
+        self.set_start_datetime_str(self.start_datetime)
+
+    def get_start_datetime(self):
+        """Gets start time of the data file as datetime object.
+
+        Returns:
+            Start time of the data file as datetime object.
+        """
+        return self.start_datetime
+
+    def set_start_datetime_str(self, start_datetime=None):
         """Sets start time extracted from data file.
 
         Args:
             Start time of the data file.
         """
-        self.start_time = start_time
+        self.start_datetime_str = time.strftime("%Y%m%d%H%M", \
+                                                    start_datetime.timetuple())
 
-    def get_start_time(self):
-        """Gets start time extracted from data file.
+    def get_start_datetime_str(self):
+        """Gets start time of the data file as string.
 
         Returns:
-            Start time of the data file.
+            Start time of the data file as string.
         """
-        return self.start_time
+        return self.start_datetime_str
 
-    def set_end_time(self, end_time=None):
-        """Sets end time  extracted from data file.
+    def set_end_datetime(self, end_datetime=None):
+        """Sets end time of the data file as datetime object.
 
         Args:
-            End time of the data file.
+            end time of the data file.
         """
-        self.end_time = end_time
+        if isinstance(end_datetime, str):
+            end_datetime = datetime.datetime.strptime(end_datetime, "%Y%m%d%H%M")
+        self.end_datetime = end_datetime
+        self.set_end_datetime_str(self.end_datetime)
 
-    def get_end_time(self):
-        """Gets end time  extracted from data file.
+    def get_end_datetime(self):
+        """Gets end time of the data file as datetime object.
 
         Returns:
-            End time of the data file.
+            end time of the data file as datetime object.
         """
-        return self.end_time
+        return self.end_datetime
+
+    def set_end_datetime_str(self, end_datetime=None):
+        """Sets end time extracted from data file.
+
+        Args:
+            end time of the data file.
+        """
+        self.end_datetime_str = time.strftime("%Y%m%d%H%M", \
+                                                    end_datetime.timetuple())
+
+    def get_end_datetime_str(self):
+        """Gets end time of the data file as string.
+
+        Returns:
+            end time of the data file as string.
+        """
+        return self.end_datetime_str
 
     def set_time_zone(self, time_zone=None):
         """Sets time zone extracted from data file.
@@ -222,21 +275,96 @@ class DataFile:
         """
         return self.time_zone
 
-    def set_time_step(self, time_step=None):
-        """Sets time step extracted from data file.
+    def set_time_step_delta(self, time_step_delta=None):
+        """Sets time step of the data file as datetime.timedelta object.
 
         Args:
-            Time interval in minutes of the data file.
+            time step of the data file as datetime.timedelta object.
         """
-        self.time_step = time_step
+        if  isinstance(time_step_delta, str):
+            a = datetime.datetime.strptime("2001010101" + time_step_delta, "%Y%m%d%H%M")
+            b = datetime.datetime.strptime("200101010100", "%Y%m%d%H%M")
+            time_step_delta = a - b
+        print time_step_delta
+        self.time_step_delta = time_step_delta
+        self.set_time_step_delta_str(time_step_delta)
 
-    def get_time_step(self):
-        """Gets time step extracted from data file.
+    def get_time_step_delta(self):
+        """Gets time step of the data file as datetime.timedelta object.
 
         Returns:
-            Time step in minutes of the data file.
+            Time time step of the data file as datetime.timedelta object.
         """
-        return self.time_step    
+        return self.time_step_delta
+
+    def set_time_step_delta_str(self, time_step_delta=None):
+        """Sets time step of the data file as string.
+
+        Args:
+            time step of the data file as datetime.timedelta object.
+        """
+        y = "0000"
+        m = "00"
+        d = "00"
+        h = "00"
+        i = "00"
+        s = "00"
+
+        seconds = time_step_delta.total_seconds()
+        if seconds < 60.0:
+            s = time.strftime("%S",time.strptime(str(int(seconds)),"%S"))
+            time_step_delta_str = s
+            time_step_level = "seconds"
+        elif seconds >= 60.0:
+            i = seconds // 60.0
+            remainder = seconds - (i*60.0)
+            s = time.strftime("%S",time.strptime(str(int(remainder)),"%S"))
+            if i < 60.0:
+                i = time.strftime("%M",time.strptime(str(int(i)),"%M"))
+                time_step_delta_str = i
+                time_step_level = "minutes"
+            elif i >= 60.0:
+                h = i // 60.0
+                remainder = i - (h*60)
+                i = time.strftime("%M",time.strptime(str(int(remainder)),"%M"))
+                if h < 24.0:
+                    h = time.strftime("%H",time.strptime(str(int(h)),"%H"))
+                    time_step_delta_str = h
+                    time_step_level = "hours"
+                if h >= 24.0:
+                    d = h // 24.0
+                    remainder = h - (d*24)
+                    h = time.strftime("%H",time.strptime(str(int(remainder)),"%H"))
+                    d = time.strftime("%d",time.strptime(str(int(d)),"%d"))
+                    time_step_delta_str = d
+                    time_step_level = "days"
+
+        self.time_step_delta_str = time_step_delta_str
+        self.time_step_level = time_step_level
+    
+    def get_time_step_delta_str(self):
+        """Gets time step of the data file as string.
+
+        Returns:
+            Time time step of the data file as string.
+        """
+        return self.time_step_delta_str
+
+    def get_time_step_level_str(self):
+        """Gets coded time step level of the data file.
+
+        Returns:
+            Coded time step level of the data file
+        """
+        if self.time_step_level == "seconds":
+           self.time_step_level_str = "s"
+        elif self.time_step_level == "minutes":
+            self.time_step_level_str = "i"
+        elif self.time_step_level == "hours":
+            self.time_step_level_str = "h"
+        elif self.time_step_level == "days":
+            self.time_step_level_str = "d"
+        return self.time_step_level_str
 
     def set_quality(self, quality=None):
         """Sets quality flag of the data file.
