@@ -37,10 +37,15 @@ def main():
     print   
     
     #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201104180810_201106280940_mez_ra01_nai05_0000.asc'
-    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000gra2/ra01_nai12_0000/ki_0000gra2_rug_201012141000_201102082236_mez_ra01_nai12_0000.asc'
-    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000gra2/ra01_nai05_0000/ki_0000gra2_rug_201106230955_201107071350_mez_ra01_nai05_0000.asc'
+    filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000gra2/ra01_nai12_0000/ki_0000gra2_rug_201012141000_201102082236_mez_ra01_nai12_0000.asc'
+    filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/000gra1b/ra01_nas02_0000/ki_000gra1b_rug_201012200000_201012210318_mez_ra01_nas02_0000.asc'
+    filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000flm1/ra01_nah01_0000/ki_0000flm1_rug_201102171000_201102231900_mez_ra01_nah01_0000.asc'
+    filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000flm1/ra01_nah01_0000/ki_0000flm1_rug_201102171000_201102231900_mez_ra01_nah01_0000.asc'
+    filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201104180810_201106280940_mez_ra01_nai05_0000.asc'
     filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_wxt_201104052200_201107191250_mez_ra01_nai05_0000.asc'
-    
+    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000gra2/ra01_nai05_0000/ki_0000gra2_rug_201106230955_201107071350_mez_ra01_nai05_0000.asc'
+    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_wxt_201104052200_201107191250_mez_ra01_nai05_0000.asc'
+    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201104180810_201106280940_mez_ra01_nai05_0000.asc'
     
     DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
         

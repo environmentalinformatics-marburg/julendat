@@ -1,5 +1,5 @@
 [logger]
-initial_logger_file = /media/permanent/development/test/kilimanjaro/metstations/infralog/logger/noname.bin
+initial_logger_filepath = /media/permanent/development/test/kilimanjaro/metstations/infralog/logger/noname.bin
 station_entries = dk_station_entries.cnf
 
 [repository]
