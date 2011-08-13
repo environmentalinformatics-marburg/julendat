@@ -98,8 +98,6 @@ class DKStationLevel02Level1:
                                 toplevel_path=self.tl_data_path)
             self.run_flag = True
         except:
-            self.filenames = StationDataFilePath(filepath=filepath, \
-                                toplevel_path=self.tl_data_path)
             self.run_flag = False
 
     def get_run_flag(self):
@@ -163,8 +161,6 @@ class DKStationLevel02Level1:
             if self.filenames.get_raw_plot_id() != inventory.get_plot_id():
                 self.run_flag = False
             elif self.filenames.get_station_id() != inventory.get_station_id():
-                print self.filenames.get_station_id()
-                print inventory.get_station_id()
                 self.run_flag = False
         if self.get_run_flag():
             self.calib_coefficients_headers, self.calib_coefficients = \
@@ -233,7 +229,6 @@ class DKStationLevel02Level1:
         f.write(r_cmd)
         f.close()
         r_cmd = "R --no-save < " + r_script
-        print r_cmd
         os.system(r_cmd)
             
     def level_010(self):
@@ -245,16 +240,12 @@ class DKStationLevel02Level1:
 
         level_010_file = []
         for act_file in range(0, filenumber):
-            print "Filenumber, ", filenumber
-            print "Act_File, ", act_file
             level_010_file.append(DataFile(\
                  self.filenames.get_filename_dictionary()\
                  ["level_010_ascii-filepath"][act_file]))
             if not os.path.isdir(self.filenames.get_filename_dictionary()["level_010_ascii-path"][act_file]):
                 os.makedirs(self.filenames.get_filename_dictionary()["level_010_ascii-path"][act_file])
-            print "Exist: ", level_010_file[act_file].get_filepath()
             if level_010_file[act_file].get_file_exists() != True:
-                "Mir egal"
                 self.init_level_010_file(level_010_file[act_file].get_filepath())
             self.compute_level_010_file(\
                  self.filenames.get_filename_dictionary()\
@@ -270,8 +261,7 @@ class DKStationLevel02Level1:
         r_output_filepath = 'outpath="' + filepath + '",'
         r_start_time = 'start_time=' + os.path.split(filepath)[1][16:28] + ','
         r_end_time = 'end_time=' + os.path.split(filepath)[1][29:41] + ','
-        r_time_step = 'time_step=' + str(float(self.filenames.get_time_step_delta_str())*60.0) + ''
-        print "HALLO, ", r_time_step
+        r_time_step = 'time_step=' + str(self.filenames.get_time_step_delta()) + ''
         r_cmd = r_source + "\n" + \
             r_keyword + " (\n" + \
             r_output_filepath + "\n" + \
@@ -312,14 +302,10 @@ class DKStationLevel02Level1:
         level_10_counter = 0
         out = []
         for level_10_row in level_10_input:
-            #print level_10_input[level_10_counter][0]
             found = False
             station_counter = 0
             for station_10_row in station_input:
-                #print level_10_input[level_10_counter][0], station_input[station_counter][0]
-                #print station_input[station_counter][0]
                 if level_10_input[level_10_counter][0] == station_input[station_counter][0]:
-                    #print "hallo"
                     out.append(station_input[station_counter])
                     found = True
                     break
@@ -387,6 +373,5 @@ class DKStationLevel02Level1:
             for entry_lce in range(0,len(self.level10_column_entries)):
                 if string.strip(self.level10_column_entries[entry_lce]) ==  \
                     string.strip(self.station_column_entries[entry_sce]):
-                        print self.level10_column_entries[entry_lce]
                         reorder.append(entry_lce+1)
         self.reorder = reorder

@@ -101,15 +101,18 @@ class DKStation2Level0:
             self.binary_logger_file = DKStationDataFile(\
                                       filepath=self.initial_logger_filepath)
 
+            # Check if ascii station logger file exists.
             ascii_file_exsists = False
             ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + "asc"
             if os.path.isfile(ascii_filepath):
                 ascii_file_exsists = True
             else:
-                ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + "ASC"
+                ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + \
+                    "ASC"
                 if os.path.isfile(ascii_filepath):
                     ascii_file_exsists = True
 
+            # Init ascii station logger file.
             if ascii_file_exsists == True:
                 self.ascii_logger_file = DKStationDataFile(\
                                          filepath=ascii_filepath)
@@ -118,9 +121,8 @@ class DKStation2Level0:
                 self.run_flag = False
 
         except:
+            #TODO(tnauss): Handle exception more properly.
             self.run_flag = False
-            self.ascii_logger_file = DKStationDataFile(\
-                                         filepath=ascii_filepath)
 
     def get_run_flag(self):
         """Gets runtime flag information.
@@ -136,7 +138,6 @@ class DKStation2Level0:
         self.inventory = StationInventory(filepath=self.station_inventory, \
                     serial_number=self.ascii_logger_file.get_serial_number())
         
-        self.time_range = self.ascii_logger_file.get_time_range()
         if self.inventory.get_found_station_inventory():
             self.plot_id = self.inventory.get_plot_id()
             self.station_id = self.inventory.get_station_id()
@@ -241,7 +242,6 @@ class DKStation2Level0:
                         time_step_delta = self.ascii_logger_file.get_time_step_delta(), \
                         aggregation_level="na", \
                         postexflag=postexflag)  
-        
         #self.filenames.build_filename_dictionary()
 
     def main(self):

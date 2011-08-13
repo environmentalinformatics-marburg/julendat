@@ -29,7 +29,7 @@ import datetime
 import time
 import os
 from julendat.filetools.stations.StationDataFile import StationDataFile
-
+from julendat.processtools import time_utilities
 
 class StationDataFilePath(StationDataFile):   
     """'Instance for generating station data filenames.
@@ -88,7 +88,7 @@ class StationDataFilePath(StationDataFile):
             self.check_standard()
         
         self.set_toplevel_path(toplevel_path)
-        
+
         if self.standard_name:
             self.build_filename_dictionary()
 
@@ -138,24 +138,13 @@ class StationDataFilePath(StationDataFile):
         
         #Level 0.5 (calibrated data values, standard format)
         time_zone = "eat"
-        if time_zone == "eat": 
-            start_datetime = self.get_start_datetime()
-            end_datetime = self.get_end_datetime()
-            start_datetime = start_datetime + datetime.timedelta(minutes=120)
-            end_datetime = end_datetime + datetime.timedelta(minutes=120)
-            start_datetime = start_datetime.strftime("%Y%m%d%H%M")
-            end_datetime = end_datetime.strftime("%Y%m%d%H%M")
+        start_datetime = self.get_start_datetime()
+        end_datetime = self.get_end_datetime()
+        start_datetime = time_utilities.convert_timezone(start_datetime, time_zone)
+        end_datetime = time_utilities.convert_timezone(end_datetime, time_zone)
+        start_datetime = start_datetime.strftime("%Y%m%d%H%M")
+        end_datetime = end_datetime.strftime("%Y%m%d%H%M")
 
-            """
-            start_datetime = datetime.strptime(\
-                            self.get_start_datetime(),"%Y%m%d%H%M")
-            end_datetime = datetime.strptime(\
-                            self.get_end_datetime(),"%Y%m%d%H%M")
-            start_datetime = start_datetime + datetime.timedelta(minutes=120)
-            end_datetime = end_datetime + datetime.timedelta(minutes=120)
-            start_datetime = start_datetime.strftime("%Y%m%d%H%M")
-            end_datetime = end_datetime.strftime("%Y%m%d%H%M")
-            """
         calibration_level="ca01"
         quality = "0005"
         extension="dat"
@@ -182,8 +171,6 @@ class StationDataFilePath(StationDataFile):
         extension="dat"
         self.get_month_range()
         
-        print "filename, " , self.get_start_datetime(), self.get_end_datetime()
-        print self.filename_dictionary['level_000_ascii-filepath']
         self.filename_dictionary['level_010_ascii-filename'], \
         self.filename_dictionary['level_010_ascii-path'], \
         self.filename_dictionary['level_010_ascii-filepath'] = \
@@ -215,24 +202,21 @@ class StationDataFilePath(StationDataFile):
         end_datetime = datetime.strptime(\
                             self.get_end_datetime(),"%Y%m%d%H%M")
         """
-        print "Start-End-Time, ", start_datetime, end_datetime
         if end_datetime.year - start_datetime.year > 0:
             month_number = 13-start_datetime.month + end_datetime.month
         else:
             month_number = end_datetime.month-start_datetime.month+1
-        print "Month, ", month_number
         start_year = str(start_datetime.year)
         start_month = str(start_datetime.month)
         start_month = start_month.zfill(2)
         start_datetime = datetime.datetime.strptime(start_year+start_month+"010000",\
                              "%Y%m%d%H%M")
-        last_time_of_month = "23" + str(60 - int(self.get_aggregation()[3:5]))
+        #last_time_of_month = "23" + str(60 - int(self.get_aggregation()[3:5]))
         last_time_of_month = str(23 + 60 - int(self.get_aggregation()[3:5]))
         
         self.set_start_datetime(start_datetime)
         self.month_number = month_number
         self.last_time_of_month = last_time_of_month
-        print "aggregation_level, ",  self.get_aggregation()
 
     def get_monthly_filepath(self, project_id=None, plot_id=None, \
                  station_id=None, start_datetime=None, end_datetime=None, \
@@ -261,20 +245,11 @@ class StationDataFilePath(StationDataFile):
         filename = []
         path = []
         filepath = []
-        print "month_number, ", self.month_number
         for i in range(0,self.month_number):
-            print " "
             act_time = self.get_start_datetime()
-
-            #act_time = datetime.datetime.strptime(\
-            #                    self.get_start_datetime(),"%Y%m%d%H%M")
-            #act_month = str((act_time.month+i)%12)
-            print i
             act_month = act_time.month+i
-            print act_month
 
             if act_month > 12:
-                print "act_month_initial, ", act_month
                 act_month = act_month-12
             act_month = str(act_month).zfill(2)
             act_month = str(act_month)
@@ -287,9 +262,6 @@ class StationDataFilePath(StationDataFile):
                            str(calendar.monthrange(int(act_year), \
                                                    int(act_month))[1]) + \
                             self.last_time_of_month,"%Y%m%d%H%M"))
-            print end_datetime
-            print "Stuff, ", act_year, act_month
-            print "Stuff2, ", start_datetime, end_datetime
             filename.append( \
                 self.build_filename(\
                     start_datetime=start_datetime, \
@@ -305,7 +277,6 @@ class StationDataFilePath(StationDataFile):
             filepath.append( \
                 path[i] + \
                 filename[i])
-        #sys.exit()
         return filename, path, filepath
         
     def build_filename(self, project_id=None, plot_id=None, \
@@ -356,18 +327,17 @@ class StationDataFilePath(StationDataFile):
             postexflag = self.get_postexflag()
 
         filename = project_id + "_" + \
-                   plot_id + "_" + \
-                   station_id + "_" + \
-                   start_datetime + "_" + \
-                   end_datetime + "_" + \
-                   time_zone + "_" + \
-                   calibration_level + "_" + \
-                   aggregation_level + "_" + \
-                   quality + "." + \
-                   extension
+            plot_id + "_" + \
+            station_id + "_" + \
+            start_datetime + "_" + \
+            end_datetime + "_" + \
+            time_zone + "_" + \
+            calibration_level + "_" + \
+            aggregation_level + "_" + \
+            quality + "." + \
+            extension
         if postexflag != None:
             filename = filename + "." + postexflag 
-        
         return filename
 
     def build_path(self, project_id=None, plot_id=None, \
@@ -451,21 +421,23 @@ class StationDataFilePath(StationDataFile):
         self.build_quality(quality)
         self.set_extension(extension)
         self.build_postexflag(postexflag)
-
-        filename = self.get_project_id() + "_" + \
-                        self.get_plot_id() + "_" + \
-                        self.get_station_id() + "_" + \
-                        self.get_start_datetime_str() + "_" + \
-                        self.get_end_datetime_str() + "_" + \
-                        self.get_time_zone() + "_" + \
-                        self.get_calibration_level() + "_" + \
-                        self.get_aggregation() + "_" + \
-                        self.get_quality() + "." + \
-                        self.get_extension()
-        print filename
+        
+        filename = self.build_filename(project_id=self.get_project_id(), \
+                            plot_id=self.get_plot_id(), \
+                            station_id=self.get_station_id(), \
+                            start_datetime=self.get_start_datetime_str(), \
+                            end_datetime=self.get_end_datetime_str(), \
+                            time_zone=self.get_time_zone(), \
+                            calibration_level=self.get_calibration_level(), \
+                            aggregation_level=self.get_aggregation(), \
+                            quality=self.get_quality(), \
+                            extension=self.get_extension(), \
+                            postexflag=self.get_postexflag())
         self.set_filepath(filename)
         self.set_filename()
-        self.set_extension()                
+        self.set_extension() 
+        
+
 
     def build_project_id(self, project_id):
         """Sets project ID of the data file.
@@ -550,11 +522,10 @@ class StationDataFilePath(StationDataFile):
         """
         if aggregation_level == None:
             aggregation_level = "00"
-        print type(time_step_delta), time_step_delta
         self.set_time_step_delta(time_step_delta)
         self.set_aggregation(aggregation_level + \
-                             self.get_time_step_level_str() + \
-                             self.get_time_step_delta_str())
+                             self.time_step_delta.get_time_step_level_str() + \
+                             self.time_step_delta.get_data_file_time_value_str())
 
     def build_quality(self, quality):
         """Set quality flag of the data file.
@@ -620,17 +591,9 @@ class StationDataFilePath(StationDataFile):
         self.set_time_zone(filename[42:45])
         self.set_calibration_level(filename[46:50])
         self.set_aggregation(filename[51:56])
-        self.set_time_step_delta(self.get_aggregation()[3:5])
         self.set_quality(filename[57:61])
         self.set_extension(filename[56:56])
         self.set_postexflag(filename[66:])
         if len(self.get_postexflag()) == 0:
             self.set_postexflag(postexflag=None)
-        print self.get_time_zone()
-        print self.get_calibration_level()
-        print self.get_aggregation()
-        print self.get_time_step_delta_str()
-        print self.get_quality()
-        print self.get_extension()
-        print self.get_postexflag()
         

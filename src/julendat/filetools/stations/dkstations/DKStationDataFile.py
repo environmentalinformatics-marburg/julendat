@@ -28,7 +28,7 @@ import linecache
 import string
 import time
 from julendat.filetools.stations.StationDataFile import StationDataFile
-
+from julendat.processtools.TimeInterval import TimeInterval
 
 class DKStationDataFile(StationDataFile):
     """Instance for handling Driesen & Kern station data (sensor/logger).
@@ -82,6 +82,7 @@ class DKStationDataFile(StationDataFile):
         compute_time_interval = False
         logger_data = open(self.get_filepath(),'r')
         line_counter = 0
+        
         for line in logger_data:
             line_counter = line_counter + 1
             if line[2] == "." and line[5] == ".":
@@ -90,7 +91,9 @@ class DKStationDataFile(StationDataFile):
                            string.strip(line.split('\t')[1]), \
                            "%d.%m.%y%H:%M:%S")
                 if compute_time_interval == True:
-                    time_step_delta = end_datetime - start_datetime
+                    #time_step_delta = end_datetime - start_datetime
+                    time_step_delta = TimeInterval(start_datetime, \
+                                                     end_datetime)
                     compute_time_interval = False
                 if start_datetime == None:
                     line_skip = line_counter -1
@@ -99,8 +102,7 @@ class DKStationDataFile(StationDataFile):
                                  string.strip(line.split('\t')[1]), \
                                  "%d.%m.%y%H:%M:%S")
                     compute_time_interval = True
-
-                """
+        """
                 end_time = time.strftime("%Y%m%d%H%M",
                            time.strptime(\
                            string.strip(line.split('\t')[0]) +\
@@ -136,7 +138,6 @@ class DKStationDataFile(StationDataFile):
 
     #TODO(tnauss): Implement csv routine
     def test(self):
-        print self.get_filepath()
         infile = open(self.get_filepath())
         for i in range (0,6):
             infile.next()
@@ -145,5 +146,4 @@ class DKStationDataFile(StationDataFile):
         test =[]
         for row in file:
             test.append(row)
-        print test[0][0], test[0][1], test[0][2], float(test[0][2])*2
                 

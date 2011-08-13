@@ -129,6 +129,7 @@ class StationDataFile(DataFile):
             aggregation: Coded time aggregation of the data set
         """
         self.aggregation = aggregation
+        self.set_time_step_delta(aggregation)
     
     def get_aggregation(self):
         """Get time aggregation of the data file.
