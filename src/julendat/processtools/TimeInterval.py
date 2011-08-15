@@ -11,15 +11,10 @@ import datetime
 import sys
 
 class TimeInterval(TimePoint):
-    '''
-    classdocs
-    '''
+
 
 
     def __init__(self,time_value_01=None, time_value_02=None):
-        '''
-        Constructor
-        '''
         if isinstance(time_value_01, str):
             self.set_time_step_delta_from_str(time_value_01)
         else:
@@ -158,3 +153,4 @@ class TimeInterval(TimePoint):
         elif self.time_step_level == "hours":
             self.data_file_time_value_str = str(self.get_time_step())[0:1]
         self.data_file_time_value_str = self.data_file_time_value_str.zfill(2)
+    

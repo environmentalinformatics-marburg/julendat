@@ -27,6 +27,7 @@ import csv
 import os
 import string
 import ConfigParser
+from julendat.processtools import time_utilities
 from julendat.filetools.stations.dkstations.DKStationDataFile import DKStationDataFile
 import shutil
 from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
@@ -79,11 +80,11 @@ class DKStationLevel02Level1:
         config = ConfigParser.ConfigParser()
         config.read(self.config_file)
         self.station_entries = config.get('logger', 'station_entries')
-
-        
+        self.logger_time_zone = config.get('logger', 'logger_time_zone')
         self.tl_data_path = config.get('repository', 'toplevel_repository_path')
         self.station_inventory = config.get('inventory','station_inventory')
         self.project_id = config.get('project','project_id')
+        self.level_005_timezone = config.get('project','level_005_timezone')
         self.level01_standards = config.get('general','level01_standards')
         self.r_filepath = config.get('general','r_filepath')
 
@@ -95,7 +96,9 @@ class DKStationLevel02Level1:
         """
         try:
             self.filenames = StationDataFilePath(filepath=filepath, \
-                                toplevel_path=self.tl_data_path)
+                                toplevel_path=self.tl_data_path, \
+                                logger_time_zone=self.logger_time_zone, \
+                                level_005_time_zone=self.level_005_timezone)
             self.run_flag = True
         except:
             self.run_flag = False
@@ -188,7 +191,8 @@ class DKStationLevel02Level1:
         """
         if not os.path.isdir(self.filenames.get_filename_dictionary()["level_005_ascii-path"]):
             os.makedirs(self.filenames.get_filename_dictionary()["level_005_ascii-path"])
-        
+        time_difference_in_seconds = \
+            time_utilities.timezone_difference(self.level_005_timezone)
         r_source = 'source("' + self.r_filepath + os.sep + \
             'ComputeLevel005File.R")'
         r_keyword = "compute_level_005_file"
@@ -207,8 +211,9 @@ class DKStationLevel02Level1:
         self.reorder_station_coloumn_entries()
         r_reorder = 'reorder=c('+ self.convert_floatlist2string(self.reorder) + '),'
         r_skip = 'skip=' + self.line_skip + ','
-        r_quality = 'quality=' + self.filenames.get_quality() + ','
-        r_adjust_time = 'adjust_time=' + str(2*60*60) + ','
+        #r_quality = 'quality=' + self.filenames.get_quality() + ','
+        r_quality = 'quality=0005,'
+        r_adjust_time = 'adjust_time=' + str(time_difference_in_seconds) + ','
         r_order_out = 'order_out=c(' + \
             self.convert_list2string(self.level10_column_entries) + ')'
             
@@ -262,6 +267,9 @@ class DKStationLevel02Level1:
         r_start_time = 'start_time=' + os.path.split(filepath)[1][16:28] + ','
         r_end_time = 'end_time=' + os.path.split(filepath)[1][29:41] + ','
         r_time_step = 'time_step=' + str(self.filenames.get_time_step_delta()) + ''
+        #TODO(tnauss): Read time aggregation from configuration file,
+        #and adjust output filenames.
+        r_time_step = str(60*5.0)
         r_cmd = r_source + "\n" + \
             r_keyword + " (\n" + \
             r_output_filepath + "\n" + \

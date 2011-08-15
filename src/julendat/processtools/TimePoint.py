@@ -9,15 +9,10 @@ import datetime
 import time
 
 class TimePoint(object):
-    '''
-    classdocs
-    '''
 
 
     def __init__(self,time_value):
-        '''
-        Constructor
-        '''
+
         if  isinstance(time_value, str):
             if len(time_value) == 12:
                 self.set_y2i_dto_from_string(time_value)

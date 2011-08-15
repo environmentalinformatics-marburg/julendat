@@ -90,6 +90,7 @@ class DKStation2Level0:
         config = ConfigParser.ConfigParser()
         config.read(self.config_file)
         self.initial_logger_filepath = config.get('logger', 'initial_logger_filepath')
+        self.logger_time_zone = config.get('logger', 'logger_time_zone')
         self.tl_data_path = config.get('repository', 'toplevel_repository_path')
         self.project_id = config.get('project', 'project_id')
         self.station_inventory = config.get('inventory', 'station_inventory')
@@ -240,6 +241,7 @@ class DKStation2Level0:
                         start_datetime=self.ascii_logger_file.get_start_datetime(), \
                         end_datetime=self.ascii_logger_file.get_end_datetime(), \
                         time_step_delta = self.ascii_logger_file.get_time_step_delta(), \
+                        logger_time_zone=self.logger_time_zone, \
                         aggregation_level="na", \
                         postexflag=postexflag)  
         #self.filenames.build_filename_dictionary()

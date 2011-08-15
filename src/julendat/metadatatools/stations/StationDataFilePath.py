@@ -23,7 +23,6 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
-import sys
 import calendar
 import datetime
 import time
@@ -41,7 +40,8 @@ class StationDataFilePath(StationDataFile):
     def __init__(self, filepath=None, io_access="r", serial_number=None, \
                  toplevel_path=None, filename=None, project_id=None, \
                  plot_id=None, station_id=None, start_datetime=None, \
-                 end_datetime=None, time_step_delta=None, time_zone=None, \
+                 end_datetime=None, time_step_delta=None, \
+                 logger_time_zone=None, level_005_time_zone=None, \
                  calibration_level=None, aggregation_level=None, quality=None, \
                  extension=None, postexflag=None):
         """Inits StationDataFilename.
@@ -66,13 +66,17 @@ class StationDataFilePath(StationDataFile):
             start_datetime: Recording time of the first data set in the file
             end_datetime: Recording time of the last data set in the file
             time_step_delta: Recording time interval
-            time_zone: Time zone of the time values
+            logger_time_zone: Time zone of the logger time values
+            level_005_time_zone: Time zone of the level 0.5+ data files
             calibration_level: Coded calibration procedures applied to the data
             aggregation_level: Coded aggregation_level of the data set
             quality: Coded quality level of the data file
             extension: Filename extension (3 characters)
             postexflag: Additional information sticked after the extension
         """       
+        self.logger_time_zone = logger_time_zone
+        self.level_005_time_zone = level_005_time_zone
+        
         if filepath == None:
             filepath = filename
         if filepath != None:
@@ -81,10 +85,16 @@ class StationDataFilePath(StationDataFile):
             if self.standard_name:
                 self.disassemble_filename()
         else:
-            self.build_initial_filename(project_id, plot_id, station_id, \
-                                    start_datetime, end_datetime, time_step_delta,
-                                    time_zone, calibration_level, aggregation_level, \
-                                    quality, extension, postexflag)
+            self.build_initial_filename(project_id=project_id, \
+                plot_id=plot_id, station_id=station_id, \
+                start_datetime=start_datetime, end_datetime=end_datetime, \
+                time_step_delta=time_step_delta, \
+                time_zone=self.logger_time_zone, \
+                calibration_level=calibration_level,  \
+                aggregation_level=aggregation_level, quality=quality, \
+                extension=extension, postexflag=postexflag)
+            
+
             self.check_standard()
         
         self.set_toplevel_path(toplevel_path)
@@ -99,13 +109,12 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary = {}
 
         #Level 0 (binary)
-        time_zone = "mez"
         calibration_level="rb01"
         quality = "0000"
         extension="bin"
         self.filename_dictionary['level_000_bin-filename'] = \
             self.build_filename(\
-                time_zone = time_zone, \
+                time_zone = self.logger_time_zone, \
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
@@ -118,13 +127,12 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_000_bin-filename']
 
         #Level 0 (ascii)
-        time_zone = "mez"
         calibration_level="ra01"
         quality = "0000"
         extension="asc"
         self.filename_dictionary['level_000_ascii-filename'] = \
             self.build_filename(\
-                time_zone = time_zone, \
+                time_zone = self.logger_time_zone , \
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
@@ -137,11 +145,12 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_000_ascii-filename']
         
         #Level 0.5 (calibrated data values, standard format)
-        time_zone = "eat"
         start_datetime = self.get_start_datetime()
         end_datetime = self.get_end_datetime()
-        start_datetime = time_utilities.convert_timezone(start_datetime, time_zone)
-        end_datetime = time_utilities.convert_timezone(end_datetime, time_zone)
+        start_datetime = time_utilities.convert_timezone(start_datetime, \
+                            self.level_005_time_zone)
+        end_datetime = time_utilities.convert_timezone(end_datetime, \
+                            self.level_005_time_zone)
         start_datetime = start_datetime.strftime("%Y%m%d%H%M")
         end_datetime = end_datetime.strftime("%Y%m%d%H%M")
 
@@ -152,7 +161,7 @@ class StationDataFilePath(StationDataFile):
             self.build_filename(\
                 start_datetime = start_datetime, \
                 end_datetime = end_datetime, \
-                time_zone = time_zone, \
+                time_zone = self.level_005_time_zone, \
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
@@ -165,7 +174,6 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_005_ascii-filename']
 
         #Level 1.0 (monthly aggregated, time-filled files)
-        time_zone = "eat"
         calibration_level="ca01"
         quality = "0010"
         extension="dat"
@@ -174,9 +182,10 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary['level_010_ascii-filename'], \
         self.filename_dictionary['level_010_ascii-path'], \
         self.filename_dictionary['level_010_ascii-filepath'] = \
-            self.get_monthly_filepath(start_datetime=start_datetime, end_datetime=end_datetime,\
-                time_zone=time_zone, calibration_level=calibration_level, \
-                quality=quality, extension=extension)
+            self.get_monthly_filepath(start_datetime=start_datetime, \
+                end_datetime=end_datetime, time_zone=self.level_005_time_zone, \
+                calibration_level=calibration_level, quality=quality, \
+                extension=extension)
 
     
     def get_filename_dictionary(self):
@@ -212,8 +221,18 @@ class StationDataFilePath(StationDataFile):
         start_datetime = datetime.datetime.strptime(start_year+start_month+"010000",\
                              "%Y%m%d%H%M")
         #last_time_of_month = "23" + str(60 - int(self.get_aggregation()[3:5]))
-        last_time_of_month = "23" + str(60 - int(self.get_aggregation()[3:5]))
         
+        if self.get_aggregation()[2:3] == "s":
+            last_time_of_month =  "23" + str(59 - \
+                                  int(float(self.get_aggregation()[3:5]) / \
+                                  60.0))
+        elif self.get_aggregation()[2:3] == "i":
+            last_time_of_month =  "23" + str(60 - \
+                                  int(self.get_aggregation()[3:5]))
+        
+        elif self.get_aggregation()[2:3] == "h":
+            last_time_of_month =  str(24 - \
+                                  int(self.get_aggregation()[3:5])) + "00"
         self.set_start_datetime(start_datetime)
         self.month_number = month_number
         self.last_time_of_month = last_time_of_month
@@ -245,6 +264,10 @@ class StationDataFilePath(StationDataFile):
         filename = []
         path = []
         filepath = []
+        #TODO(tnauss): Read time aggregation from configuration file,
+        #and adjust output filenames.
+        if self.get_aggregation()[2:] != "i05":
+            aggregation_level = "cti05"
         for i in range(0,self.month_number):
             act_time = self.get_start_datetime()
             act_month = act_time.month+i
@@ -268,6 +291,7 @@ class StationDataFilePath(StationDataFile):
                     end_datetime=end_datetime, \
                     time_zone=time_zone, \
                     calibration_level=calibration_level, \
+                    aggregation_level=aggregation_level, \
                     quality=quality, \
                     extension=extension))
             path.append( \
@@ -391,9 +415,10 @@ class StationDataFilePath(StationDataFile):
             self.standard_name = False
     
     def build_initial_filename(self,project_id, plot_id, station_id, \
-                               start_datetime, end_datetime, time_step_delta, time_zone, \
-                               calibration_level, aggregation_level, quality, \
-                               extension, postexflag):
+                               start_datetime, end_datetime, time_step_delta, \
+                               time_zone, calibration_level, \
+                               aggregation_level, quality, extension, \
+                               postexflag):
         """Sets filename of the data file.
 
         Args:
