@@ -1,5 +1,6 @@
 [logger]
 initial_logger_filepath = /media/permanent/development/test/kilimanjaro/metstations/infralog/logger/noname.bin
+logger_time_zone = mez
 station_entries = dk_station_entries.cnf
 
 [repository]
@@ -10,6 +11,7 @@ station_inventory = ki_station_inventory.cnf
 
 [project]
 project_id = ki
+level_005_timezone = eat 
 
 [general]
 level01_standards = ki_level01_standards.cnf
