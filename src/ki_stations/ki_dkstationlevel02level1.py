@@ -22,8 +22,24 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
+import os
+import fnmatch
 from julendat.processtools.stations.DKStationLevel02Level1 import \
     DKStationLevel02Level1
+
+## {{{ http://code.activestate.com/recipes/499305/ (r3)
+## Creatied by Simon Brunning
+## Modified by Thomas Nauss: add patternpath to check for path.     
+def locate(pattern, patternpath, root=os.curdir):
+    '''Locate all files matching supplied filename pattern in and below
+    supplied root directory.'''
+    for path, dirs, files in os.walk(os.path.abspath(root)):
+        for filename in fnmatch.filter(files, pattern):
+## Modified by Thomas Nauss
+            if fnmatch.fnmatch(path, patternpath):
+## End of Thomas Nauss
+                yield os.path.join(path, filename)
+## end of http://code.activestate.com/recipes/499305/ }}}
 
 def main():
     """Main program function
@@ -37,10 +53,15 @@ def main():
     print   
     
     #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201104180810_201106280940_mez_ra01_nai05_0000.asc'    
-    filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_wxt_201104052200_201107191250_mez_ra01_nai05_0000.asc'    
+    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_wxt_201104052200_201107191250_mez_ra01_nai05_0000.asc'    
     #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000gra2/ra01_nai12_0000/ki_0000gra2_rug_201012141000_201102082236_mez_ra01_nai12_0000.asc'    
     #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/000gra1b/ra01_nas02_0000/ki_000gra1b_rug_201012200000_201012210318_mez_ra01_nas02_0000.asc'    
-    DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
+    input_path = '/media/permanent/development/test/kilimanjaro/metstations/plots/ki/'
+    station_dataset=locate("*.asc", "*ra01_*", input_path)
+    for dataset in station_dataset:
+        print(dataset)
+        filepath=dataset
+        DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
         
 if __name__ == '__main__':
     main()
