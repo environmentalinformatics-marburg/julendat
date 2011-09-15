@@ -11,8 +11,7 @@ init_level_010_file <- function(outpath, start_time, end_time, time_step) {
   tseries <- format(tseries, usetz=F)
   #tseries <- as.POSIXct(tseries)
   tseries  <- data.frame("dateEAT"=tseries)
-
-  
+   
   write.table(tseries, outpath, append=F, col.names=T, row.names=F, sep=",")
   
 }

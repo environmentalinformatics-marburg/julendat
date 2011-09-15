@@ -30,7 +30,8 @@ compute_level_005_file <- function(asciipath, outpath, plotID, loggertype,
 
   dateEAT <- dateCET + adjust_time
 
-  dateEAT <- as.POSIXct(format(dateEAT, usetz=F))
+  ##dateEAT <- as.POSIXct(format(dateEAT, usetz=F))
+  dateEAT <- format(dateEAT, format =  "%Y-%m-%d %H:%M:%S", usetz=F)
   dateEAT <- as.character(dateEAT)
 
   chdateEAT <- strftime(dateEAT, "%Y%m%d%H%M%S")
