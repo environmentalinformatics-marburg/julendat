@@ -2,6 +2,10 @@
 compute_level_005_file <- function(asciipath, outpath, plotID, loggertype, 
                        cf, reorder, skip, tz, quality, adjust_time, order_out) {
 
+  ## package 'chron' is needed for the handling of dates and times (as it
+  ## ignores time zones and daylight saving)
+  stopifnot(require("chron"))
+  
   ## define order for reading in data and writing out data
   order_in <- c(1:length(order_out))
 
@@ -26,16 +30,22 @@ compute_level_005_file <- function(asciipath, outpath, plotID, loggertype,
   minute <- substr(temp[,2],4,5)
   second <- substr(temp[,2],7,8)
 
-  dateCET <- as.POSIXct(ISOdate(year,month,day,hour,minute,second))
-
-  dateEAT <- dateCET + adjust_time
-
-  ##dateEAT <- as.POSIXct(format(dateEAT, usetz=F))
-  dateEAT <- format(dateEAT, format =  "%Y-%m-%d %H:%M:%S", usetz=F)
+  dateCET <- paste(year,month,day, sep="/")
+  timeCET <- paste(hour,minute,second, sep=":")
+  options(chron.year.abb = F)
+  datetimeCET <- chron(dateCET, timeCET, format = c(dates = "y/m/d", 
+                                                    times = "h:m:s"),
+                       out.format = c(dates = "y-m-d", times = "h:m:s"))
+  
+  dateEAT <- datetimeCET + 0.08333333
   dateEAT <- as.character(dateEAT)
+  
+  dateEAT <- gsub("(", "", dateEAT, fixed=T)
+  dateEAT <- gsub(")", "", dateEAT, fixed=T)
 
-  chdateEAT <- strftime(dateEAT, "%Y%m%d%H%M%S")
-  chdateEAT <- as.character(chdateEAT)
+  chdateEAT <- gsub("-", "", dateEAT)
+  chdateEAT <- gsub(" ", "", chdateEAT)
+  chdateEAT <- gsub(":", "", chdateEAT)
 
   year <- substr(chdateEAT,1,4)
   year <- as.character(year)
