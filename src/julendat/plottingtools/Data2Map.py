@@ -127,7 +127,7 @@ class Data2Map(object):
         grid_factor = math.cos(math.radians(
                                min(abs(self.lat_range[0]),
                                    abs(self.lat_range[1])))) * \
-                      400240000.0 / 360.0 / self.map_resolution
+                      40024000.0 / 360.0 / self.map_resolution
 
         self.lat_map_resolution = int(abs(self.lat_range[0] - 
                                       self.lat_range[1]) * grid_factor)
