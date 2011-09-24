@@ -37,7 +37,7 @@ compute_level_005_file <- function(asciipath, outpath, plotID, loggertype,
                                                     times = "h:m:s"),
                        out.format = c(dates = "y-m-d", times = "h:m:s"))
   
-  dateEAT <- datetimeCET + 0.08333333
+  dateEAT <- datetimeCET + adjust_time / 60 / 60 / 24
   dateEAT <- as.character(dateEAT)
   
   dateEAT <- gsub("(", "", dateEAT, fixed=T)
