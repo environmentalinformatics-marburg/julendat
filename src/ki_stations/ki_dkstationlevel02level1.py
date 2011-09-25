@@ -22,8 +22,9 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
-import os
+import datetime
 import fnmatch
+import os
 from julendat.processtools.stations.DKStationLevel02Level1 import \
     DKStationLevel02Level1
 
@@ -60,9 +61,12 @@ def main():
     station_dataset=locate("*.asc", "*ra01_*", input_path)
     for dataset in station_dataset:
         print(dataset)
+        systemdate = datetime.datetime.now()
         filepath=dataset
-        DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
-        
+        #DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
+        move_file = "mv " + dataset + " " + \
+            dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
+        os.system(move_file)
 if __name__ == '__main__':
     main()
 
