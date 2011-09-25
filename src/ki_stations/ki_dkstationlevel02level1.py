@@ -63,7 +63,7 @@ def main():
         print(dataset)
         systemdate = datetime.datetime.now()
         filepath=dataset
-        #DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
+        DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
         move_file = "mv " + dataset + " " + \
             dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
         os.system(move_file)
