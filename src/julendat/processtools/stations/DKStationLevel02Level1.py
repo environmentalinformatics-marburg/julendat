@@ -265,7 +265,7 @@ class DKStationLevel02Level1:
         r_keyword = "init_level_010_file"
         r_output_filepath = 'outpath="' + filepath + '",'
         r_start_time = 'start_time="' + os.path.split(filepath)[1][16:28] + '00",'
-        r_end_time = 'end_time="' + os.path.split(filepath)[1][29:41] + '00",'
+        r_end_time = 'end_time="' + os.path.split(filepath)[1][29:41] + '01",'
         r_time_step = 'time_step=' + str(self.filenames.get_time_step_delta()) + ''
         #TODO(tnauss): Read time aggregation from configuration file,
         #and adjust output filenames.
