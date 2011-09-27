@@ -22,6 +22,7 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
+import ConfigParser
 import datetime
 import fnmatch
 import os
@@ -42,6 +43,20 @@ def locate(pattern, patternpath, root=os.curdir):
                 yield os.path.join(path, filename)
 ## end of http://code.activestate.com/recipes/499305/ }}}
 
+
+def configure(config_file):
+    """Reads configuration settings and configure object.
+    
+    Args:
+        config_file: Full path and name of the configuration file.
+    """
+    config = ConfigParser.ConfigParser()
+    config.read(config_file)
+    toplevel_repository_path = config.get('repository', \
+                                          'toplevel_repository_path')
+    project_id = config.get('project','project_id')
+    return toplevel_repository_path, project_id
+    
 def main():
     """Main program function
     Process data from level 0 to level 1.
@@ -53,20 +68,27 @@ def main():
     print 'License: ' + __license__
     print   
     
-    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_pu1_201104180810_201106280940_mez_ra01_nai05_0000.asc'    
-    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_wxt_201104052200_201107191250_mez_ra01_nai05_0000.asc'    
-    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/0000gra2/ra01_nai12_0000/ki_0000gra2_rug_201012141000_201102082236_mez_ra01_nai12_0000.asc'    
-    #filepath='file:///media/permanent/development/test/kilimanjaro/metstations/plots/ki/000gra1b/ra01_nas02_0000/ki_000gra1b_rug_201012200000_201012210318_mez_ra01_nas02_0000.asc'    
-    input_path = '/media/permanent/development/test/kilimanjaro/metstations/plots/ki/'
+    toplevel_repository_path, project_id = configure(config_file='ki_stations.cnf')
+    input_path = toplevel_repository_path + os.sep + project_id
     station_dataset=locate("*.asc", "*ra01_*", input_path)
     for dataset in station_dataset:
         print(dataset)
         systemdate = datetime.datetime.now()
         filepath=dataset
-        DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
-        move_file = "mv " + dataset + " " + \
-            dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
-        os.system(move_file)
+        
+        try:
+            DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
+            move_file = "mv " + dataset + " " + \
+                dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
+            os.system(move_file)
+        except Exception as inst:
+            print "An error occured with the following dataset."
+            print "Some details:"
+            print "Filename: " + dataset
+            print "Exception type: " , type(inst)
+            print "Exception args: " , inst.args
+            print "Exception content: " , inst        
+        
 if __name__ == '__main__':
     main()
 

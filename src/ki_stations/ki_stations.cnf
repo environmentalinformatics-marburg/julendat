@@ -4,7 +4,8 @@ logger_time_zone = mez
 station_entries = dk_station_entries.cnf
 
 [repository]
-toplevel_repository_path = /media/permanent/development/test/kilimanjaro/metstations/plots
+toplevel_repository_path = /media/permanent/development/test/julendat/processing/plots
+toplevel_incoming_path = /media/permanent/development/test/julendat/incoming
 
 [inventory]
 station_inventory = ki_station_inventory.cnf
