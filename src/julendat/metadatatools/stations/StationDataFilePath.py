@@ -173,7 +173,7 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_005_ascii-path'] + \
             self.filename_dictionary['level_005_ascii-filename']
 
-        #Level 1.0 (monthly aggregated, time-filled files)
+        #Level 1.0 (monthly time-filled files, standard format)
         calibration_level="ca01"
         quality = "0010"
         extension="dat"
@@ -187,7 +187,6 @@ class StationDataFilePath(StationDataFile):
                 calibration_level=calibration_level, quality=quality, \
                 extension=extension)
 
-    
     def get_filename_dictionary(self):
         """Gets dictionary for data filenames of different levels.
         
@@ -201,7 +200,7 @@ class StationDataFilePath(StationDataFile):
         return self.filename_dictionary
 
     def get_month_range(self):
-        """Gets month range of t file.
+        """Gets month range of the file.
         """
         start_datetime = self.get_start_datetime()
         end_datetime = self.get_end_datetime()
