@@ -196,10 +196,18 @@ class DKStationLevel02Level1:
         r_source = 'source("' + self.r_filepath + os.sep + \
             'ComputeLevel005File.R")'
         r_keyword = "compute_level_005_file"
-        r_input_filepath = \
-           'asciipath="' + \
-            self.filenames.get_filename_dictionary()\
-            ["level_000_ascii-filepath"] + '",'
+        #If station is wxt, create temporary file and check for comments
+        if self.filenames.get_station_id() == "wxt":
+            self.check_wxt()
+            r_input_filepath = \
+                'asciipath="' + \
+                self.filenames.get_filename_dictionary()\
+                ["temp_filepath"] + '",'
+        else:
+            r_input_filepath = \
+                'asciipath="' + \
+                self.filenames.get_filename_dictionary()\
+                ["level_000_ascii-filepath"] + '",'
         r_output_filepath = 'outpath="' + \
             self.filenames.get_filename_dictionary()\
             ["level_005_ascii-filepath"] + '",'
@@ -235,6 +243,11 @@ class DKStationLevel02Level1:
         f.close()
         r_cmd = "R --no-save < " + r_script
         os.system(r_cmd)
+        #Delete temporary file created for wxt processing
+        if self.filenames.get_station_id() == "wxt":
+            cmd = "rm " + self.filenames.get_filename_dictionary()\
+                ["temp_filepath"]
+            os.system(cmd)
             
     def level_010(self):
         """Compute level 1.0 station data sets
@@ -383,3 +396,25 @@ class DKStationLevel02Level1:
                     string.strip(self.station_column_entries[entry_sce]):
                         reorder.append(entry_lce+1)
         self.reorder = reorder
+
+    def check_wxt(self):
+        """Check level 0 wxt logger file for comment lines within the data rows.
+        """
+        original_file = open(self.filenames.get_filename_dictionary()\
+                            ["level_000_ascii-filepath"],'r')
+        target_file = open(\
+            self.filenames.get_filename_dictionary()["temp_filepath"],'w')
+        first_run = False
+        row_skip = False
+        row_counter = 4
+        for row in original_file:
+            if row[0:3] == "RUN" and first_run == True:
+                row_skip = True
+                row_counter = 1
+            elif row[0:3] == "RUN" and first_run == False:
+                first_run = True
+            
+            if row_skip == True and row_counter <= 3:
+                row_counter = row_counter + 1
+            else:
+                target_file.write(row)

@@ -143,6 +143,8 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary['level_000_ascii-filepath'] = \
             self.filename_dictionary['level_000_ascii-path'] + \
             self.filename_dictionary['level_000_ascii-filename']
+        self.filename_dictionary['temp_filepath'] = \
+            self.filename_dictionary['level_000_ascii-path'] + "temp.txt"
         
         #Level 0.5 (calibrated data values, standard format)
         start_datetime = self.get_start_datetime()
