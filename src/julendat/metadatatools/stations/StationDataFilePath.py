@@ -407,9 +407,9 @@ class StationDataFilePath(StationDataFile):
         """
         filename = self.get_filename()
         if filename[2] == "_" and filename[11] == "_" \
-            and filename[15] == "_" and filename[28]  == "_" \
-            and filename[41] == "_" and filename[45] == "_" \
-            and filename[50] == "_" and filename[56] == "_":
+            and filename[18] == "_" and filename[31]  == "_" \
+            and filename[44] == "_" and filename[48] == "_" \
+            and filename[53] == "_" and filename[59] == "_":
             self.standard_name  = True
             
         else:
@@ -497,7 +497,7 @@ class StationDataFilePath(StationDataFile):
             station_id: Type of the station (sensor/logger combination)
         """
         if station_id == None:
-            station_id = "000"
+            station_id = "000000"
         self.set_station_id(station_id)
 
     def build_start_datetime(self, start_datetime):
@@ -611,15 +611,15 @@ class StationDataFilePath(StationDataFile):
         filename = self.get_filename()
         self.set_project_id(filename[0:2])
         self.set_plot_id(filename[3:11])
-        self.set_station_id(filename[12:15])
-        self.set_start_datetime(filename[16:28])
-        self.set_end_datetime(filename[29:41])
-        self.set_time_zone(filename[42:45])
-        self.set_calibration_level(filename[46:50])
-        self.set_aggregation(filename[51:56])
-        self.set_quality(filename[57:61])
-        self.set_extension(filename[56:56])
-        self.set_postexflag(filename[66:])
+        self.set_station_id(filename[12:18])
+        self.set_start_datetime(filename[19:31])
+        self.set_end_datetime(filename[32:44])
+        self.set_time_zone(filename[45:48])
+        self.set_calibration_level(filename[49:53])
+        self.set_aggregation(filename[54:59])
+        self.set_quality(filename[60:64])
+        self.set_extension(filename[66:69])
+        self.set_postexflag(filename[70:])
         if len(self.get_postexflag()) == 0:
             self.set_postexflag(postexflag=None)
         

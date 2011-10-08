@@ -55,7 +55,7 @@ class StationEntries(StationInventoryFile):
         error = False
         entries_data = open(self.get_filepath(),'r')
         for line in entries_data:
-            if string.strip(line.rsplit(',')[0])[1:4] == self.get_station_id():
+            if string.strip(line.rsplit(',')[0])[4:7] == self.get_station_id()[3:6]:
                 if foundID == True:
                     print "The same serial number has been found at least twice!"
                     error = True

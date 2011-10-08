@@ -70,7 +70,7 @@ class StationInventory(StationInventoryFile):
                     else:
                         act_line = line.rstrip()
                         plot_id = string.strip(line.rsplit(',')[5].strip('"'))
-                        logger_id = string.strip(line.rsplit(',')[6][1:4])
+                        logger_id = string.strip(line.rsplit(',')[6][1:7])
                         calib_coefficents = act_line.rsplit(',')[8:17]
                         misc = act_line.rsplit(',')[18:]
                         foundID = True
