@@ -76,8 +76,6 @@ def main():
         systemdate = datetime.datetime.now()
         filepath=dataset
         
-        DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
-        '''
         try:
             DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
             move_file = "mv " + dataset + " " + \
@@ -90,7 +88,7 @@ def main():
             print "Exception type: " , type(inst)
             print "Exception args: " , inst.args
             print "Exception content: " , inst        
-        '''
+
 if __name__ == '__main__':
     main()
 

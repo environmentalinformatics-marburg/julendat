@@ -1,11 +1,11 @@
 [logger]
-initial_logger_filepath = /home/dogbert/kilimanjaro/processing/logger/noname.bin
+initial_logger_filepath = /home/uikistations/ui_data_kilimanjaro/processing/logger/noname.bin
 logger_time_zone = mez
 station_entries = dk_station_entries.cnf
 
 [repository]
-toplevel_repository_path = /home/dogbert/kilimanjaro/processing/plots
-toplevel_incoming_path = /home/dogbert/kilimanjaro/incoming
+toplevel_repository_path = /home/uikistations/ui_data_kilimanjaro/processing/plots
+toplevel_incoming_path = /home/uikistations/ui_data_kilimanjaro/incoming
 
 [inventory]
 station_inventory = ki_station_inventory.cnf
@@ -16,5 +16,5 @@ level_005_timezone = eat
 
 [general]
 level01_standards = ki_level01_standards.cnf
-r_filepath = /home/dogbert/kilimanjaro/scripts/julendat-processing-packages/src/ki_stations
+r_filepath = /home/uikistations/ui_data_kilimanjaro/scripts/julendat-processing-packages/src/ki_stations
 

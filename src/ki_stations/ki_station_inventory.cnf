@@ -43,9 +43,9 @@ NaN,Nan,NaN,NaN,"forest Podocarpus","fpo2",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,N
 NaN,Nan,NaN,NaN,"forest Podocarpus","fpo3",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,"forest Podocarpus","fpo4",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,NaN,"fpo5",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
-NaN,Nan,NaN,NaN,"grasland","gra0","xxx",9999999999,NaN,NaN,NaN,16,17.59,9.14,9.73,NaN,NaN,"F4250012",100331,NaN,NaN,NaN,NaN,NaN
-NaN,Nan,NaN,NaN,"grasland","nkw1","000wxt",80091030031,NaN,NaN,NaN,16,17.59,9.14,9.73,NaN,NaN,"F4250012",100331,NaN,NaN,NaN,NaN,NaN
-NaN,Nan,NaN,NaN,"grasland","nkw1","000pu1",80081025285,0.201,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,104041,NaN,NaN,NaN,NaN
+NaN,Nan,NaN,NaN,"grasland","gra0","000rug","999999999999",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+NaN,Nan,NaN,NaN,"grasland","nkw1","000wxt","80091030031",NaN,NaN,NaN,16,17.59,9.14,9.73,NaN,NaN,"F4250012",100331,NaN,NaN,NaN,NaN,NaN
+NaN,Nan,NaN,NaN,"grasland","nkw1","000pu1","80081025285",0.201,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,104041,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,"grasland","gra1","000rug","051021020181",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,"grasland","gra2","000rug","051021020185",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,"grasland","gra3","000rug","051021020206",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
@@ -76,7 +76,7 @@ NaN,Nan,NaN,NaN,"maize","mai5","000rug","051021020213",NaN,NaN,NaN,NaN,NaN,NaN,N
 NaN,Nan,NaN,NaN,"coffee plantation","cof1","000rug","051021020218",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,"coffee plantation","cof3","000wxt",080031130064,NaN,NaN,NaN,18.9,15.02,10.53,8.64,NaN,NaN,"F3930007",100326,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,"forest lower montane","flm4","000rug",51021020208,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
-NaN,Nan,NaN,NaN,"grasland","nkw1","000wxt",080031130065,NaN,NaN,NaN,16,17.59,9.14,9.73,NaN,NaN,"F4250012",100331,NaN,NaN,NaN,NaN,NaN
+NaN,Nan,NaN,NaN,"grasland","nkw1","000wxt","080031130065",NaN,NaN,NaN,16,17.59,9.14,9.73,NaN,NaN,"F4250012",100331,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,"homegarden","hom3","000rug","051021020165",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,"homegarden","hom5","000rug","051021020200",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,"savanna","sav1","000rug","051021020162",NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
