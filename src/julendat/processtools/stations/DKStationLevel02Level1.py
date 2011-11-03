@@ -30,6 +30,7 @@ import ConfigParser
 from julendat.processtools import time_utilities
 from julendat.filetools.stations.dkstations.DKStationDataFile import DKStationDataFile
 import shutil
+import time
 from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
 from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.metadatatools.stations.StationEntries import StationEntries
@@ -197,7 +198,7 @@ class DKStationLevel02Level1:
             'ComputeLevel005File.R")'
         r_keyword = "compute_level_005_file"
         #If station is wxt, create temporary file and check for comments
-        if self.filenames.get_station_id() == "wxt":
+        if self.filenames.get_station_id().find("wxt") != -1:
             self.check_wxt()
             r_input_filepath = \
                 'asciipath="' + \
@@ -404,17 +405,14 @@ class DKStationLevel02Level1:
                             ["level_000_ascii-filepath"],'r')
         target_file = open(\
             self.filenames.get_filename_dictionary()["temp_filepath"],'w')
-        first_run = False
-        row_skip = False
-        row_counter = 4
+        row_counter = 0
+        
         for row in original_file:
-            if row[0:3] == "RUN" and first_run == True:
-                row_skip = True
-                row_counter = 1
-            elif row[0:3] == "RUN" and first_run == False:
-                first_run = True
-            
-            if row_skip == True and row_counter <= 3:
-                row_counter = row_counter + 1
-            else:
+            if row_counter < 7:
                 target_file.write(row)
+                row_counter = row_counter + 1
+            try:
+                time.strptime(row[0:8], "%d.%m.%y")
+                target_file.write(row)
+            except:
+                continue
