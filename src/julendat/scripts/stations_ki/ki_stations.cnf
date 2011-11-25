@@ -1,0 +1,20 @@
+[logger]
+initial_logger_filepath = /home/dogbert/Desktop/development/test/processing/logger/noname.bin
+logger_time_zone = mez
+station_entries = dk_station_entries.cnf
+
+[repository]
+toplevel_repository_path = /home/dogbert/Desktop/development/test/processing/plots
+toplevel_incoming_path = /home/dogbert/Desktop/development/test/incoming
+
+[inventory]
+station_inventory = ki_station_inventory.cnf
+
+[project]
+project_id = ki
+level_005_timezone = eat 
+
+[general]
+level01_standards = ki_level01_standards.cnf
+r_filepath = /home/dogbert/Desktop/development/julendat/src/julendat/scripts/stations_ki
+
