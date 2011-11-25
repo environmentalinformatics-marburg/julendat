@@ -2,9 +2,8 @@ init_level_010_file <- function(outpath, start_time, end_time, time_step) {
   
   ## set system locale time zone to "UTC" for time handling w/out
   ## daylight saving - save current (old) time zone setting
-  Old.TZ <- Sys.getenv("TZ")
   Sys.setenv(TZ = "UTC")
-  
+  print(Sys.time())
   ## create series 
   date_from <- as.POSIXct(start_time)
   date_to <- as.POSIXct(end_time)
@@ -19,10 +18,10 @@ init_level_010_file <- function(outpath, start_time, end_time, time_step) {
   write.table(tseries, outpath, append=F, col.names="date", row.names=F, sep=",")
   
   ## revert system local time zone setting to original
-  Sys.setenv(TZ = Old.TZ)
-  
+  Sys.setenv(TZ = "CET")
+  print(Sys.time())
 }
 
 ## EXAMPLE
-init_level_010_file("e:/kili_data/testing/level05/test_level001_POSIX.dat", 
-                    "2011-10-01 00:00:00", "2011-10-31 23:55:00", 300)
+init_level_010_file("/home/tappelhans/test.dat", "2011-03-27 00:00:00", 
+"2011-03-27 03:00:00", 300)
