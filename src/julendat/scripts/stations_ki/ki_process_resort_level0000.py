@@ -1,4 +1,4 @@
-"""Process D&K logger data from level 0 to level 1 (DFG-Kilimanjaro).
+"""Re-process inital logger files from DFG-Kilimanjaro.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -19,15 +19,13 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2010-08-06"
+__version__ = "2012-01-04"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
 import datetime
 import fnmatch
 import os
-from julendat.processtools.stations.DKStationLevel02Level1 import \
-    DKStationLevel02Level1
 
 ## {{{ http://code.activestate.com/recipes/499305/ (r3)
 ## Creatied by Simon Brunning
@@ -46,48 +44,50 @@ def locate(pattern, patternpath, root=os.curdir):
 
 def configure(config_file):
     """Reads configuration settings and configure object.
-    
+
     Args:
         config_file: Full path and name of the configuration file.
+        
     """
     config = ConfigParser.ConfigParser()
     config.read(config_file)
-    toplevel_repository_path = config.get('repository', \
-                                          'toplevel_repository_path')
-    project_id = config.get('project','project_id')
-    return toplevel_repository_path, project_id
-    
+    return config.get('repository', 'toplevel_incoming_path'), \
+           config.get('repository', 'toplevel_temp_path'), \
+           config.get('repository', 'toplevel_processing_logger_path')
+
+
+
 def main():
     """Main program function
     Process data from level 0 to level 1.
     """
     print
-    print 'Module: ki_dkstationlevel02level1'
+    print 'Module: ki_process_resort_level0000'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
     print   
     
-    toplevel_repository_path, project_id = configure(config_file='ki_stations.cnf')
-    input_path = toplevel_repository_path + os.sep + project_id
-    station_dataset=locate("*.asc", "*ra01_*", input_path)
+    config_file = "ki_config.cnf"
+    toplevel_incoming_path, toplevel_temp_path , \
+        toplevel_processing_logger_path = configure(config_file)
+    
+    station_dataset=locate("*.asc*", "*", toplevel_incoming_path)
     for dataset in station_dataset:
-        print(dataset)
-        systemdate = datetime.datetime.now()
-        filepath=dataset
-        
-        try:
-            DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
-            move_file = "mv " + dataset + " " + \
-                dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
-            os.system(move_file)
-        except Exception as inst:
-            print "An error occured with the following dataset."
-            print "Some details:"
-            print "Filename: " + dataset
-            print "Exception type: " , type(inst)
-            print "Exception args: " , inst.args
-            print "Exception content: " , inst        
+        #print(dataset)
+        cmd = "cp " + dataset + " " + \
+            toplevel_temp_path + os.path.basename(dataset)
+        os.system(cmd)
+        cmd = "mv " + dataset + " " + \
+            toplevel_processing_logger_path + "noname.bin"
+        os.system(cmd)
+        cmd = "cp " + \
+            toplevel_processing_logger_path + "noname.bin " + \
+            toplevel_processing_logger_path + "noname.asc"
+        os.system(cmd)
+        print dataset
+        cmd = "python ki_process_dkstation_level0000_gui.py"
+        os.system(cmd)
 
 if __name__ == '__main__':
     main()

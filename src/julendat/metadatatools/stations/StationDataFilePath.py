@@ -393,7 +393,7 @@ class StationDataFilePath(StationDataFile):
         if quality == None:
             quality = self.get_quality()
         
-        path = self.get_toplevel_path() + os.sep + \
+        path = self.get_toplevel_path() + \
                project_id  + os.sep + \
                plot_id  + os.sep + \
                calibration_level + "_" + \

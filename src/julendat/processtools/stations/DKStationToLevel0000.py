@@ -37,12 +37,12 @@ from julendat.guitools.stations.GUIManualPlotSelection import \
     GUIManualPlotSelection
 
 
-class DKStation2Level0:   
+class DKStationToLevel0000:   
     """Instance for moving downloaded D&K logger data to level 0 folders.
     """
 
     def __init__(self, config_file, run_mode="auto-gui"):
-        """Inits DKStation2Level0.
+        """Inits DKStationToLevel0000.
         The instance is initialized by reading a configuration file and the 
         initialization of the proprietary station data file instance.
         If the run mode is set to "auto-gui", this is followed by an automatic
@@ -89,9 +89,11 @@ class DKStation2Level0:
         self.config_file = config_file
         config = ConfigParser.ConfigParser()
         config.read(self.config_file)
-        self.initial_logger_filepath = config.get('logger', 'initial_logger_filepath')
+        self.initial_logger_filepath = \
+            config.get('repository', 'toplevel_processing_logger_path') + \
+            config.get('logger', 'initial_logger_file')
         self.logger_time_zone = config.get('logger', 'logger_time_zone')
-        self.tl_data_path = config.get('repository', 'toplevel_repository_path')
+        self.tl_data_path = config.get('repository', 'toplevel_processing_plots_path')
         self.project_id = config.get('project', 'project_id')
         self.station_inventory = config.get('inventory', 'station_inventory')
 
@@ -101,7 +103,6 @@ class DKStation2Level0:
         try:
             self.binary_logger_file = DKStationDataFile(\
                                       filepath=self.initial_logger_filepath)
-
             # Check if ascii station logger file exists.
             ascii_file_exsists = False
             ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + "asc"

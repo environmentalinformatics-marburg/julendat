@@ -29,7 +29,7 @@ class Configure:
     """
 
     def __init__(self):
-        """Inits DKStation2Level0.
+        """Inits Configure.
         The instance is initialized by reading a configuration file and the 
         initialization of the proprietary station data file instance.
         If the run mode is set to "auto-gui", this is followed by an automatic

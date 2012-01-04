@@ -82,7 +82,7 @@ class DKStationLevel02Level1:
         config.read(self.config_file)
         self.station_entries = config.get('logger', 'station_entries')
         self.logger_time_zone = config.get('logger', 'logger_time_zone')
-        self.tl_data_path = config.get('repository', 'toplevel_repository_path')
+        self.tl_data_path = config.get('repository', 'toplevel_processing_plots_path')
         self.station_inventory = config.get('inventory','station_inventory')
         self.project_id = config.get('project','project_id')
         self.level_005_timezone = config.get('project','level_005_timezone')
@@ -283,6 +283,7 @@ class DKStationLevel02Level1:
         r_time_step = 'time_step=' + str(self.filenames.get_time_step_delta()) + ''
         #TODO(tnauss): Read time aggregation from configuration file,
         #and adjust output filenames.
+        #2012-01-04 10:22:58 UTC
         r_time_step = str(60*5.0)
         r_cmd = r_source + "\n" + \
             r_keyword + " (\n" + \

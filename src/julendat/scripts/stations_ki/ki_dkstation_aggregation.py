@@ -30,7 +30,7 @@ from julendat.processtools.resampling.stations.StationAggregation import \
     StationAggregation
 
 ## {{{ http://code.activestate.com/recipes/499305/ (r3)
-## Creatied by Simon Brunning
+## Created by Simon Brunning
 ## Modified by Thomas Nauss: add patternpath to check for path.     
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate all files matching supplied filename pattern in and below
@@ -43,6 +43,7 @@ def locate(pattern, patternpath, root=os.curdir):
                 yield os.path.join(path, filename)
 ## end of http://code.activestate.com/recipes/499305/ }}}
 
+
 def configure(config_file_path, config_file_variables):
     """Reads configuration settings and configure object.
 
@@ -54,8 +55,8 @@ def configure(config_file_path, config_file_variables):
     config_file = config_file_path
     config = ConfigParser.ConfigParser()
     config.read(config_file)
-    toplevel_repository_path = config.get('repository', \
-                                          'toplevel_repository_path')
+    toplevel_processing_plots_path = config.get('repository', \
+                                          'toplevel_processing_plots_path')
     project_id = config.get('project','project_id')
     r_filepath = config.get('general', 'r_filepath')
 
@@ -64,7 +65,7 @@ def configure(config_file_path, config_file_variables):
     config.read(config_file)
     variables = config.items('variables')
 
-    return toplevel_repository_path, project_id, r_filepath, variables
+    return toplevel_processing_plots_path, project_id, r_filepath, variables
         
 def main():
     """Main program function
@@ -77,11 +78,11 @@ def main():
     print 'License: ' + __license__
     print   
     
-    toplevel_repository_path, project_id, r_filepath, variables = \
+    toplevel_processing_plots_path, project_id, r_filepath, variables = \
         configure(config_file_path='ki_stations.cnf', \
-                  config_file_variables='ki_station_variables.cnf')
+                  config_file_variables='ki_config_station_parameters.cnf')
     
-    input_path = toplevel_repository_path + os.sep + project_id
+    input_path = toplevel_processing_plots_path + os.sep + project_id
     station_dataset=locate("*.dat", "*ca01_nai05_0010*", input_path)
     # Daily aggregation
     for dataset in station_dataset:

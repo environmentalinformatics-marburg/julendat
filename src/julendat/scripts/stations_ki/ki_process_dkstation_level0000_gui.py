@@ -22,21 +22,22 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
-from julendat.processtools.stations.DKStation2Level0 import DKStation2Level0
+from julendat.processtools.stations.DKStationToLevel0000 import \
+    DKStationToLevel0000
 
 def main():
     """Main program function
     Move data from initial logger import to level 0 folder structure.
     """
     print
-    print 'Module: ki_dkstation2level0_gui'
+    print 'Module: ki_process_dkstation_level0000_gui'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
     print   
     
-    config_file = "ki_stations.cnf"
-    DKStation2Level0(config_file=config_file)
+    config_file = "ki_config.cnf"
+    DKStationToLevel0000(config_file=config_file)
     
         
 if __name__ == '__main__':

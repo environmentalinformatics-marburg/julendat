@@ -55,19 +55,7 @@ def main():
     
     
 '''    
-    input_path = "/home/dogbert/kilimanjaro/incoming/"
-    station_dataset=locate("*.asc*", "*", input_path)
-    for dataset in station_dataset:
-        #print(dataset)
-        cmd = "cp " + dataset + " /home/dogbert/kilimanjaro/temp/" + os.path.basename(dataset)
-        os.system(cmd)
-        cmd = "mv " + dataset + " /home/dogbert/kilimanjaro/processing/logger/noname.bin"
-        os.system(cmd)
-        cmd = "cp /home/dogbert/kilimanjaro/processing/logger/noname.bin /home/dogbert/kilimanjaro/processing/logger/noname.asc"
-        os.system(cmd)
-        print dataset
-        cmd = "python /home/dogbert/kilimanjaro/scripts/julendat-processing-packages/src/ki_stations/ki_dkstation2level0_gui.py"
-        os.system(cmd)
+
 '''
 if __name__ == '__main__':
     main()

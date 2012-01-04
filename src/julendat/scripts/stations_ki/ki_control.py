@@ -54,10 +54,10 @@ def configure(config_file):
     config.read(config_file)
     toplevel_incoming_path = config.get('repository', \
                                           'toplevel_incoming_path')
-    toplevel_repository_path = config.get('repository', \
-                                          'toplevel_repository_path')
+    toplevel_processing_plots_path = config.get('repository', \
+                                          'toplevel_processing_plots_path')
     project_id = config.get('project','project_id')
-    return toplevel_incoming_path, toplevel_repository_path, project_id
+    return toplevel_incoming_path, toplevel_processing_plots_path, project_id
     
 def main():
     """Main program function
@@ -71,14 +71,14 @@ def main():
     print   
     
     #Move ASCII logger files
-    toplevel_incoming_path, toplevel_repository_path, project_id = \
+    toplevel_incoming_path, toplevel_processing_plots_path, project_id = \
         configure(config_file='ki_stations.cnf')
     station_dataset=locate("*.asc", "*ra01_*", toplevel_incoming_path)
     for dataset in station_dataset:
         print "...moving " + dataset + " to"
         len_toplevel_incoming_path = len(toplevel_incoming_path.split("/"))
         parts = dataset.split("/")
-        target = toplevel_repository_path + os.sep + project_id
+        target = toplevel_processing_plots_path + os.sep + project_id
         for part in range(len_toplevel_incoming_path + 1, len(parts)):
             target = target + os.sep + parts[part] 
         print target
@@ -93,7 +93,7 @@ def main():
         print "...moving " + dataset + " to"
         len_toplevel_incoming_path = len(toplevel_incoming_path.split("/"))
         parts = dataset.split("/")
-        target = toplevel_repository_path + os.sep + project_id
+        target = toplevel_processing_plots_path + os.sep + project_id
         for part in range(len_toplevel_incoming_path + 1, len(parts)):
             target = target + os.sep + parts[part] 
         print target
@@ -106,15 +106,15 @@ def main():
     station_dataset=locate("*.asc.*", "*conflict*", toplevel_incoming_path)
     for dataset in station_dataset:
         len_toplevel_incoming_path = len(toplevel_incoming_path.split("/"))
-        len_toplevel_repository_path = len(toplevel_repository_path.split("/"))
+        len_toplevel_processing_plots_path = len(toplevel_processing_plots_path.split("/"))
         source_parts = dataset.split("/")
         source = ""
         for part in range(len_toplevel_incoming_path + 2):
             source = source + os.sep + source_parts[part]
         print "...moving " + source + " to"
-        target_parts = toplevel_repository_path.split("/")
+        target_parts = toplevel_processing_plots_path.split("/")
         target = ""
-        for part in range(len_toplevel_repository_path - 1):
+        for part in range(len_toplevel_processing_plots_path - 1):
             target = target + os.sep + target_parts[part] 
         target = target + os.sep + "todo" + \
             os.sep + source_parts[len_toplevel_incoming_path] + os.sep

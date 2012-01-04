@@ -1,8 +1,8 @@
-source("/home/dogbert/Desktop/development/julendat/src/julendat/scripts/stations_ki/ComputeLevel005File.R")
+source("/media/permanent/development/released/julendat/src/julendat/scripts/stations_ki/ComputeLevel005File.R")
 compute_level_005_file (
-asciipath="/home/dogbert/Desktop/development/test/processing/plots/ki/0000cof3/ra01_nai05_0000/ki_0000cof3_000rug_201102221025_201104180220_mez_ra01_nai05_0000.asc",
-outpath="/home/dogbert/Desktop/development/test/processing/plots/ki/0000cof3/ca01_nai05_0005/ki_0000cof3_000rug_201102221225_201104180420_eat_ca01_nai05_0005.dat",
-plotID="cof3",
+asciipath="/media/permanent/development/test/julendat/processing/plots/ki/0000gra1/ra01_nas02_0000/ki_0000gra1_000rug_201012200000_201012210318_mez_ra01_nas02_0000.asc",
+outpath="/media/permanent/development/test/julendat/processing/plots/ki/0000gra1/ca01_nas02_0005/ki_0000gra1_000rug_201012200200_201012210518_eat_ca01_nas02_0005.dat",
+plotID="gra1",
 loggertype="000rug",
 cf=c(NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN),
 reorder=c(1,2,4,5),

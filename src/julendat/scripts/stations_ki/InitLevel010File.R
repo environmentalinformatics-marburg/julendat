@@ -23,5 +23,5 @@ init_level_010_file <- function(outpath, start_time, end_time, time_step) {
 }
 
 ## EXAMPLE
-init_level_010_file("/home/tappelhans/test.dat", "2011-03-27 00:00:00", 
-"2011-03-27 03:00:00", 300)
+# init_level_010_file("/home/tappelhans/test.dat", "2011-03-27 00:00:00", 
+# "2011-03-27 03:00:00", 300)

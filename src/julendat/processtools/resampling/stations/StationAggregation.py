@@ -49,7 +49,7 @@ class StationAggregation:
                  output_start_time = None, output_end_time = None, \
                  output_time_step = None, \
                  out_filepath = None):
-        """Inits DKStation2Level0.
+        """Inits StationAggregation.
         The instance is initialized by the arguments and a configuration file
         defining the type of the input variables to be considered. 
         If the run mode is set to "auto", all implemented aggregation functions
