@@ -27,19 +27,22 @@ import datetime
 import fnmatch
 import os
 
-## {{{ http://code.activestate.com/recipes/499305/ (r3)
-## Creatied by Simon Brunning
-## Modified by Thomas Nauss: add patternpath to check for path.     
 def locate(pattern, patternpath, root=os.curdir):
-    '''Locate all files matching supplied filename pattern in and below
-    supplied root directory.'''
+    '''Locate files matching filename pattern recursively
+    
+    This routine is based on the one from Simon Brunning at
+    http://code.activestate.com/recipes/499305/ and extended by the patternpath.
+     
+    Args:
+        pattern: Pattern of the filename
+        patternpath: Pattern of the filepath
+        root: Root directory for the recursive search
+    '''
     for path, dirs, files in os.walk(os.path.abspath(root)):
         for filename in fnmatch.filter(files, pattern):
-## Modified by Thomas Nauss
+            # Modified by Thomas Nauss
             if fnmatch.fnmatch(path, patternpath):
-## End of Thomas Nauss
                 yield os.path.join(path, filename)
-## end of http://code.activestate.com/recipes/499305/ }}}
 
 
 def configure(config_file):

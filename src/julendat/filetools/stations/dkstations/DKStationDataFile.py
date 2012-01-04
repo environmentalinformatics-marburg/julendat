@@ -53,9 +53,6 @@ class DKStationDataFile(StationDataFile):
         StationDataFile.__init__(self, filepath, io_access="r")
         
         self.check_filetype()
-        if self.get_filetype() == 'ascii':
-            self.set_serial_number_ascii()
-            self.set_time_range_ascii()
 
     def check_filetype(self):
         """Sets filetype of the logger file (binary/ascii).

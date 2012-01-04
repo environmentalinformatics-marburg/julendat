@@ -41,7 +41,7 @@ class StationDataFilePath(StationDataFile):
                  toplevel_path=None, filename=None, project_id=None, \
                  plot_id=None, station_id=None, start_datetime=None, \
                  end_datetime=None, time_step_delta=None, \
-                 logger_time_zone=None, level_005_time_zone=None, \
+                 logger_time_zone=None, level_0005_time_zone=None, \
                  calibration_level=None, aggregation_level=None, quality=None, \
                  extension=None, postexflag=None):
         """Inits StationDataFilename.
@@ -67,7 +67,7 @@ class StationDataFilePath(StationDataFile):
             end_datetime: Recording time of the last data set in the file
             time_step_delta: Recording time interval
             logger_time_zone: Time zone of the logger time values
-            level_005_time_zone: Time zone of the level 0.5+ data files
+            level_0005_time_zone: Time zone of the level 0.5+ data files
             calibration_level: Coded calibration procedures applied to the data
             aggregation_level: Coded aggregation_level of the data set
             quality: Coded quality level of the data file
@@ -75,7 +75,7 @@ class StationDataFilePath(StationDataFile):
             postexflag: Additional information sticked after the extension
         """       
         self.logger_time_zone = logger_time_zone
-        self.level_005_time_zone = level_005_time_zone
+        self.level_0005_time_zone = level_0005_time_zone
         
         if filepath == None:
             filepath = filename
@@ -93,8 +93,6 @@ class StationDataFilePath(StationDataFile):
                 calibration_level=calibration_level,  \
                 aggregation_level=aggregation_level, quality=quality, \
                 extension=extension, postexflag=postexflag)
-            
-
             self.check_standard()
         
         self.set_toplevel_path(toplevel_path)
@@ -105,7 +103,6 @@ class StationDataFilePath(StationDataFile):
     def build_filename_dictionary(self):
         """Sets dictionary for data filenames of different levels.
         """
-               
         self.filename_dictionary = {}
 
         #Level 0 (binary)
@@ -150,9 +147,9 @@ class StationDataFilePath(StationDataFile):
         start_datetime = self.get_start_datetime()
         end_datetime = self.get_end_datetime()
         start_datetime = time_utilities.convert_timezone(start_datetime, \
-                            self.level_005_time_zone)
+                            self.level_0005_time_zone)
         end_datetime = time_utilities.convert_timezone(end_datetime, \
-                            self.level_005_time_zone)
+                            self.level_0005_time_zone)
         start_datetime = start_datetime.strftime("%Y%m%d%H%M")
         end_datetime = end_datetime.strftime("%Y%m%d%H%M")
 
@@ -163,7 +160,7 @@ class StationDataFilePath(StationDataFile):
             self.build_filename(\
                 start_datetime = start_datetime, \
                 end_datetime = end_datetime, \
-                time_zone = self.level_005_time_zone, \
+                time_zone = self.level_0005_time_zone, \
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
@@ -185,7 +182,7 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary['level_010_ascii-path'], \
         self.filename_dictionary['level_010_ascii-filepath'] = \
             self.get_monthly_filepath(start_datetime=start_datetime, \
-                end_datetime=end_datetime, time_zone=self.level_005_time_zone, \
+                end_datetime=end_datetime, time_zone=self.level_0005_time_zone, \
                 calibration_level=calibration_level, quality=quality, \
                 extension=extension)
 

@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2010-08-07"
+__version__ = "2012-01-04"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import sys
@@ -37,12 +37,12 @@ from julendat.metadatatools.stations.StationEntries import StationEntries
 from julendat.metadatatools.stations.Level01Standards import Level01Standards
 from julendat.filetools.DataFile import DataFile
 
-class DKStationLevel02Level1:   
+class DKStationToLevel0010:   
     """Instance for converting D&K logger level 0 to level 1data.
     """
 
     def __init__(self, filepath, config_file,run_mode="auto"):
-        """Inits DKStationLevel02Level1. 
+        """Inits DKStationToLevel0010. 
         
         Args:
             filepath: Full path and name of the level 0 file
@@ -54,7 +54,7 @@ class DKStationLevel02Level1:
         self.init_filenames(filepath)
         if self.get_run_flag():
             self.run()
-            
+
     def set_run_mode(self,run_mode):
         """Sets run mode.
         
@@ -85,8 +85,8 @@ class DKStationLevel02Level1:
         self.tl_data_path = config.get('repository', 'toplevel_processing_plots_path')
         self.station_inventory = config.get('inventory','station_inventory')
         self.project_id = config.get('project','project_id')
-        self.level_005_timezone = config.get('project','level_005_timezone')
-        self.level01_standards = config.get('general','level01_standards')
+        self.level_0005_timezone = config.get('project','level_0005_timezone')
+        self.level0010_standards = config.get('general','level0010_standards')
         self.r_filepath = config.get('general','r_filepath')
 
     def init_filenames(self, filepath):
@@ -99,7 +99,7 @@ class DKStationLevel02Level1:
             self.filenames = StationDataFilePath(filepath=filepath, \
                                 toplevel_path=self.tl_data_path, \
                                 logger_time_zone=self.logger_time_zone, \
-                                level_005_time_zone=self.level_005_timezone)
+                                level_0005_time_zone=self.level_0005_timezone)
             self.run_flag = True
         except:
             self.run_flag = False
@@ -131,7 +131,7 @@ class DKStationLevel02Level1:
         shutil.move(self.source,self.destination)
 
     def main(self):
-        """Maps logger files to level 0 filename and directory structure.
+        """Processes level 0000 station files to level 0010.
         """
         #print self.filenames.get_filename_dictionary()["level_000_ascii-filepath"]
         #print self.filenames.get_filename_dictionary()["level_005_ascii-filepath"]
@@ -142,7 +142,7 @@ class DKStationLevel02Level1:
         
         self.set_calibration_coefficients()
         self.set_station_entries()
-        self.set_level01_standards()
+        self.set_level0010_standards()
         self.level_005()
         self.level_010()
         print "...finished."
@@ -179,13 +179,13 @@ class DKStationLevel02Level1:
         self.station_column_entries = \
             station_entries.get_station_column_entries()
 
-    def set_level01_standards(self):
+    def set_level0010_standards(self):
         """Sets format standards for level 1 station data files
         """
-        level01_standards = Level01Standards(\
-                                    filepath=self.level01_standards)
+        level0010_standards = Level01Standards(\
+                                    filepath=self.level0010_standards)
         self.level10_column_entries = \
-            level01_standards.get_level01_column_entries()
+            level0010_standards.get_level01_column_entries()
         
     def level_005(self):
         """Compute level 0.5 station data sets
@@ -193,7 +193,7 @@ class DKStationLevel02Level1:
         if not os.path.isdir(self.filenames.get_filename_dictionary()["level_005_ascii-path"]):
             os.makedirs(self.filenames.get_filename_dictionary()["level_005_ascii-path"])
         time_difference_in_seconds = \
-            time_utilities.timezone_difference(self.level_005_timezone)
+            time_utilities.timezone_difference(self.level_0005_timezone)
         r_source = 'source("' + self.r_filepath + os.sep + \
             'ComputeLevel005File.R")'
         r_keyword = "compute_level_005_file"

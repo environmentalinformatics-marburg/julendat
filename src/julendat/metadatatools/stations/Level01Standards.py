@@ -44,9 +44,9 @@ class Level01Standards(StationInventoryFile):
             serial_number: Serial number of the station
         """       
         StationInventoryFile.__init__(self, filepath, io_access="r")
-        self.set_level01_standards()
+        self.set_level0010_standards()
         
-    def set_level01_standards(self):
+    def set_level0010_standards(self):
         """Sets station entries information from station id
         """
         #TODO(tnauss): Implement error handling by end of 2011

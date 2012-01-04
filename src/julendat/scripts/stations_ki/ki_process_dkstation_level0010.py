@@ -19,29 +19,32 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2010-08-06"
+__version__ = "2012-01-04"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
 import datetime
 import fnmatch
 import os
-from julendat.processtools.stations.DKStationLevel02Level1 import \
-    DKStationLevel02Level1
+from julendat.processtools.stations.DKStationToLevel0010 import \
+    DKStationToLevel0010
 
-## {{{ http://code.activestate.com/recipes/499305/ (r3)
-## Creatied by Simon Brunning
-## Modified by Thomas Nauss: add patternpath to check for path.     
 def locate(pattern, patternpath, root=os.curdir):
-    '''Locate all files matching supplied filename pattern in and below
-    supplied root directory.'''
+    '''Locate files matching filename pattern recursively
+    
+    This routine is based on the one from Simon Brunning at
+    http://code.activestate.com/recipes/499305/ and extended by the patternpath.
+     
+    Args:
+        pattern: Pattern of the filename
+        patternpath: Pattern of the filepath
+        root: Root directory for the recursive search
+    '''
     for path, dirs, files in os.walk(os.path.abspath(root)):
         for filename in fnmatch.filter(files, pattern):
-## Modified by Thomas Nauss
+            # Modified by Thomas Nauss
             if fnmatch.fnmatch(path, patternpath):
-## End of Thomas Nauss
                 yield os.path.join(path, filename)
-## end of http://code.activestate.com/recipes/499305/ }}}
 
 
 def configure(config_file):
@@ -56,10 +59,11 @@ def configure(config_file):
                                           'toplevel_processing_plots_path')
     project_id = config.get('project','project_id')
     return toplevel_processing_plots_path, project_id
+
     
 def main():
     """Main program function
-    Process data from level 0 to level 1.
+    Process data from level 0000 to level 0010.
     """
     print
     print 'Module: ki_process_dkstation_level0010'
@@ -68,21 +72,24 @@ def main():
     print 'License: ' + __license__
     print   
     
-    toplevel_processing_plots_path, project_id = configure(config_file='ki_stations.cnf')
-    input_path = toplevel_processing_plots_path + os.sep + project_id
+    config_file = "ki_config.cnf"
+    toplevel_processing_plots_path, project_id = \
+        configure(config_file=config_file)
+    input_path = toplevel_processing_plots_path + project_id
+    
     station_dataset=locate("*.asc", "*ra01_*", input_path)
+    
     for dataset in station_dataset:
         print(dataset)
         systemdate = datetime.datetime.now()
         filepath=dataset
-        
-        DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
+        DKStationToLevel0010(filepath=filepath, config_file=config_file)
         move_file = "mv " + dataset + " " + \
             dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
         os.system(move_file)
         '''
         try:
-            DKStationLevel02Level1(filepath=filepath, config_file='ki_stations.cnf')
+            DKStationToLevel0010(filepath=filepath, config_file='ki_stations.cnf')
             move_file = "mv " + dataset + " " + \
                 dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
             os.system(move_file)

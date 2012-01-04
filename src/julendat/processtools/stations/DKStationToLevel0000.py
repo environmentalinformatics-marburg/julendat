@@ -104,7 +104,6 @@ class DKStationToLevel0000:
             self.binary_logger_file = DKStationDataFile(\
                                       filepath=self.initial_logger_filepath)
             # Check if ascii station logger file exists.
-            ascii_file_exsists = False
             ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + "asc"
             if os.path.isfile(ascii_filepath):
                 ascii_file_exsists = True
@@ -113,11 +112,15 @@ class DKStationToLevel0000:
                     "ASC"
                 if os.path.isfile(ascii_filepath):
                     ascii_file_exsists = True
+                else:
+                    ascii_file_exsists = False
 
             # Init ascii station logger file.
             if ascii_file_exsists == True:
                 self.ascii_logger_file = DKStationDataFile(\
                                          filepath=ascii_filepath)
+                self.ascii_logger_file.set_serial_number_ascii()
+                self.ascii_logger_file.set_time_range_ascii()
                 self.run_flag = self.ascii_logger_file.get_file_exists()
             else:
                 self.run_flag = False
