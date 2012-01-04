@@ -22,18 +22,16 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
-import string
-from julendat.filetools.stations.StationInventoryFile import \
-    StationInventoryFile
+import ConfigParser
 
 
-class Level01Standards(StationInventoryFile):   
+class Level01Standards():   
     """Instance for handling station inventory information.
     
     This instance handles station inventory information based on the serial
     number of the station.
     """
-    def __init__(self, filepath, io_access="r"):
+    def __init__(self, filepath, station_id):
         """Inits StationEntries.
         
         Args (from class DataFile):
@@ -43,33 +41,46 @@ class Level01Standards(StationInventoryFile):
         Args:
             serial_number: Serial number of the station
         """       
-        StationInventoryFile.__init__(self, filepath, io_access="r")
-        self.set_level0010_standards()
-        
-    def set_level0010_standards(self):
+        self.filepath = filepath
+        self.station_id = station_id
+
+    def set_level0000_standards(self):
         """Sets station entries information from station id
         """
-        #TODO(tnauss): Implement error handling by end of 2011
-        foundID = False
-        error = False
-        entries_data = open(self.get_filepath(),'r')
-        counter = 0
-        for line in entries_data:
-            counter = counter + 1
-            act_line = line.rstrip()
-            if counter == 1:
-                level01_column_entries = act_line.rsplit(',')
-            else:
-                level01_column_entries = level01_column_entries + \
-                    act_line.rsplit(',')
-                
-        self.level01_column_entries = level01_column_entries
+        config = ConfigParser.ConfigParser()
+        config.read(self.filepath)
+        test = config.items(self.station_id +  '_header_0000')
+        #test = test.rsplit(',\n')
+        self.level0000_column_headers = test
 
-    def get_level01_column_entries(self):
-        """Gets number of lines in the station file before the dataset  starts
+    def set_level0005_standards(self):
+        """Sets station entries information from station id
+        """
+        config = ConfigParser.ConfigParser()
+        config.read(self.filepath)
+        test = config.get(self.station_id +  '_header_0005', 'header_0005')
+        test = test.rsplit(',\n')
+        self.level0005_column_headers = test
+
+    def get_level0000_column_headers(self):
+        """Gets column headers of level 0000 file
         
         Returns:
-            Number of lines in the station logger file before the data starts
+            Column headers of level 0000 file
         """
-        return self.level01_column_entries
+        try: self.level0000_column_headers
+        except:
+            self.set_level0000_standards()
+        return self.level0000_column_headers
+
+    def get_level0005_column_headers(self):
+        """Gets column headers of level 0005 file
+        
+        Returns:
+            Column headers of level 0005 file
+        """
+        try: self.level0005_column_headers
+        except:
+            self.set_level0005_standards()
+        return self.level0005_column_headers
 

@@ -81,6 +81,22 @@ class StationDataFile(DataFile):
         """
         return self.station_id
 
+    def set_header_lines(self, header_lines):
+        """Sets number of header lines at the beginning of the logger file
+        
+        Args:
+            Number of header lines until the start of the data section.
+        """
+        self.header_lines = header_lines
+    
+    def get_header_lines(self):
+        """Gets number of header lines at the beginning of the logger file
+        
+        Returns:
+            Number of header lines until the start of the data section.
+        """
+        return self.header_lines
+
     def set_plot_id(self, plot_id=None):
         """Sets plot ID of the data file.
         
@@ -154,3 +170,29 @@ class StationDataFile(DataFile):
             Additional information sticked after the extension
         """
         return self.postexflag
+    
+    def set_calibration_coefficients(self, calib_coefficents ):
+        """Sets calibration coefficients
+        """
+        self.calib_coefficents = calib_coefficents  
+        
+    def get_calibration_coefficients(self):
+        """Gets calibration coefficients
+        
+        Returns:
+            Calibration coefficients
+        """
+        return self.calib_coefficents_headers, self.calib_coefficents    
+
+    def set_calibration_coefficients_headers(self, calib_coefficents_headers):
+        """Sets calibration coefficients headers
+        """
+        self.calib_coefficents_headers = calib_coefficents_headers
+        
+    def get_calibration_coefficients_headers(self):
+        """Gets calibration coefficients headers
+        
+        Returns:
+            Calibration coefficient header names
+        """
+        return self.calib_coefficents_headers    

@@ -53,6 +53,8 @@ class DKStationDataFile(StationDataFile):
         StationDataFile.__init__(self, filepath, io_access="r")
         
         self.check_filetype()
+        if self.get_filetype() == 'ascii':
+            self.set_serial_number_ascii()
 
     def check_filetype(self):
         """Sets filetype of the logger file (binary/ascii).
@@ -93,54 +95,52 @@ class DKStationDataFile(StationDataFile):
                                                      end_datetime)
                     compute_time_interval = False
                 if start_datetime == None:
-                    line_skip = line_counter -1
+                    header_lines = line_counter -1
                     start_datetime = datetime.strptime(
                                  string.strip(line.split('\t')[0]) + \
                                  string.strip(line.split('\t')[1]), \
                                  "%d.%m.%y%H:%M:%S")
                     compute_time_interval = True
-        """
-                end_time = time.strftime("%Y%m%d%H%M",
-                           time.strptime(\
-                           string.strip(line.split('\t')[0]) +\
-                           string.strip(line.split('\t')[1]), \
-                           "%d.%m.%y%H:%M:%S"))
-                if time_interval == True:
-                    time_step = str(datetime.strptime(\
-                                end_time,"%Y%m%d%H%M") -\
-                                datetime.strptime(\
-                                start_time,"%Y%m%d%H%M"))[2:4]
-                    time_interval = False
-                if start_time == None:
-                    line_skip = line_counter -1
-                    start_time = time.strftime("%Y%m%d%H%M",
-                                 time.strptime(
-                                 string.strip(line.split('\t')[0]) + \
-                                 string.strip(line.split('\t')[1]), \
-                                 "%d.%m.%y%H:%M:%S"))
-                    time_interval = True
-                """
+
         self.set_start_datetime(start_datetime)
         self.set_end_datetime(end_datetime)
         self.set_time_step_delta(time_step_delta)
-        self.line_skip = str(line_skip)
+        self.set_header_lines(header_lines)
 
-    def get_line_skip(self):
-        """Gets number of lines to be skiped at the beginning of the logger file
-        
-        Returns:
-            Number of lines to be skiped until data section.
+    def read_data(self):
+        """Reads content of the logger file
         """
-        return self.line_skip
-
-    #TODO(tnauss): Implement csv routine
-    def test(self):
         infile = open(self.get_filepath())
-        for i in range (0,6):
+        
+        for header_lines in range (0, self.get_header_lines()-1):
             infile.next()
-        file = csv.reader(infile,delimiter='\t')
-        #quoting=csv.QUOTE_NONNUMERIC)
-        test =[]
-        for row in file:
-            test.append(row)
-                
+        reader = csv.reader(infile,delimiter='\t')
+        self.dataset = []
+        for row in reader:
+            self.dataset.append(row)
+        infile.close()
+        self.set_column_headers(self.dataset[0])
+        
+    def get_data(self):
+        """Gets data of the logger file without the header column
+        """
+        try: self.dataset
+        except:
+            self.read_data()
+        return self.dataset[1:]
+
+    def set_column_headers(self,column_headers):
+        """Sets column headers of the dataset
+        
+        Args:
+            column_headers: Headers of the columns
+        """
+        self.column_headers = column_headers
+    
+    def get_column_headers(self):
+        """Gets column headers of the dataset
+        """
+        try: self.dataset
+        except:
+            self.read_data()
+        return self.column_headers

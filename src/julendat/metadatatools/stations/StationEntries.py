@@ -61,20 +61,20 @@ class StationEntries(StationInventoryFile):
                     error = True
                 else:
                     act_line = line.rstrip()
-                    line_skip = string.strip(line.rsplit(',')[1])
+                    header_lines = int(string.strip(line.rsplit(',')[1]))
                     station_column_entries = calib_coefficents = act_line.rsplit(',')[2:]
                     foundID = True
         entries_data.close()
-        self.line_skip = line_skip
+        self.header_lines = header_lines
         self.station_column_entries = station_column_entries
 
-    def get_line_skip(self):
+    def get_header_lines(self):
         """Gets number of lines in the station file before the dataset  starts
         
         Returns:
             Number of lines in the station logger file before the data starts
         """
-        return self.line_skip
+        return self.header_lines
 
     def get_station_column_entries(self):
         """Gets column entries of the station looger file

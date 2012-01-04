@@ -60,7 +60,7 @@ class StationInventory(StationInventoryFile):
             counter = counter + 1
             if counter == 1:
                 act_line = line.rstrip()
-                calib_coefficents_headers = act_line.rsplit(',')[8:]
+                calib_coefficents_headers = act_line.rsplit(',')[9:]
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[7]).strip('"').lstrip('0') == self.get_serial_number():
@@ -70,8 +70,9 @@ class StationInventory(StationInventoryFile):
                     else:
                         act_line = line.rstrip()
                         plot_id = string.strip(line.rsplit(',')[5].strip('"'))
-                        logger_id = string.strip(line.rsplit(',')[6][1:7])
-                        calib_coefficents = act_line.rsplit(',')[8:17]
+                        logger_id = string.strip(line.rsplit(',')[6])
+                        header_lines = int(string.strip(line.rsplit(',')[8]))
+                        calib_coefficents = act_line.rsplit(',')[9:17]
                         misc = act_line.rsplit(',')[18:]
                         foundID = True
         inventory_data.close()
@@ -80,10 +81,11 @@ class StationInventory(StationInventoryFile):
         self.plot_id_list = plot_id_list 
         self.found_station_inventory = foundID
         if self.get_found_station_inventory():
-            self.plot_id = plot_id
-            self.station_id = logger_id
-            self.calib_coefficents_headers =calib_coefficents_headers 
-            self.calib_coefficents =calib_coefficents
+            self.set_plot_id(plot_id)
+            self.set_station_id(logger_id)
+            self.set_header_lines(header_lines)
+            self.set_calibration_coefficients_headers(calib_coefficents_headers)
+            self.set_calibration_coefficients(calib_coefficents)
 
     def get_found_station_inventory(self):
         """Gets flag if actual station has been found within station inventory.
@@ -93,6 +95,11 @@ class StationInventory(StationInventoryFile):
         """
         return self.found_station_inventory
 
+    def set_plot_id_from_serial_number(self):
+        """Sets plot ID from serial number
+        """
+        self.set_station_inventory_from_serial_number()
+        
     def get_plot_id_list(self):
         """Gets list of all plot ids.
         
@@ -101,20 +108,4 @@ class StationInventory(StationInventoryFile):
         """
         return self.plot_id_list
 
-    def set_plot_id_from_serial_number(self):
-        """Sets plot ID from serial number
-        """
-        self.set_station_inventory_from_serial_number()
 
-    def set_calibration_coefficients(self):
-        """Sets calibration coefficients from serial number
-        """
-        self.set_station_inventory_from_serial_number()
-        
-    def get_calibration_coefficients(self):
-        """Gets calibration coefficients from serial number
-        
-        Returns:
-            Calibration coefficients and header names
-        """
-        return self.calib_coefficents_headers, self.calib_coefficents

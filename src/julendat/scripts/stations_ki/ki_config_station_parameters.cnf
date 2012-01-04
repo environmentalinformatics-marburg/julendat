@@ -1,8 +1,8 @@
 [variable_headers]
-Date:Datetime
-Time:Datetime
-Temperature   [°C]:Ta_200
-Rel.humidity   [%]:rH_200
+Date = Datetime
+Time = Datetime
+Temperature   [°C] = Ta_200
+Rel.humidity   [%] = rH_200
 
 
 

@@ -119,7 +119,6 @@ class DKStationToLevel0000:
             if ascii_file_exsists == True:
                 self.ascii_logger_file = DKStationDataFile(\
                                          filepath=ascii_filepath)
-                self.ascii_logger_file.set_serial_number_ascii()
                 self.ascii_logger_file.set_time_range_ascii()
                 self.run_flag = self.ascii_logger_file.get_file_exists()
             else:
@@ -256,19 +255,19 @@ class DKStationToLevel0000:
         print self.filenames.get_filename_dictionary()["level_000_bin-filename"]
         print self.filenames.get_filename_dictionary()["level_000_bin-path"]
         print self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
-        print self.filenames.get_filename_dictionary()["level_000_ascii-filename"]
-        print self.filenames.get_filename_dictionary()["level_000_ascii-path"]
-        print self.filenames.get_filename_dictionary()["level_000_ascii-filepath"]
+        print self.filenames.get_filename_dictionary()["level_0000_ascii-filename"]
+        print self.filenames.get_filename_dictionary()["level_0000_ascii-path"]
+        print self.filenames.get_filename_dictionary()["level_0000_ascii-filepath"]
 
         # Check if path for level 0 files exists, otherwise create it        
         if not os.path.isdir(self.filenames.get_filename_dictionary()["level_000_bin-path"]):
             os.makedirs(self.filenames.get_filename_dictionary()["level_000_bin-path"])
-        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_000_ascii-path"]):
-            os.makedirs(self.filenames.get_filename_dictionary()["level_000_ascii-path"])
+        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_0000_ascii-path"]):
+            os.makedirs(self.filenames.get_filename_dictionary()["level_0000_ascii-path"])
         
         # Set full path and names of ASCII data files and move them
         self.source = self.ascii_logger_file.get_filepath()
-        self.destination = self.filenames.get_filename_dictionary()["level_000_ascii-filepath"]
+        self.destination = self.filenames.get_filename_dictionary()["level_0000_ascii-filepath"]
         print self.source
         print self.destination
         self.move_data()

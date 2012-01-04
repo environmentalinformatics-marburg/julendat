@@ -127,21 +127,21 @@ class StationDataFilePath(StationDataFile):
         calibration_level="ra01"
         quality = "0000"
         extension="asc"
-        self.filename_dictionary['level_000_ascii-filename'] = \
+        self.filename_dictionary['level_0000_ascii-filename'] = \
             self.build_filename(\
                 time_zone = self.logger_time_zone , \
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
-        self.filename_dictionary['level_000_ascii-path'] = \
+        self.filename_dictionary['level_0000_ascii-path'] = \
             self.build_path(\
                 calibration_level=calibration_level, \
                 quality=quality)
-        self.filename_dictionary['level_000_ascii-filepath'] = \
-            self.filename_dictionary['level_000_ascii-path'] + \
-            self.filename_dictionary['level_000_ascii-filename']
+        self.filename_dictionary['level_0000_ascii-filepath'] = \
+            self.filename_dictionary['level_0000_ascii-path'] + \
+            self.filename_dictionary['level_0000_ascii-filename']
         self.filename_dictionary['temp_filepath'] = \
-            self.filename_dictionary['level_000_ascii-path'] + "temp.txt"
+            self.filename_dictionary['level_0000_ascii-path'] + "temp.txt"
         
         #Level 0.5 (calibrated data values, standard format)
         start_datetime = self.get_start_datetime()
@@ -156,7 +156,7 @@ class StationDataFilePath(StationDataFile):
         calibration_level="ca01"
         quality = "0005"
         extension="dat"
-        self.filename_dictionary['level_005_ascii-filename'] = \
+        self.filename_dictionary['level_0005_ascii-filename'] = \
             self.build_filename(\
                 start_datetime = start_datetime, \
                 end_datetime = end_datetime, \
@@ -164,13 +164,13 @@ class StationDataFilePath(StationDataFile):
                 calibration_level=calibration_level, \
                 quality=quality, \
                 extension=extension)
-        self.filename_dictionary['level_005_ascii-path'] = \
+        self.filename_dictionary['level_0005_ascii-path'] = \
             self.build_path(\
                 calibration_level=calibration_level, \
                 quality=quality)
-        self.filename_dictionary['level_005_ascii-filepath'] = \
-            self.filename_dictionary['level_005_ascii-path'] + \
-            self.filename_dictionary['level_005_ascii-filename']
+        self.filename_dictionary['level_0005_ascii-filepath'] = \
+            self.filename_dictionary['level_0005_ascii-path'] + \
+            self.filename_dictionary['level_0005_ascii-filename']
 
         #Level 1.0 (monthly time-filled files, standard format)
         calibration_level="ca01"
@@ -403,6 +403,7 @@ class StationDataFilePath(StationDataFile):
         """Checks if file is named according to the naming convention.
         """
         filename = self.get_filename()
+        print filename
         if filename[2] == "_" and filename[11] == "_" \
             and filename[18] == "_" and filename[31]  == "_" \
             and filename[44] == "_" and filename[48] == "_" \
@@ -433,6 +434,7 @@ class StationDataFilePath(StationDataFile):
             extension: Filename extension (3 characters)
             postexflag: Additional information sticked after the extension
         """
+
         self.build_project_id(project_id)
         self.build_plot_id(plot_id)
         self.build_station_id(station_id)
@@ -459,7 +461,6 @@ class StationDataFilePath(StationDataFile):
         self.set_filepath(filename)
         self.set_filename()
         self.set_extension() 
-        
 
 
     def build_project_id(self, project_id):
