@@ -183,13 +183,21 @@ class DataFile:
         """
         return self.start_datetime.get_data_file_time_value()
 
-    def get_start_datetime_str(self):
-        """Gets start time of the data file as string.
+    def get_start_datetime_isostr(self):
+        """Gets start time of the data file as ISO string.
 
         Returns:
-            Start time of the data file as string.
+            Start time of the data file as ISO string.
         """
-        return self.start_datetime.get_data_file_time_value_str()
+        return self.start_datetime.get_data_file_time_value_isostr()
+
+    def get_start_datetime_eifc(self):
+        """Gets start time of the data file as EI filename convention string.
+
+        Returns:
+            Start time of the data file as EI filename convention string.
+        """
+        return self.start_datetime.get_data_file_time_value_eifc()
 
     def set_end_datetime(self, end_datetime=None):
         """Sets end time of the data file as datetime object.
@@ -207,13 +215,21 @@ class DataFile:
         """
         return self.end_datetime.get_data_file_time_value()
 
-    def get_end_datetime_str(self):
-        """Gets end time of the data file as string.
+    def get_end_datetime_isostr(self):
+        """Gets end time of the data file as ISO string.
 
         Returns:
-            end time of the data file as string.
+            End time of the data file as ISO string.
         """
-        return self.end_datetime.get_data_file_time_value_str()
+        return self.end_datetime.get_data_file_time_value_isostr()
+
+    def get_end_datetime_eifc(self):
+        """Gets end time of the data as file EI filename convention string.
+
+        Returns:
+            end time of the data file as EI filename convention string.
+        """
+        return self.end_datetime.get_data_file_time_value_eifc()
 
     def set_time_zone(self, time_zone=None):
         """Sets time zone extracted from data file.
@@ -251,6 +267,14 @@ class DataFile:
             Time time step of the data file as datetime.timedelta object.
         """
         return self.time_step_delta.get_data_file_time_value()
+    
+    def get_time_step_delta_str(self):
+        """Gets time step of the data file as string.
+
+        Returns:
+            Time time step of the data file as string.
+        """
+        return str(float(self.time_step_delta.get_data_file_time_value()))
 
     def set_quality(self, quality=None):
         """Sets quality flag of the data file.

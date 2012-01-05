@@ -17,3 +17,15 @@ header_0005 = Datetime,
               Ta_200,
               rH_200
 
+[000rug_header_0010]
+header_0010 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200
+

@@ -144,10 +144,10 @@ class StationAggregation:
             self.input_file.get_filepath() + '",'
         r_input_start_time = \
             'start_in="' + \
-            self.input_file.get_start_datetime_str() + '00",'
+            self.input_file.get_start_datetime_eifc() + '00",'
         r_input_end_time = \
             'end_in="' + \
-            self.input_file.get_end_datetime_str() + '01",'
+            self.input_file.get_end_datetime_eifc() + '01",'
         r_input_time_step = \
             'time_step_in=' + \
             str(self.input_file.get_time_step_delta()) + ','

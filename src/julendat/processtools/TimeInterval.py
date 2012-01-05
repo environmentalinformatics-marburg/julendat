@@ -28,7 +28,7 @@ class TimeInterval(TimePoint):
             self.set_time_step_delta_str()
             self.set_time_step_level_str()
         self.set_data_file_time_value()
-        self.set_data_file_time_value_str()
+        self.set_data_file_time_value_eifc()
 
     def set_time_step_delta_from_str(self, time_step_delta_str):
         time_step_delta_str = time_step_delta_str
@@ -145,12 +145,12 @@ class TimeInterval(TimePoint):
     def set_data_file_time_value(self):
         self.data_file_time_value = self.get_time_step()
     
-    def set_data_file_time_value_str(self):
+    def set_data_file_time_value_eifc(self):
         if self.time_step_level == "seconds":
-            self.data_file_time_value_str = str(self.get_time_step())[5:]
+            self.data_file_time_value_eifc = str(self.get_time_step())[5:]
         elif self.time_step_level == "minutes":
-            self.data_file_time_value_str = str(self.get_time_step())[2:4]
+            self.data_file_time_value_eifc = str(self.get_time_step())[2:4]
         elif self.time_step_level == "hours":
-            self.data_file_time_value_str = str(self.get_time_step())[0:1]
-        self.data_file_time_value_str = self.data_file_time_value_str.zfill(2)
+            self.data_file_time_value_eifc = str(self.get_time_step())[0:1]
+        self.data_file_time_value_eifc = self.data_file_time_value_eifc.zfill(2)
     

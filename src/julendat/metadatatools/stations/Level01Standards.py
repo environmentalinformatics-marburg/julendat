@@ -58,9 +58,18 @@ class Level01Standards():
         """
         config = ConfigParser.ConfigParser()
         config.read(self.filepath)
-        test = config.get(self.station_id +  '_header_0005', 'header_0005')
-        test = test.rsplit(',\n')
-        self.level0005_column_headers = test
+        temp = config.get(self.station_id +  '_header_0005', 'header_0005')
+        temp = temp.rsplit(',\n')
+        self.level0005_column_headers = temp
+
+    def set_level0010_standards(self):
+        """Sets station entries information from station id
+        """
+        config = ConfigParser.ConfigParser()
+        config.read(self.filepath)
+        temp = config.get(self.station_id +  '_header_0010', 'header_0010')
+        temp = temp.rsplit(',\n')
+        self.level0010_column_headers = temp
 
     def get_level0000_column_headers(self):
         """Gets column headers of level 0000 file
@@ -84,3 +93,13 @@ class Level01Standards():
             self.set_level0005_standards()
         return self.level0005_column_headers
 
+    def get_level0010_column_headers(self):
+        """Gets column headers of level 0010 file
+        
+        Returns:
+            Column headers of level 0010 file
+        """
+        try: self.level0010_column_headers
+        except:
+            self.set_level0010_standards()
+        return self.level0010_column_headers
