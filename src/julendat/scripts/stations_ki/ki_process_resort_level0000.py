@@ -23,7 +23,6 @@ __version__ = "2012-01-04"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
-import datetime
 import fnmatch
 import os
 

@@ -29,3 +29,31 @@ header_0010 = Datetime,
               Ta_200,
               rH_200
 
+
+[000pu1_header_0000]
+Date=Date
+Time=Time
+Impulses = P_RT_NRT
+
+[000pu1_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              P_RT_NRT
+
+[000pu1_header_0010]
+header_0010 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              P_RT_NRT
+

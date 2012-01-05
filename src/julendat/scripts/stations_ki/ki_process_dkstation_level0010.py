@@ -86,7 +86,7 @@ def main():
         DKStationToLevel0010(filepath=filepath, config_file=config_file)
         move_file = "mv " + dataset + " " + \
             dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
-        os.system(move_file)
+        #os.system(move_file)
         '''
         try:
             DKStationToLevel0010(filepath=filepath, config_file='ki_stations.cnf')

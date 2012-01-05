@@ -3,7 +3,7 @@ Date = Datetime
 Time = Datetime
 Temperature   [°C] = Ta_200
 Rel.humidity   [%] = rH_200
-
+Impulses = P_RT_NRT
 
 
 [variables]

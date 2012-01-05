@@ -200,42 +200,72 @@ class StationDataFilePath(StationDataFile):
         """
         return self.filename_dictionary
 
+    def set_first_time_of_month(self, start_datetime):
+        """Sets start time (hour, minute)
+        This must be different from 00:00 for files which do not have a interval
+        of 5, 10, 12, 15, etc. and therefore have different minutes.
+        
+        Args:
+            start_datetime: Start time
+        """
+        start_month = start_datetime.month
+        act_month = start_datetime.month
+        time_step = self.get_time_step_delta()
+        while start_month == act_month:
+            start_datetime = start_datetime - datetime.timedelta(seconds=time_step)
+            start_month = start_datetime.month
+        start_datetime = start_datetime + datetime.timedelta(seconds=time_step)
+
+        '''
+        start_time = str(start_datetime.hour).zfill(2) + \
+                     str(start_datetime.minute).zfill(2) + \
+                     str(start_datetime.second).zfill(2)
+        print start_time
+        print self.get_aggregation()
+        print self.get_time_step_delta()
+        '''
+        return start_datetime
+
+    def set_last_time_of_month(self, start_datetime):
+        """Sets start time (hour, minute)
+        This must be different from 00:00 for files which do not have a interval
+        of 5, 10, 12, 15, etc. and therefore have different minutes.
+        
+        Args:
+            start_datetime: Start time
+        """
+        start_month = start_datetime.month
+        act_month = start_datetime.month
+        time_step = self.get_time_step_delta()
+        while start_month == act_month:
+            start_datetime = start_datetime + datetime.timedelta(seconds=time_step)
+            start_month = start_datetime.month
+        start_datetime = start_datetime - datetime.timedelta(seconds=time_step)
+
+        #last_time_of_month = str(start_datetime.hour).zfill(2) + \
+        #                     str(start_datetime.minute).zfill(2)
+
+        return start_datetime
+    
     def get_month_range(self):
         """Gets month range of the file.
         """
         start_datetime = self.get_start_datetime()
+        start_datetime = time_utilities.convert_timezone(start_datetime, \
+                            self.level_0005_time_zone)
         end_datetime = self.get_end_datetime()
-        """
-        start_datetime = datetime.strptime(\
-                            self.get_start_datetime(),"%Y%m%d%H%M")
-        end_datetime = datetime.strptime(\
-                            self.get_end_datetime(),"%Y%m%d%H%M")
-        """
+        end_datetime = time_utilities.convert_timezone(end_datetime, \
+                            self.level_0005_time_zone)
+
         if end_datetime.year - start_datetime.year > 0:
             month_number = 13-start_datetime.month + end_datetime.month
         else:
             month_number = end_datetime.month-start_datetime.month+1
-        start_year = str(start_datetime.year)
-        start_month = str(start_datetime.month)
-        start_month = start_month.zfill(2)
-        start_datetime = datetime.datetime.strptime(start_year+start_month+"010000",\
-                             "%Y%m%d%H%M")
-        #last_time_of_month = "23" + str(60 - int(self.get_aggregation()[3:5]))
         
-        if self.get_aggregation()[2:3] == "s":
-            last_time_of_month =  "23" + str(59 - \
-                                  int(float(self.get_aggregation()[3:5]) / \
-                                  60.0))
-        elif self.get_aggregation()[2:3] == "i":
-            last_time_of_month =  "23" + str(60 - \
-                                  int(self.get_aggregation()[3:5]))
-        
-        elif self.get_aggregation()[2:3] == "h":
-            last_time_of_month =  str(24 - \
-                                  int(self.get_aggregation()[3:5])) + "00"
-        self.set_start_datetime(start_datetime)
         self.month_number = month_number
-        self.last_time_of_month = last_time_of_month
+        start_datetime = self.set_first_time_of_month(start_datetime)
+        self.set_start_datetime(start_datetime)
+        self.last_time_of_month = self.set_last_time_of_month(start_datetime)
 
     def get_monthly_filepath(self, project_id=None, plot_id=None, \
                  station_id=None, start_datetime=None, end_datetime=None, \
@@ -268,17 +298,22 @@ class StationDataFilePath(StationDataFile):
         end_time_isostr = []
         #TODO(tnauss): Read time aggregation from configuration file,
         #and adjust output filenames.
-        if self.get_aggregation()[2:] != "i05":
-            aggregation_level = "cti05"
+        #if self.get_aggregation()[2:] != "i05":
+        #    aggregation_level = "cti05"
+        aggregation_level = "ct" + self.get_aggregation()[2:]
+        
         for i in range(0,self.month_number):
-            act_time = self.get_start_datetime()
-            act_month = act_time.month+i
-
+            act_start_time = self.get_start_datetime()
+            act_end_time = self.last_time_of_month
+            '''
+            act_month = act_start_time.month+i
+            print act_start_time, act_month
             if act_month > 12:
                 act_month = act_month-12
             act_month = str(act_month).zfill(2)
             act_month = str(act_month)
-            act_year = str(act_time.year+(act_time.month+i)/13)
+            act_year = str(act_start_time.year+(act_start_time.month+i)/13)
+
             start_datetime = time.strftime("%Y%m%d%H%M",
                                  time.strptime(act_year + act_month + "010000",\
                                  "%Y%m%d%H%M"))
@@ -295,6 +330,17 @@ class StationDataFilePath(StationDataFile):
                            str(calendar.monthrange(int(act_year), \
                                                    int(act_month))[1]) + \
                             self.last_time_of_month,"%Y%m%d%H%M")))                                     
+            '''
+            start_datetime = time.strftime("%Y%m%d%H%M",
+                                 act_start_time.timetuple())
+            
+            start_time_isostr.append(time.strftime("%Y-%m-%d %H:%M:%S",
+                                 act_start_time.timetuple()))
+            end_datetime = time.strftime("%Y%m%d%H%M",
+                           act_end_time.timetuple())
+            end_time_isostr.append(time.strftime("%Y-%m-%d %H:%M:%S",
+                           act_end_time.timetuple()))                                     
+
             filename.append( \
                 self.build_filename(\
                     start_datetime=start_datetime, \
@@ -311,6 +357,12 @@ class StationDataFilePath(StationDataFile):
             filepath.append( \
                 path[i] + \
                 filename[i])
+            
+            new_start_time = act_end_time + datetime.timedelta(seconds=self.get_time_step_delta())
+            new_start_time = self.set_first_time_of_month(new_start_time)
+            self.set_start_datetime(new_start_time)
+            self.last_time_of_month = self.set_last_time_of_month(new_start_time)
+
         return filename, path, filepath, start_time_isostr, end_time_isostr
         
     def build_filename(self, project_id=None, plot_id=None, \
