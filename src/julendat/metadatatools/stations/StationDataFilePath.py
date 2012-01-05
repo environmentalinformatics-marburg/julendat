@@ -82,7 +82,7 @@ class StationDataFilePath(StationDataFile):
         if filepath != None:
             StationDataFile.__init__(self, filepath=filepath, io_access="r")
             self.check_standard()
-            if self.standard_name:
+            if self.get_standard_name():
                 self.disassemble_filename()
         else:
             self.build_initial_filename(project_id=project_id, \
@@ -97,8 +97,8 @@ class StationDataFilePath(StationDataFile):
         
         self.set_toplevel_path(toplevel_path)
 
-        if self.standard_name:
-            self.build_filename_dictionary()
+        #if self.standard_name:
+        #    self.build_filename_dictionary()
 
     def build_filename_dictionary(self):
         """Sets dictionary for data filenames of different levels.
@@ -476,6 +476,14 @@ class StationDataFilePath(StationDataFile):
             
         else:
             self.standard_name = False
+    
+    def get_standard_name(self):
+        """Gets info if files has a standard name (True)
+        
+        Returns
+            True if file has a standard name according to the eifc
+        """
+        return self.standard_name
     
     def build_initial_filename(self,project_id, plot_id, station_id, \
                                start_datetime, end_datetime, time_step_delta, \

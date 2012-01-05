@@ -60,7 +60,7 @@ class StationInventory(StationInventoryFile):
             counter = counter + 1
             if counter == 1:
                 act_line = line.rstrip()
-                calib_coefficents_headers = act_line.rsplit(',')[9:]
+                calib_coefficents_headers = act_line.rsplit(',')[10:19]
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[7]).strip('"').lstrip('0') == self.get_serial_number():
@@ -71,9 +71,10 @@ class StationInventory(StationInventoryFile):
                         act_line = line.rstrip()
                         plot_id = string.strip(line.rsplit(',')[5].strip('"'))
                         logger_id = string.strip(line.rsplit(',')[6])
-                        header_lines = int(string.strip(line.rsplit(',')[8]))
-                        calib_coefficents = act_line.rsplit(',')[9:17]
-                        misc = act_line.rsplit(',')[18:]
+                        header_line = int(string.strip(line.rsplit(',')[8]))
+                        first_data_line = int(string.strip(line.rsplit(',')[9]))
+                        calib_coefficents = act_line.rsplit(',')[10:19]
+                        misc = act_line.rsplit(',')[20:]
                         foundID = True
         inventory_data.close()
         plot_id_list = sorted(set(plot_id_list))
@@ -83,7 +84,8 @@ class StationInventory(StationInventoryFile):
         if self.get_found_station_inventory():
             self.set_plot_id(plot_id)
             self.set_station_id(logger_id)
-            self.set_header_lines(header_lines)
+            self.set_header_line(header_line)
+            self.set_first_data_line(first_data_line)
             self.set_calibration_coefficients_headers(calib_coefficents_headers)
             self.set_calibration_coefficients(calib_coefficents)
 

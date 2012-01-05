@@ -29,6 +29,7 @@ import string
 import time
 from julendat.filetools.stations.StationDataFile import StationDataFile
 from julendat.processtools.TimeInterval import TimeInterval
+from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
 
 class DKStationDataFile(StationDataFile):
     """Instance for handling Driesen & Kern station data (sensor/logger).
@@ -55,6 +56,10 @@ class DKStationDataFile(StationDataFile):
         self.check_filetype()
         if self.get_filetype() == 'ascii':
             self.set_serial_number_ascii()
+            stationdatafilepath = StationDataFilePath(filepath)
+            if stationdatafilepath.get_standard_name():
+                self.set_start_datetime(stationdatafilepath.get_start_datetime())
+                self.set_end_datetime(stationdatafilepath.get_end_datetime())         
 
     def check_filetype(self):
         """Sets filetype of the logger file (binary/ascii).
@@ -95,7 +100,7 @@ class DKStationDataFile(StationDataFile):
                                                      end_datetime)
                     compute_time_interval = False
                 if start_datetime == None:
-                    header_lines = line_counter -1
+                    header_extension = line_counter -1
                     start_datetime = datetime.strptime(
                                  string.strip(line.split('\t')[0]) + \
                                  string.strip(line.split('\t')[1]), \
@@ -105,21 +110,29 @@ class DKStationDataFile(StationDataFile):
         self.set_start_datetime(start_datetime)
         self.set_end_datetime(end_datetime)
         self.set_time_step_delta(time_step_delta)
-        self.set_header_lines(header_lines)
+        self.set_header_extension(header_extension)
+
+    def read_header(self):
+        """Reads header of the logger file
+        """
+        infile = open(self.get_filepath())
+        for header_extension in range (0, self.get_header_line()-1):
+            infile.next()
+        reader = csv.reader(infile,delimiter='\t')
+        self.set_column_headers(reader.next())
+        infile.close() 
 
     def read_data(self):
         """Reads content of the logger file
         """
         infile = open(self.get_filepath())
-        
-        for header_lines in range (0, self.get_header_lines()-1):
+        for header_extension in range (0, self.get_first_data_line()-1):
             infile.next()
         reader = csv.reader(infile,delimiter='\t')
         self.dataset = []
         for row in reader:
             self.dataset.append(row)
         infile.close()
-        self.set_column_headers(self.dataset[0])
         
     def get_data(self):
         """Gets data of the logger file without the header column
@@ -127,8 +140,8 @@ class DKStationDataFile(StationDataFile):
         try: self.dataset
         except:
             self.read_data()
-        return self.dataset[1:]
-
+        return self.dataset
+    
     def set_column_headers(self,column_headers):
         """Sets column headers of the dataset
         
@@ -140,7 +153,7 @@ class DKStationDataFile(StationDataFile):
     def get_column_headers(self):
         """Gets column headers of the dataset
         """
-        try: self.dataset
+        try: self.column_headers
         except:
-            self.read_data()
+            self.read_header()
         return self.column_headers

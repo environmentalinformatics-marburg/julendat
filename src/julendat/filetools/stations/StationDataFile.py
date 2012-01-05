@@ -81,22 +81,54 @@ class StationDataFile(DataFile):
         """
         return self.station_id
 
-    def set_header_lines(self, header_lines):
+    def set_header_extension(self, header_extension):
         """Sets number of header lines at the beginning of the logger file
         
         Args:
             Number of header lines until the start of the data section.
         """
-        self.header_lines = header_lines
+        self.header_extension = header_extension
     
-    def get_header_lines(self):
+    def get_header_extension(self):
         """Gets number of header lines at the beginning of the logger file
         
         Returns:
             Number of header lines until the start of the data section.
         """
-        return self.header_lines
+        return self.header_extension
 
+    def set_header_line(self, header_line):
+        """Sets header line
+        
+        Args:
+            header_line: Header line
+        """
+        self.header_line = header_line
+    
+    def get_header_line(self):
+        """Gets header line
+        
+        Returns:
+            Number of header line
+        """
+        return self.header_line
+ 
+    def set_first_data_line(self, first_data_line):
+        """Sets first data line
+        
+        Args:
+            first_data_line: First data line
+        """
+        self.first_data_line = first_data_line
+    
+    def get_first_data_line(self):
+        """Gets first data line
+        
+        Returns:
+            Number of first data line
+        """
+        return self.first_data_line
+    
     def set_plot_id(self, plot_id=None):
         """Sets plot ID of the data file.
         
@@ -119,8 +151,7 @@ class StationDataFile(DataFile):
         Returns:
             Coded ID of the station plot without leading zeros
         """
-        
-        return self.plot_id.rpartition("0")[2]
+        return self.plot_id.lstrip("0")
 
     def set_calibration_level(self, calibration_level=None):
         """Sets calibration level of the data file.
@@ -182,7 +213,7 @@ class StationDataFile(DataFile):
         Returns:
             Calibration coefficients
         """
-        return self.calib_coefficents_headers, self.calib_coefficents    
+        return self.calib_coefficents    
 
     def set_calibration_coefficients_headers(self, calib_coefficents_headers):
         """Sets calibration coefficients headers

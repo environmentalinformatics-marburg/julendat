@@ -4,7 +4,6 @@ Time=Time
 Temperature   [°C]=Ta_200
 Rel.humidity   [%]=rH_200
 
-
 [000rug_header_0005]
 header_0005 = Datetime, 
               Timezone,
@@ -55,5 +54,70 @@ header_0010 = Datetime,
               StationId,
               Processlevel,
               Qualityflag,
+              P_RT_NRT
+
+[000wxt_header_0000]
+Date=Date
+Time=Time
+Winddirection  [°]=WD
+Windspeed    [m/s]=WV
+Temperature   [°C]=Ta_200
+Rel.humidity   [%]=rH_200
+Barom. prs   [hPa]=p_200
+Rain          [mm]=P_container_RT
+VoltageHiImp  [mV]=SWDR_300_U
+VoltageHiImp  [mV]=SWUR_300_U
+Voltage DVM   [mV]=LWDR_300_U
+Voltage DVM   [mV]=LWUR_300_U
+Temper. PT100 [°C]=T_CNR
+Temp. PT1000  [°C]=Ts_10
+
+[000wxt_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200,
+              Ts_10,
+              SWDR_300,
+              SWUR_300,
+              LWDR_300,
+              LWUR_300,
+              WD,
+              WV,
+              p_200,
+              P_RT_NRT,
+              P_container_RT,
+              SWDR_300_U,
+              SWUR_300_U,
+              LWDR_300_U,
+              LWUR_300_U,
+              T_CNR
+              
+
+[000wxt_header_0010]
+header_0010 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200,
+              Ts_10,
+              SWDR_300,
+              SWUR_300,
+              LWDR_300,
+              LWUR_300,
+              WD,
+              WV,
+              p_200,
               P_RT_NRT
 

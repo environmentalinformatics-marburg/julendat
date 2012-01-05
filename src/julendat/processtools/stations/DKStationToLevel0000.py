@@ -120,6 +120,7 @@ class DKStationToLevel0000:
                 self.ascii_logger_file = DKStationDataFile(\
                                          filepath=ascii_filepath)
                 self.ascii_logger_file.set_time_range_ascii()
+                
                 self.run_flag = self.ascii_logger_file.get_file_exists()
             else:
                 self.run_flag = False
@@ -247,7 +248,7 @@ class DKStationToLevel0000:
                         logger_time_zone=self.logger_time_zone, \
                         aggregation_level="na", \
                         postexflag=postexflag)  
-        #self.filenames.build_filename_dictionary()
+        self.filenames.build_filename_dictionary()
 
     def main(self):
         """Maps logger files to level 0 filename and directory structure.
