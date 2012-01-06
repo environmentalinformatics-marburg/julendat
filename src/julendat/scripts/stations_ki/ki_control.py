@@ -26,8 +26,8 @@ import ConfigParser
 import datetime
 import fnmatch
 import os
-from julendat.processtools.stations.DKStationToLevel0010 import \
-    DKStationToLevel0010
+from julendat.processtools.stations.DKStationToLevel0050 import \
+    DKStationToLevel0050
 
 ## {{{ http://code.activestate.com/recipes/499305/ (r3)
 ## Creatied by Simon Brunning

@@ -38,12 +38,12 @@ from julendat.metadatatools.stations.StationEntries import StationEntries
 from julendat.metadatatools.stations.Level01Standards import Level01Standards
 from julendat.filetools.DataFile import DataFile
 
-class DKStationToLevel0010:   
+class DKStationToLevel0050:   
     """Instance for converting D&K logger level 0 to level 1data.
     """
 
     def __init__(self, filepath, config_file,run_mode="auto"):
-        """Inits DKStationToLevel0010. 
+        """Inits DKStationToLevel0050. 
         
         Args:
             filepath: Full path and name of the level 0 file
@@ -87,7 +87,7 @@ class DKStationToLevel0010:
         self.station_inventory = config.get('inventory','station_inventory')
         self.project_id = config.get('project','project_id')
         self.level_0005_timezone = config.get('project','level_0005_timezone')
-        self.level0010_standards = config.get('general','level0010_standards')
+        self.level0050_standards = config.get('general','level0050_standards')
         self.r_filepath = config.get('general','r_filepath')
 
     def init_filenames(self, filepath):
@@ -133,7 +133,7 @@ class DKStationToLevel0010:
         shutil.move(self.source,self.destination)
 
     def main(self):
-        """Processes level 0000 station files to level 0010.
+        """Processes level 0000 station files to level 0050.
         """
         self.init_level_0000_ascii_file()
         
@@ -143,7 +143,7 @@ class DKStationToLevel0010:
             self.process_level_0005()
         
         if self.get_run_flag():
-            self.process_level_0010()
+            self.process_level_0050()
         
         print "...finished."
 
@@ -199,7 +199,7 @@ class DKStationToLevel0010:
         """Sets format standards for level 1 station data files
         """
         level0005_standard = Level01Standards(\
-            filepath=self.level0010_standards, \
+            filepath=self.level0050_standards, \
             station_id=self.filenames.get_station_id())
         self.level0000_column_headers = \
             level0005_standard.get_level0000_column_headers()
@@ -210,8 +210,6 @@ class DKStationToLevel0010:
         """Reorder station column entries to match the level 1 standards.
         """
         reorder = []
-        print "In: ", input_headers
-        print "Out: ", output_headers
         for entry_sce in range (0,len(input_headers)):
             match = False
             for entry_lce in range(0,len(output_headers)):
@@ -222,19 +220,18 @@ class DKStationToLevel0010:
             if match == False:
                 reorder.append(-1)
         self.reorder = reorder
-        print "Re: ", reorder
+        print "Reorder of input columns:    ", reorder
 
     def rename_level0000_headers(self):
         """Rename level 0000 headers to 0005+ convention
         """
         ascii_headers = self.level_0000_ascii_file.get_column_headers()
-        print "Old: ", ascii_headers
+        print "Original level 0000 headers: ", ascii_headers
         for col_old in range(0, len(ascii_headers)):
             for col_new in self.level0000_column_headers:
                 if col_new[0].rsplit(" ")[0] == str.lower(ascii_headers[col_old].rsplit(" ")[0]):
                     ascii_headers[col_old] = col_new[1]
 
-        print "New: ", ascii_headers
         if self.filenames.get_station_id().find("wxt") != -1:
             if self.level_0000_ascii_file.get_start_datetime().year == 2011 and\
                self.level_0000_ascii_file.get_start_datetime().month <= 8 and \
@@ -250,16 +247,11 @@ class DKStationToLevel0010:
                 ascii_headers[11] = 'SWUR_300_U'
 
         self.level_0000_ascii_file.set_column_headers(ascii_headers)
-        print "New: ", ascii_headers
+        print "New level 0000 headers:      ", ascii_headers
 
     def calibrate_level_0005(self):
         """Calibrate level 0000 datasets
         """
-        print self.calibration_coefficients_headers
-        print self.calibration_coefficients
-        print  self.level_0000_ascii_file.get_column_headers()
-        
-        
         if self.filenames.get_station_id().find("wxt") != -1:
             
             parameters = ["SWDR_300","SWUR_300","LWDR_300","LWUR_300"]
@@ -343,8 +335,8 @@ class DKStationToLevel0010:
                                self.filenames.get_plot_id(), \
                                'xxx', \
                                self.filenames.get_station_id(), \
-                               self.filenames.get_calibration_level(), \
-                               '0000']
+                               self.filenames.get_filename_dictionary()['level_0005_process_level'], \
+                               self.filenames.get_filename_dictionary()['level_0005_quality']]
                 for i in range(9, max(self.reorder)+1):
                     try:
                         index =  self.reorder.index(i)
@@ -370,48 +362,48 @@ class DKStationToLevel0010:
         outfile.close()
 
             
-    def process_level_0010(self):
+    def process_level_0050(self):
         """Compute level 1.0 station data sets
         """
-        self.get_level0010_standards()
-        print self.level0005_column_headers
-        print self.level0010_column_headers
+        self.get_level0050_standards()
+        print "Level 0005 headers:          ", self.level0005_column_headers
+        print "Level 0050 headers:          ", self.level0050_column_headers
         self.reorder_station_coloumn_entries(\
             self.level0005_column_headers, \
-            self.level0010_column_headers)
-        print self.reorder
+            self.level0050_column_headers)
+        print "Reorder of input columns:    ", self.reorder
 
         
         filenumber = len(self.filenames.get_filename_dictionary()\
-                         ["level_0010_ascii-filepath"])
+                         ["level_0050_ascii-filepath"])
 
         for act_file in range(0, filenumber):
-            self.act_level_0010_filepath = \
+            self.act_level_0050_filepath = \
                 self.filenames.get_filename_dictionary()\
-                ["level_0010_ascii-filepath"][act_file]        
-            self.act_level_0010_path = \
+                ["level_0050_ascii-filepath"][act_file]        
+            self.act_level_0050_path = \
                 self.filenames.get_filename_dictionary()\
-                ["level_0010_ascii-path"][act_file]
-            self.act_level_0010_start_time_isostr = \
+                ["level_0050_ascii-path"][act_file]
+            self.act_level_0050_start_time_isostr = \
                 self.filenames.get_filename_dictionary()\
-                ['level_0010_start_time_isostr'][act_file]
-            self.act_level_0010_end_time_isostr = \
+                ['level_0050_start_time_isostr'][act_file]
+            self.act_level_0050_end_time_isostr = \
                 self.filenames.get_filename_dictionary()\
-                ['level_0010_end_time_isostr'][act_file]
-            self.init_path(self.act_level_0010_path)        
-            self.init_level_0010()   
-            self.write_level_0010()
+                ['level_0050_end_time_isostr'][act_file]
+            self.init_path(self.act_level_0050_path)        
+            self.init_level_0050()   
+            self.write_level_0050()
 
-    def get_level0010_standards(self):
+    def get_level0050_standards(self):
         """Sets format standards for level 1 station data files
         """
-        level0010_standard = Level01Standards(\
-            filepath=self.level0010_standards, \
+        level0050_standard = Level01Standards(\
+            filepath=self.level0050_standards, \
             station_id=self.filenames.get_station_id())
         self.level0005_column_headers = \
-            level0010_standard.get_level0005_column_headers()
-        self.level0010_column_headers = \
-            level0010_standard.get_level0010_column_headers()
+            level0050_standard.get_level0005_column_headers()
+        self.level0050_column_headers = \
+            level0050_standard.get_level0050_column_headers()
                     
     def init_path(self, path):
         """Init path
@@ -422,15 +414,15 @@ class DKStationToLevel0010:
         if not os.path.isdir(path):
             os.makedirs(path)
         
-    def init_level_0010(self):
+    def init_level_0050(self):
         """Init level 1.0 file
         """
         r_source = 'source("' + self.r_filepath + os.sep + \
-            'InitLevel010File.R")'
+            'InitLevel050File.R")'
         r_keyword = "init_level_010_file"
-        r_ofp = 'outpath="' + self.act_level_0010_filepath + '",'
-        r_st = 'start_time="' + self.act_level_0010_start_time_isostr + '",'
-        r_et = 'end_time="' + self.act_level_0010_end_time_isostr + '",'
+        r_ofp = 'outpath="' + self.act_level_0050_filepath + '",'
+        r_st = 'start_time="' + self.act_level_0050_start_time_isostr + '",'
+        r_et = 'end_time="' + self.act_level_0050_end_time_isostr + '",'
         r_ts = 'time_step=' + self.filenames.get_time_step_delta_str() + ''
         r_cmd = r_source + "\n" + \
                 r_keyword + " (\n" + \
@@ -438,7 +430,7 @@ class DKStationToLevel0010:
                 r_st + "\n" + \
                 r_et + "\n" + \
                 r_ts + ")\n"
-        r_script = "il0010.R" 
+        r_script = "il0050.R" 
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
@@ -446,8 +438,8 @@ class DKStationToLevel0010:
         print r_cmd
         os.system(r_cmd)
 
-    def write_level_0010(self):
-        """Fill level 1.0 file
+    def write_level_0050(self):
+        """Fill level 0050 file
         """
         station_file = open( \
             self.filenames.get_filename_dictionary()["level_0005_ascii-filepath"])
@@ -460,7 +452,7 @@ class DKStationToLevel0010:
             station_input.append(row)
         station_file.close()
 
-        level_010_file = open(self.act_level_0010_filepath)
+        level_010_file = open(self.act_level_0050_filepath)
         for header_lines in range (0,1):
             level_010_header = level_010_file.next()
         reader = csv.reader(level_010_file,delimiter=',', \
@@ -470,6 +462,7 @@ class DKStationToLevel0010:
             level_10_input.append(row)
         level_010_file.close()
 
+        process_level_index = self.level0005_column_headers.index("Processlevel")
         qualtiy_flag_index = self.level0005_column_headers.index("Qualityflag")
 
         level_10_counter = 0
@@ -481,7 +474,8 @@ class DKStationToLevel0010:
                 if level_10_input[level_10_counter][0] == station_input[station_counter][0]:
                     
                     act_out = station_input[station_counter][0:8]
-                    act_out[qualtiy_flag_index] = '0005'
+                    act_out[process_level_index] = self.filenames.get_filename_dictionary()['level_0050_process_level']
+                    act_out[qualtiy_flag_index] = self.filenames.get_filename_dictionary()['level_0050_quality']
                     for i in range(9, max(self.reorder)+1):
                         try:
                             index =  self.reorder.index(i)
@@ -498,8 +492,8 @@ class DKStationToLevel0010:
             level_10_counter = level_10_counter + 1
 
 
-        outfile = open(self.act_level_0010_filepath,"w")
-        outfile.write(', '.join(str(i) for i in self.level0010_column_headers) + '\n')
+        outfile = open(self.act_level_0050_filepath,"w")
+        outfile.write(', '.join(str(i) for i in self.level0050_column_headers) + '\n')
         writer = csv.writer(outfile,delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
         for row in out:
             writer.writerow(row)

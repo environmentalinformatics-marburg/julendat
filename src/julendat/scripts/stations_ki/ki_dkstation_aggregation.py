@@ -83,7 +83,7 @@ def main():
                   config_file_variables='ki_config_station_parameters.cnf')
     
     input_path = toplevel_processing_plots_path + os.sep + project_id
-    station_dataset=locate("*.dat", "*ca01_nai05_0010*", input_path)
+    station_dataset=locate("*.dat", "*ca01_nai05_0050*", input_path)
     # Daily aggregation
     for dataset in station_dataset:
         print(dataset)

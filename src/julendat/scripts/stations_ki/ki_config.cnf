@@ -19,6 +19,6 @@ project_id = ki
 level_0005_timezone = eat 
 
 [general]
-level0010_standards = ki_config_level0010_standards.cnf
+level0050_standards = ki_config_level0050_standards.cnf
 r_filepath = /media/permanent/development/released/julendat/src/julendat/scripts/stations_ki
 

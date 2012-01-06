@@ -26,8 +26,8 @@ import ConfigParser
 import datetime
 import fnmatch
 import os
-from julendat.processtools.stations.DKStationToLevel0010 import \
-    DKStationToLevel0010
+from julendat.processtools.stations.DKStationToLevel0050 import \
+    DKStationToLevel0050
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -63,10 +63,10 @@ def configure(config_file):
     
 def main():
     """Main program function
-    Process data from level 0000 to level 0010.
+    Process data from level 0000 to level 0050.
     """
     print
-    print 'Module: ki_process_dkstation_level0010'
+    print 'Module: ki_process_dkstation_level0050'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
@@ -83,13 +83,13 @@ def main():
         print(dataset)
         systemdate = datetime.datetime.now()
         filepath=dataset
-        DKStationToLevel0010(filepath=filepath, config_file=config_file)
+        DKStationToLevel0050(filepath=filepath, config_file=config_file)
         move_file = "mv " + dataset + " " + \
             dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
         #os.system(move_file)
         '''
         try:
-            DKStationToLevel0010(filepath=filepath, config_file='ki_stations.cnf')
+            DKStationToLevel0050(filepath=filepath, config_file='ki_stations.cnf')
             move_file = "mv " + dataset + " " + \
                 dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
             os.system(move_file)

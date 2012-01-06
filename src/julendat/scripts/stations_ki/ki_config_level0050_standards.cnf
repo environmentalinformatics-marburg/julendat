@@ -20,8 +20,8 @@ header_0005 = Datetime,
               Ta_200,
               rH_200
 
-[000rug_header_0010]
-header_0010 = Datetime, 
+[000rug_header_0050]
+header_0050 = Datetime, 
               Timezone,
               Aggregationtime,
               PlotId,
@@ -53,8 +53,8 @@ header_0005 = Datetime,
               P_RT_NRT,
               P_RT_NRT_I
 
-[000pu1_header_0010]
-header_0010 = Datetime, 
+[000pu1_header_0050]
+header_0050 = Datetime, 
               Timezone,
               Aggregationtime,
               PlotId,
@@ -130,8 +130,8 @@ header_0005 = Datetime,
               T_CNR
               
 
-[000wxt_header_0010]
-header_0010 = Datetime, 
+[000wxt_header_0050]
+header_0050 = Datetime, 
               Timezone,
               Aggregationtime,
               PlotId,
