@@ -175,7 +175,7 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_0005_ascii-filename']
 
         #Level 0050 (monthly time-filled files, standard format)
-        process_level="ca01"
+        process_level="ca05"
         quality = "0005"
         extension="dat"
         self.filename_dictionary['level_0050_process_level'] = process_level
