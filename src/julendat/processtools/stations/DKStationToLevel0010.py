@@ -186,13 +186,15 @@ class DKStationToLevel0010:
         self.rename_level0000_headers()
         
         self.calibrate_level_0005()
+        
+        self.convert_P_container_RT()
 
         self.reorder_station_coloumn_entries(\
             self.level_0000_ascii_file.get_column_headers(), \
             self.level0005_column_headers)
 
         self.write_level_0005()
-        
+
     def get_level0005_standards(self):
         """Sets format standards for level 1 station data files
         """
@@ -285,8 +287,45 @@ class DKStationToLevel0010:
             new_header = self.level_0000_ascii_file.get_column_headers() + parameters
             self.level_0000_ascii_file.set_column_headers(new_header)
 
+        elif self.filenames.get_station_id().find("pu1") != -1:
+            parameters = ["P_RT_NRT"]
+            self.level_0000_data = []
+            for row in self.level_0000_ascii_file.get_data():
+                act_row = row
+                for parameter in parameters:
+                    try:
+                        raw_value_index = self.level_0000_ascii_file.get_column_headers().index(parameter + "_I")
+                        raw_value = float(row[raw_value_index])
+                        calib_coefficient_index = self.calibration_coefficients_headers.index(self.filenames.get_station_id()[-3:] + "_" + parameter)
+                        calib_coefficient = float(self.calibration_coefficients[calib_coefficient_index])
+                        param_value = raw_value * calib_coefficient
+                        act_row = act_row + [param_value]
+                    except:
+                        continue
+                self.level_0000_data.append(act_row)
+
+            new_header = self.level_0000_ascii_file.get_column_headers() + parameters
+            self.level_0000_ascii_file.set_column_headers(new_header)
         else:
             self.level_0000_data = self.level_0000_ascii_file.get_data()
+
+    def convert_P_container_RT(self):
+        """Convert precipitation sums of wxt to precipitation per time slot
+        """
+        if self.filenames.get_station_id().find("wxt") != -1:
+            parameters = ["P_container_RT","P_RT_NRT"]
+            temp_data = []
+            for i in range(1,len(self.level_0000_data)):
+                try:
+                    p_container_index = self.level_0000_ascii_file.get_column_headers().index(parameters[0])
+                    prev_p_cont = self.level_0000_data[i-1][p_container_index]
+                    act_p_cont = self.level_0000_data[i][p_container_index]
+                    self.level_0000_data[i] = self.level_0000_data[i] + [max(abs(float(act_p_cont) - float(prev_p_cont)),0.0)]
+            
+                except:
+                    continue
+            new_header = self.level_0000_ascii_file.get_column_headers() + [parameters[1]]
+            self.level_0000_ascii_file.set_column_headers(new_header)
 
     def write_level_0005(self):
         """Write level 0005 dataset.
@@ -335,6 +374,13 @@ class DKStationToLevel0010:
         """Compute level 1.0 station data sets
         """
         self.get_level0010_standards()
+        print self.level0005_column_headers
+        print self.level0010_column_headers
+        self.reorder_station_coloumn_entries(\
+            self.level0005_column_headers, \
+            self.level0010_column_headers)
+        print self.reorder
+
         
         filenumber = len(self.filenames.get_filename_dictionary()\
                          ["level_0010_ascii-filepath"])
@@ -424,6 +470,8 @@ class DKStationToLevel0010:
             level_10_input.append(row)
         level_010_file.close()
 
+        qualtiy_flag_index = self.level0005_column_headers.index("Qualityflag")
+
         level_10_counter = 0
         out = []
         for level_10_row in level_10_input:
@@ -431,7 +479,17 @@ class DKStationToLevel0010:
             station_counter = 0
             for station_10_row in station_input:
                 if level_10_input[level_10_counter][0] == station_input[station_counter][0]:
-                    out.append(station_input[station_counter])
+                    
+                    act_out = station_input[station_counter][0:8]
+                    act_out[qualtiy_flag_index] = '0005'
+                    for i in range(9, max(self.reorder)+1):
+                        try:
+                            index =  self.reorder.index(i)
+                            act_out = act_out + [float(station_input[station_counter][index])]
+                        except:
+                            act_out = act_out + [float('nan')]
+                    out.append(act_out)
+                    #out.append(station_input[station_counter])
                     found = True
                     break
                 station_counter = station_counter + 1
