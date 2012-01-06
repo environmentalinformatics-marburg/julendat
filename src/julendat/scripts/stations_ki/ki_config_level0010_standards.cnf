@@ -1,8 +1,12 @@
 [000rug_header_0000]
-Date=Date
-Time=Time
-Temperature   [°C]=Ta_200
-Rel.humidity   [%]=rH_200
+Date = Date
+Time = Time
+Temperature   [°C] = Ta_200
+Rel.humidity   [%] = rH_200
+Datum = Date
+Zeit = Time
+Temperatur    [°C] = Ta_200
+rel.Feuchte    [%] = rH_200
 
 [000rug_header_0005]
 header_0005 = Datetime, 
@@ -32,7 +36,10 @@ header_0010 = Datetime,
 [000pu1_header_0000]
 Date=Date
 Time=Time
-Impulses = P_RT_NRT_I
+Impulses=P_RT_NRT_I
+Datum=Date
+Zeit=Time
+Impulse=P_RT_NRT_I
 
 [000pu1_header_0005]
 header_0005 = Datetime, 
@@ -58,20 +65,42 @@ header_0010 = Datetime,
               P_RT_NRT
 
 [000wxt_header_0000]
-Date=Date
-Time=Time
-Winddirection  [°]=WD
-Windspeed    [m/s]=WV
-Temperature   [°C]=Ta_200
-Rel.humidity   [%]=rH_200
-Barom. prs   [hPa]=p_200
-Rain          [mm]=P_container_RT
-VoltageHiImp  [mV]=SWDR_300_U
-VoltageHiImp  [mV]=SWUR_300_U
-Voltage DVM   [mV]=LWDR_300_U
-Voltage DVM   [mV]=LWUR_300_U
-Temper. PT100 [°C]=T_CNR
-Temp. PT1000  [°C]=Ts_10
+Date = Date
+Time = Time
+Winddirection  [°] = WD
+Windspeed    [m/s] = WV
+Temperature   [°C] = Ta_200
+Rel.humidity   [%] = rH_200
+Barom. prs   [hPa] = p_200
+Rain          [mm] = P_container_RT
+VoltageHiImp  [mV] = SWDR_300_U
+VoltageHiImp  [mV] = SWUR_300_U
+Voltage DVM   [mV] = LWDR_300_U
+Voltage DVM   [mV] = LWUR_300_U
+Temper. PT100 [°C] = T_CNR
+Temp. PT1000  [°C] = Ts_10
+Datum = Date
+Zeit = Time
+Windrichtung   [°] = WD
+Windgeschw.  [m/s] = WV
+Temperatur    [°C] = Ta_200
+rel.Feuchte    [%] = rH_200
+Barom.Druck  [hPa] = p_200
+Regenmenge    [mm] = P_container_RT
+Spannung DVM  [mV] = SWDR_300_U
+Spannung DVM  [mV] = SWUR_300_U
+Spannung DVM  [mV] = LWDR_300_U
+Spannung DVM  [mV] = LWUR_300_U
+Temp. PT100   [°C] = T_CNR
+Temp. PT1000  [°C] = Ts_10
+
+
+
+
+
+
+
+
 
 [000wxt_header_0005]
 header_0005 = Datetime, 
