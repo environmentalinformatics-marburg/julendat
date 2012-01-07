@@ -33,6 +33,40 @@ header_0050 = Datetime,
               rH_200
 
 
+[002rug_header_0000]
+Date = Date
+Time = Time
+Temperature   [°C] = Ta_200
+Rel.humidity   [%] = rH_200
+Datum = Date
+Zeit = Time
+Temperatur    [°C] = Ta_200
+rel.Feuchte    [%] = rH_200
+
+[001rug_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200
+
+[001rug_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200
+
 [000pu1_header_0000]
 Date=Date
 Time=Time
