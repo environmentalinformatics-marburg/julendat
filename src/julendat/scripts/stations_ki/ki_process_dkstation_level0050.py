@@ -83,11 +83,6 @@ def main():
         print(dataset)
         systemdate = datetime.datetime.now()
         filepath=dataset
-        DKStationToLevel0050(filepath=filepath, config_file=config_file)
-        move_file = "mv " + dataset + " " + \
-            dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
-        #os.system(move_file)
-        '''
         try:
             DKStationToLevel0050(filepath=filepath, config_file='ki_stations.cnf')
             move_file = "mv " + dataset + " " + \
@@ -100,7 +95,6 @@ def main():
             print "Exception type: " , type(inst)
             print "Exception args: " , inst.args
             print "Exception content: " , inst        
-        '''
 
 if __name__ == '__main__':
     main()
