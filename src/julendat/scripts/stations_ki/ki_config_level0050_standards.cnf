@@ -33,7 +33,7 @@ header_0050 = Datetime,
               rH_200
 
 
-[002rug_header_0000]
+[001rug_header_0000]
 Date = Date
 Time = Time
 Temperature   [°C] = Ta_200
