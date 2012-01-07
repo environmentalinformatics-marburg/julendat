@@ -55,6 +55,8 @@ class DKStationToLevel0050:
         self.init_filenames(filepath)
         if self.get_run_flag():
             self.run()
+        else:
+            sys.exit()
 
     def set_run_mode(self,run_mode):
         """Sets run mode.
@@ -139,11 +141,18 @@ class DKStationToLevel0050:
         
         if self.get_run_flag():
             self.get_station_inventory_information()
-        if self.get_run_flag():
-            self.process_level_0005()
+        else:
+            sys.exit()
         
         if self.get_run_flag():
+            self.process_level_0005()
+        else:
+            sys.exit()
+
+        if self.get_run_flag():
             self.process_level_0050()
+        else:
+            sys.exit()
         
         print "...finished."
 
