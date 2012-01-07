@@ -230,7 +230,11 @@ class DKStationToLevel0050:
         for col_old in range(0, len(ascii_headers)):
             for col_new in self.level0000_column_headers:
                 if col_new[0].rsplit(" ")[0] == str.lower(ascii_headers[col_old].rsplit(" ")[0]):
-                    ascii_headers[col_old] = col_new[1]
+                    if str.lower(ascii_headers[col_old].rsplit(" ")[0]) != "temp.":
+                        ascii_headers[col_old] = col_new[1]
+                    else:
+                        if col_new[0].rsplit(" ")[1] == str.lower(ascii_headers[col_old].rsplit(" ")[1]):
+                            ascii_headers[col_old] = col_new[1]
 
         if self.filenames.get_station_id().find("wxt") != -1:
             if self.level_0000_ascii_file.get_start_datetime().year == 2011 and\
