@@ -56,7 +56,7 @@ class DKStationToLevel0050:
         if self.get_run_flag():
             self.run()
         else:
-            sys.exit()
+            raise Exception, "Run flag is false."
 
     def set_run_mode(self,run_mode):
         """Sets run mode.
@@ -141,18 +141,12 @@ class DKStationToLevel0050:
         
         if self.get_run_flag():
             self.get_station_inventory_information()
-        else:
-            sys.exit()
         
         if self.get_run_flag():
             self.process_level_0005()
-        else:
-            sys.exit()
 
         if self.get_run_flag():
             self.process_level_0050()
-        else:
-            sys.exit()
         
         print "...finished."
 
@@ -182,11 +176,13 @@ class DKStationToLevel0050:
             print "Error: plot-id does not match"
             print "File:       ", self.filenames.get_raw_plot_id()
             print "Inventory:, ", inventory.get_plot_id()
+            raise Exception, "Error: plot-id does not match."
             self.run_flag = False
             
         elif self.filenames.get_station_id() != inventory.get_station_id():
             print "Error: station-id does not match"
             self.run_flag = False
+            raise Exception, "Error: station-id does not match."
 
     def process_level_0005(self):
         """Process level 0000 to level 0005 data set
