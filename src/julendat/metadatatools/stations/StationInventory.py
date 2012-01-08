@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2010-08-07"
+__version__ = "2012-01-05"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import string
@@ -33,7 +33,7 @@ class StationInventory(StationInventoryFile):
     This instance handles station inventory information based on the serial
     number of the station.
     """
-    def __init__(self, filepath, io_access="r", serial_number=None):
+    def __init__(self, filepath, io_access="r", plot_id=None, serial_number=None):
         """Inits StationInventory.
         
         Args (from class DataFile):
@@ -44,9 +44,59 @@ class StationInventory(StationInventoryFile):
             serial_number: Serial number of the station
         """       
         StationInventoryFile.__init__(self, filepath, io_access="r")
+        self.set_plot_id(plot_id)
         self.set_serial_number(serial_number)
-        self.set_station_inventory_from_serial_number()
+        if self.get_plot_id() != None:
+            self.set_station_inventory_from_plot_id()
+        elif self.get_serial_number() != None:
+            self.set_station_inventory_from_serial_number()
         
+    def set_station_inventory_from_plot_id(self):
+        """Sets station inventory information from serial number
+        """
+        #TODO(tnauss): Implement error handling by end of 2011
+        foundID = False
+        error = False
+        inventory_data = open(self.get_filepath(),'r')
+        plot_id_list = []
+        counter = 0
+        for line in inventory_data:
+            counter = counter + 1
+            if counter == 1:
+                act_line = line.rstrip()
+                calib_coefficents_headers = act_line.rsplit(',')[10:19]
+            else:
+                plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
+                if string.strip(line.rsplit(',')[5]).strip('"').lstrip('0') == self.get_plot_id():
+                    if foundID == True:
+                        print "The same plot id has been found at least twice!"
+                        error = True
+                    else:
+                        act_line = line.rstrip()
+                        type = string.strip(line.rsplit(',')[4].strip('"'))
+                        plot_id = string.strip(line.rsplit(',')[5].strip('"'))
+                        logger_id = string.strip(line.rsplit(',')[6])
+                        serial_number = string.strip(line.rsplit(',')[7])
+                        header_line = int(string.strip(line.rsplit(',')[8]))
+                        first_data_line = int(string.strip(line.rsplit(',')[9]))
+                        calib_coefficents = act_line.rsplit(',')[10:19]
+                        misc = act_line.rsplit(',')[20:]
+                        foundID = True
+        inventory_data.close()
+        plot_id_list = sorted(set(plot_id_list))
+        plot_id_list.append("not sure")
+        self.plot_id_list = plot_id_list 
+        self.found_station_inventory = foundID
+        if self.get_found_station_inventory():
+            self.set_type(type)
+            self.set_plot_id(plot_id)
+            self.set_station_id(logger_id)
+            self.set_serial_number(serial_number)
+            self.set_header_line(header_line)
+            self.set_first_data_line(first_data_line)
+            self.set_calibration_coefficients_headers(calib_coefficents_headers)
+            self.set_calibration_coefficients(calib_coefficents)
+
     def set_station_inventory_from_serial_number(self):
         """Sets station inventory information from serial number
         """

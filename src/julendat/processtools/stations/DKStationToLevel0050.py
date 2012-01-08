@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-01-04"
+__version__ = "2012-01-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import sys
@@ -34,9 +34,8 @@ import time
 import datetime
 from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
 from julendat.metadatatools.stations.StationInventory import StationInventory
-from julendat.metadatatools.stations.StationEntries import StationEntries
 from julendat.metadatatools.stations.Level01Standards import Level01Standards
-from julendat.filetools.DataFile import DataFile
+
 
 class DKStationToLevel0050:   
     """Instance for converting D&K logger level 0 to level 1data.

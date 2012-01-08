@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>"
-__version__ = "2010-08-07"
+__version__ = "2012-01-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 from julendat.filetools.DataFile import DataFile
@@ -129,6 +129,22 @@ class StationDataFile(DataFile):
         """
         return self.first_data_line
     
+    def set_type(self, type=None):
+        """Sets type of plot and/or station of the data file.
+        
+        Args:
+            type: Coded ID of the plot and/or station type
+        """
+        self.type = type
+
+    def get_type(self):
+        """Gets tyoe of the plot and/or station of the data file.
+        
+        Returns:
+            Coded ID of the plot and/or station type
+        """
+        return self.type
+
     def set_plot_id(self, plot_id=None):
         """Sets plot ID of the data file.
         
@@ -227,3 +243,17 @@ class StationDataFile(DataFile):
             Calibration coefficient header names
         """
         return self.calib_coefficents_headers    
+    
+    def check_filetype(self):
+        """Sets filetype of the logger file (binary/ascii).
+        """
+        if self.get_extension() == 'bin' or \
+            self.get_extension() == 'BIN':
+            filetype = 'bin'
+        elif self.get_extension() == 'asc' or \
+            self.get_extension() == 'ASC':
+            filetype = 'ascii'
+        elif self.get_extension() == 'csv' or \
+            self.get_extension() == 'CSV':
+            filetype = 'csv'
+        self.set_filetype(filetype)    

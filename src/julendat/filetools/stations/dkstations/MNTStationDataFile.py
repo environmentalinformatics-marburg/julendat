@@ -1,5 +1,5 @@
-"""Handle data files from Driesen & Kern sensor/logger combinations.
-Copyright (C) 2011 Thomas Nauss, Tim Appelhans
+"""Handle data files from Mayer NT sensor/logger combinations.
+Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,9 +19,10 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-01-07"
+__version__ = "2012-01-08"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
+import sys
 import csv
 from datetime import datetime
 import linecache
@@ -31,20 +32,19 @@ from julendat.filetools.stations.StationDataFile import StationDataFile
 from julendat.processtools.TimeInterval import TimeInterval
 from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
 
-class DKStationDataFile(StationDataFile):
-    """Instance for handling Driesen & Kern station data (sensor/logger).
+class MNTStationDataFile(StationDataFile):
+    """Instance for handling Mayer NT station data (sensor/logger).
 
     This instance can be used to handle Driesn & Kern station data which is a
     defined combination of one or more sensors and one logger.
     """
 
     def __init__(self, filepath, io_access="r"):
-        """Inits DKStationDataFile.
+        """Inits MNTStationDataFile.
         
-        Based on the initial binary logger data file instance, the associated
-        ASCII file data object will be initialized. In addition, the serial
-        number of the logger and the time range of the data file will be
-        extracted.
+        Based on the ASCII file, the data object will be initialized.
+        In addition, the serial number of the logger and the time range
+        of the data file will be extracted.
         
         Args (from class DataFile):
             filepath: Full path and name of the data file
@@ -54,18 +54,30 @@ class DKStationDataFile(StationDataFile):
         StationDataFile.__init__(self, filepath, io_access="r")
         
         self.check_filetype()
-        if self.get_filetype() == 'ascii':
-            self.set_serial_number_ascii()
+        if self.get_filetype() == 'csv':
             stationdatafilepath = StationDataFilePath(filepath)
+            self.set_plot_id_ascii()
             if stationdatafilepath.get_standard_name():
                 self.set_start_datetime(stationdatafilepath.get_start_datetime())
                 self.set_end_datetime(stationdatafilepath.get_end_datetime())         
 
-    def set_serial_number_ascii(self):
-        """Sets station serial number extracted from ascii logger file.
+    def set_plot_id_ascii(self):
+        """Sets station plot id extracted from ascii logger file.
         """
-        line = linecache.getline(self.get_filepath(), 2)
-        self.set_serial_number(string.strip(line.partition(':')[2]))
+        
+        plot_id = self.get_filename().partition("_")[0]
+        if len(plot_id) < 5:
+            if plot_id[0:2] == "HG":
+                plot_id = "HEG" + plot_id[2:]  
+            elif plot_id[0:2] == "HW":
+                plot_id = "HEW" + plot_id[2:]  
+            elif plot_id[0:2] == "SG":
+                plot_id = "SEG" + plot_id[2:]  
+            elif plot_id[0:2] == "SW":
+                plot_id = "SEW" + plot_id[2:]  
+            else:
+                raise Exception, "Invalid plot id."
+        self.set_plot_id(plot_id)
 
     def set_time_range_ascii(self):
         """Sets time range extracted from ascii logger file.
@@ -80,9 +92,8 @@ class DKStationDataFile(StationDataFile):
             line_counter = line_counter + 1
             try:
                 end_datetime = datetime.strptime(\
-                           string.strip(line.split('\t')[0]) +\
-                           string.strip(line.split('\t')[1]), \
-                           "%d.%m.%y%H:%M:%S")
+                           string.strip(line.split(';')[0][0:16]), \
+                           "%d.%m.%Y %H:%M")
                 if compute_time_interval == True:
                     #time_step_delta = end_datetime - start_datetime
                     time_step_delta = TimeInterval(start_datetime, \
@@ -90,10 +101,9 @@ class DKStationDataFile(StationDataFile):
                     compute_time_interval = False
                 if start_datetime == None:
                     header_extension = line_counter -1
-                    start_datetime = datetime.strptime(
-                                 string.strip(line.split('\t')[0]) + \
-                                 string.strip(line.split('\t')[1]), \
-                                 "%d.%m.%y%H:%M:%S")
+                    start_datetime = datetime.strptime(\
+                           string.strip(line.split(';')[0][0:16]), \
+                           "%d.%m.%Y %H:%M")
                     compute_time_interval = True
             except:
                 continue
