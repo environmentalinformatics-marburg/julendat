@@ -425,26 +425,27 @@ class DKStationToLevel0050:
     def init_level_0050(self):
         """Init level 1.0 file
         """
-        r_source = 'source("' + self.r_filepath + os.sep + \
-            'InitLevel050File.R")'
-        r_keyword = "init_level_010_file"
-        r_ofp = 'outpath="' + self.act_level_0050_filepath + '",'
-        r_st = 'start_time="' + self.act_level_0050_start_time_isostr + '",'
-        r_et = 'end_time="' + self.act_level_0050_end_time_isostr + '",'
-        r_ts = 'time_step=' + self.filenames.get_time_step_delta_str() + ''
-        r_cmd = r_source + "\n" + \
-                r_keyword + " (\n" + \
-                r_ofp + "\n" + \
-                r_st + "\n" + \
-                r_et + "\n" + \
-                r_ts + ")\n"
-        r_script = "il0050.R" 
-        f = open(r_script,"w")
-        f.write(r_cmd)
-        f.close()
-        r_cmd = "R --no-save < " + r_script
-        print r_cmd
-        os.system(r_cmd)
+        if os.path.isfile(self.act_level_0050_filepath) != True:
+            r_source = 'source("' + self.r_filepath + os.sep + \
+                'InitLevel050File.R")'
+            r_keyword = "init_level_010_file"
+            r_ofp = 'outpath="' + self.act_level_0050_filepath + '",'
+            r_st = 'start_time="' + self.act_level_0050_start_time_isostr + '",'
+            r_et = 'end_time="' + self.act_level_0050_end_time_isostr + '",'
+            r_ts = 'time_step=' + self.filenames.get_time_step_delta_str() + ''
+            r_cmd = r_source + "\n" + \
+                    r_keyword + " (\n" + \
+                    r_ofp + "\n" + \
+                    r_st + "\n" + \
+                    r_et + "\n" + \
+                    r_ts + ")\n"
+            r_script = "il0050.R" 
+            f = open(r_script,"w")
+            f.write(r_cmd)
+            f.close()
+            r_cmd = "R --no-save < " + r_script
+            print r_cmd
+            os.system(r_cmd)
 
     def write_level_0050(self):
         """Fill level 0050 file
