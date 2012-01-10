@@ -77,10 +77,10 @@ class StationInventory(StationInventoryFile):
                         plot_id = string.strip(line.rsplit(',')[5].strip('"'))
                         logger_id = string.strip(line.rsplit(',')[6])
                         serial_number = string.strip(line.rsplit(',')[7])
-                        header_line = int(string.strip(line.rsplit(',')[8]))
-                        first_data_line = int(string.strip(line.rsplit(',')[9]))
-                        calib_coefficents = act_line.rsplit(',')[10:19]
-                        misc = act_line.rsplit(',')[20:]
+                        header_line = int(string.strip(line.rsplit(',')[10]))
+                        first_data_line = int(string.strip(line.rsplit(',')[11]))
+                        calib_coefficents = act_line.rsplit(',')[12:21]
+                        misc = act_line.rsplit(',')[22:]
                         foundID = True
         inventory_data.close()
         plot_id_list = sorted(set(plot_id_list))
@@ -121,10 +121,10 @@ class StationInventory(StationInventoryFile):
                         act_line = line.rstrip()
                         plot_id = string.strip(line.rsplit(',')[5].strip('"'))
                         logger_id = string.strip(line.rsplit(',')[6])
-                        header_line = int(string.strip(line.rsplit(',')[8]))
-                        first_data_line = int(string.strip(line.rsplit(',')[9]))
-                        calib_coefficents = act_line.rsplit(',')[10:19]
-                        misc = act_line.rsplit(',')[20:]
+                        header_line = int(string.strip(line.rsplit(',')[10]))
+                        first_data_line = int(string.strip(line.rsplit(',')[11]))
+                        calib_coefficents = act_line.rsplit(',')[12:21]
+                        misc = act_line.rsplit(',')[22:]
                         foundID = True
         inventory_data.close()
         plot_id_list = sorted(set(plot_id_list))
