@@ -74,8 +74,8 @@ class StationInventory(StationInventoryFile):
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[5]).strip('"').lstrip('0') == self.get_plot_id():
                     if foundID == True:
-                        install_date = TimePoint(int(string.strip(line.rsplit(',')[8])))
-                        uninstall_date = TimePoint(int(string.strip(line.rsplit(',')[9])))
+                        install_date = TimePoint(string.strip(line.rsplit(',')[8]))
+                        uninstall_date = TimePoint(string.strip(line.rsplit(',')[9]))
                         if self.get_logger_install_date() == install_date.get_data_file_time_value() and \
                            self.get_logger_uninstall_date() == uninstall_date.get_data_file_time_value():
                             print "The same plot id has been found at least twice!"
@@ -121,8 +121,8 @@ class StationInventory(StationInventoryFile):
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[7]).strip('"').lstrip('0') == self.get_serial_number():
                     if foundID == True:
-                        install_date = int(string.strip(line.rsplit(',')[8]))
-                        uninstall_date = int(string.strip(line.rsplit(',')[9]))
+                        install_date = TimePoint(string.strip(line.rsplit(',')[8]))
+                        uninstall_date = TimePoint(string.strip(line.rsplit(',')[9]))
                         if self.get_logger_install_date() == install_date and \
                            self.get_logger_uninstall_date() == uninstall_date:
                             print "The same serial number has been found at least twice!"
