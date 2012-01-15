@@ -52,7 +52,6 @@ class DKStationDataFile(StationDataFile):
         """       
         
         StationDataFile.__init__(self, filepath, io_access="r")
-        
         self.check_filetype()
         if self.get_filetype() == 'ascii':
             self.set_serial_number_ascii()

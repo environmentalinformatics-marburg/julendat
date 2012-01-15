@@ -105,6 +105,7 @@ class DKStationToLevel0050:
             self.filenames.build_filename_dictionary()
             self.run_flag = True
         except:
+            raise Exception, "Can not compute station data filepath"
             self.run_flag = False
 
     def get_run_flag(self):
@@ -137,7 +138,6 @@ class DKStationToLevel0050:
         """Processes level 0000 station files to level 0050.
         """
         self.init_level_0000_ascii_file()
-        
         if self.get_run_flag():
             self.get_station_inventory_information()
         
@@ -158,6 +158,7 @@ class DKStationToLevel0050:
                 "level_0000_ascii-filepath"])
             self.run_flag = self.level_0000_ascii_file.get_file_exists()
         except:
+            raise Exception, "Can not initialize level 0000 ascii file"
             print "Error: level 0000 ascii file could not be read"
             self.run_flag = False
 
@@ -168,6 +169,8 @@ class DKStationToLevel0050:
             logger_start_time = self.level_0000_ascii_file.get_start_datetime(), \
             logger_end_time = self.level_0000_ascii_file.get_end_datetime(), \
             serial_number=self.level_0000_ascii_file.get_serial_number())
+        if inventory.found_station_inventory != True:
+            raise Exception, "Serial number has not been found in station inventory"
         self.level_0000_ascii_file.set_header_line(inventory.get_header_line())
         self.level_0000_ascii_file.set_first_data_line(inventory.get_first_data_line())
         self.calibration_coefficients_headers = \

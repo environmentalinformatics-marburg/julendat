@@ -147,6 +147,8 @@ class StationInventory(StationInventoryFile):
         plot_id_list.append("not sure")
         self.plot_id_list = plot_id_list 
         self.found_station_inventory = foundID
+        if self.get_found_station_inventory() != True:
+            print "Serial number has not been found in station inventory"
 
     def get_found_station_inventory(self):
         """Gets flag if actual station has been found within station inventory.
