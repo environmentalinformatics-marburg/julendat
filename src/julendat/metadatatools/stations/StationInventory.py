@@ -23,6 +23,8 @@ __version__ = "2012-01-05"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import string
+import os
+from julendat.processtools.TimePoint import TimePoint 
 from julendat.filetools.stations.StationInventoryFile import \
     StationInventoryFile
 
@@ -33,7 +35,8 @@ class StationInventory(StationInventoryFile):
     This instance handles station inventory information based on the serial
     number of the station.
     """
-    def __init__(self, filepath, io_access="r", plot_id=None, serial_number=None):
+    def __init__(self, filepath, io_access="r", \
+                 logger_start_time=None, logger_end_time=None, plot_id=None, serial_number=None):
         """Inits StationInventory.
         
         Args (from class DataFile):
@@ -44,6 +47,8 @@ class StationInventory(StationInventoryFile):
             serial_number: Serial number of the station
         """       
         StationInventoryFile.__init__(self, filepath, io_access="r")
+        self.logger_start_time = logger_start_time
+        self.logger_end_time = logger_end_time
         self.set_plot_id(plot_id)
         self.set_serial_number(serial_number)
         if self.get_plot_id() != None:
@@ -64,38 +69,39 @@ class StationInventory(StationInventoryFile):
             counter = counter + 1
             if counter == 1:
                 act_line = line.rstrip()
-                calib_coefficents_headers = act_line.rsplit(',')[10:19]
+                self.set_calibration_coefficients_headers(act_line.rsplit(',')[10:19])
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[5]).strip('"').lstrip('0') == self.get_plot_id():
                     if foundID == True:
-                        print "The same plot id has been found at least twice!"
-                        error = True
+                        install_date = TimePoint(int(string.strip(line.rsplit(',')[8])))
+                        uninstall_date = TimePoint(int(string.strip(line.rsplit(',')[9])))
+                        if self.get_logger_install_date() == install_date.get_data_file_time_value() and \
+                           self.get_logger_uninstall_date() == uninstall_date.get_data_file_time_value():
+                            print "The same plot id has been found at least twice!"
+                            error = True
                     else:
                         act_line = line.rstrip()
-                        type = string.strip(line.rsplit(',')[4].strip('"'))
-                        plot_id = string.strip(line.rsplit(',')[5].strip('"'))
-                        logger_id = string.strip(line.rsplit(',')[6])
-                        serial_number = string.strip(line.rsplit(',')[7])
-                        header_line = int(string.strip(line.rsplit(',')[10]))
-                        first_data_line = int(string.strip(line.rsplit(',')[11]))
-                        calib_coefficents = act_line.rsplit(',')[12:21]
-                        misc = act_line.rsplit(',')[22:]
-                        foundID = True
+                        self.set_logger_install_date(string.strip(line.rsplit(',')[8]))
+                        self.set_logger_uninstall_date(string.strip(line.rsplit(',')[9]))
+                        if self.logger_start_time >= self.get_logger_install_date() and \
+                           self.logger_end_time <= self.get_logger_uninstall_date(): 
+                            self.set_type(string.strip(line.rsplit(',')[4].strip('"')))
+                            self.set_plot_id(string.strip(line.rsplit(',')[5].strip('"')))
+                            self.set_station_id(string.strip(line.rsplit(',')[6]))
+                            self.set_serial_number(string.strip(line.rsplit(',')[7]))
+                            self.set_logger_install_date(string.strip(line.rsplit(',')[8]))
+                            self.set_logger_uninstall_date(string.strip(line.rsplit(',')[9]))
+                            self.set_header_line(int(string.strip(line.rsplit(',')[10])))
+                            self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
+                            self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
+                            misc = act_line.rsplit(',')[22:]
+                            foundID = True
         inventory_data.close()
         plot_id_list = sorted(set(plot_id_list))
         plot_id_list.append("not sure")
         self.plot_id_list = plot_id_list 
         self.found_station_inventory = foundID
-        if self.get_found_station_inventory():
-            self.set_type(type)
-            self.set_plot_id(plot_id)
-            self.set_station_id(logger_id)
-            self.set_serial_number(serial_number)
-            self.set_header_line(header_line)
-            self.set_first_data_line(first_data_line)
-            self.set_calibration_coefficients_headers(calib_coefficents_headers)
-            self.set_calibration_coefficients(calib_coefficents)
 
     def set_station_inventory_from_serial_number(self):
         """Sets station inventory information from serial number
@@ -110,34 +116,37 @@ class StationInventory(StationInventoryFile):
             counter = counter + 1
             if counter == 1:
                 act_line = line.rstrip()
-                calib_coefficents_headers = act_line.rsplit(',')[10:19]
+                self.set_calibration_coefficients_headers(act_line.rsplit(',')[10:19])
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[7]).strip('"').lstrip('0') == self.get_serial_number():
                     if foundID == True:
-                        print "The same serial number has been found at least twice!"
-                        error = True
+                        install_date = int(string.strip(line.rsplit(',')[8]))
+                        uninstall_date = int(string.strip(line.rsplit(',')[9]))
+                        if self.get_logger_install_date() == install_date and \
+                           self.get_logger_uninstall_date() == uninstall_date:
+                            print "The same serial number has been found at least twice!"
+                            error = True
                     else:
                         act_line = line.rstrip()
-                        plot_id = string.strip(line.rsplit(',')[5].strip('"'))
-                        logger_id = string.strip(line.rsplit(',')[6])
-                        header_line = int(string.strip(line.rsplit(',')[10]))
-                        first_data_line = int(string.strip(line.rsplit(',')[11]))
-                        calib_coefficents = act_line.rsplit(',')[12:21]
-                        misc = act_line.rsplit(',')[22:]
-                        foundID = True
+                        self.set_logger_install_date(string.strip(line.rsplit(',')[8]))
+                        self.set_logger_uninstall_date(string.strip(line.rsplit(',')[9]))
+                        if self.logger_start_time >= self.get_logger_install_date() and \
+                           self.logger_end_time <= self.get_logger_uninstall_date(): 
+                            self.set_type(string.strip(line.rsplit(',')[4].strip('"')))
+                            self.set_plot_id(string.strip(line.rsplit(',')[5].strip('"')))
+                            self.set_station_id(string.strip(line.rsplit(',')[6]))
+                            self.set_serial_number(string.strip(line.rsplit(',')[7]))
+                            self.set_header_line(int(string.strip(line.rsplit(',')[10])))
+                            self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
+                            self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
+                            misc = act_line.rsplit(',')[22:]
+                            foundID = True
         inventory_data.close()
         plot_id_list = sorted(set(plot_id_list))
         plot_id_list.append("not sure")
         self.plot_id_list = plot_id_list 
         self.found_station_inventory = foundID
-        if self.get_found_station_inventory():
-            self.set_plot_id(plot_id)
-            self.set_station_id(logger_id)
-            self.set_header_line(header_line)
-            self.set_first_data_line(first_data_line)
-            self.set_calibration_coefficients_headers(calib_coefficents_headers)
-            self.set_calibration_coefficients(calib_coefficents)
 
     def get_found_station_inventory(self):
         """Gets flag if actual station has been found within station inventory.

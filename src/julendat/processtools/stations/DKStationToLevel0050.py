@@ -165,6 +165,8 @@ class DKStationToLevel0050:
         """Get meta-information from station inventory.
         """
         inventory = StationInventory(filepath=self.station_inventory, \
+            logger_start_time = self.level_0000_ascii_file.get_start_datetime(), \
+            logger_end_time = self.level_0000_ascii_file.get_end_datetime(), \
             serial_number=self.level_0000_ascii_file.get_serial_number())
         self.level_0000_ascii_file.set_header_line(inventory.get_header_line())
         self.level_0000_ascii_file.set_first_data_line(inventory.get_first_data_line())

@@ -23,6 +23,7 @@ __version__ = "2012-01-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 from julendat.filetools.DataFile import DataFile
+from julendat.processtools.TimePoint import TimePoint 
 
 
 class StationDataFile(DataFile):
@@ -81,6 +82,38 @@ class StationDataFile(DataFile):
         """
         return self.station_id
 
+    def set_logger_install_date(self, logger_install_date):
+        """Sets the installation date of the logger/station
+        
+        Args:
+            logger_install_date: Installation date of the logger/station
+        """
+        self.logger_install_date = TimePoint(logger_install_date)
+    
+    def get_logger_install_date(self):
+        """Gets the installation date of the logger/station
+        
+        Returns:
+            Installation date of the logger/station
+        """
+        return self.logger_install_date.get_data_file_time_value()
+ 
+    def set_logger_uninstall_date(self, logger_uninstall_date):
+        """Sets the uninstall date of the logger/station
+        
+        Args:
+            logger_uninstall_date: Uninstall date of the logger/station
+        """
+        self.logger_uninstall_date = TimePoint(logger_uninstall_date)
+    
+    def get_logger_uninstall_date(self):
+        """Gets the uninstall date of the logger/station
+        
+        Returns:
+            Uninstall date of the logger/station
+        """
+        return self.logger_uninstall_date.get_data_file_time_value()
+    
     def set_header_extension(self, header_extension):
         """Sets number of header lines at the beginning of the logger file
         
@@ -97,6 +130,7 @@ class StationDataFile(DataFile):
         """
         return self.header_extension
 
+
     def set_header_line(self, header_line):
         """Sets header line
         
@@ -112,7 +146,7 @@ class StationDataFile(DataFile):
             Number of header line
         """
         return self.header_line
- 
+    
     def set_first_data_line(self, first_data_line):
         """Sets first data line
         

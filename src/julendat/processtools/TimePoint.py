@@ -14,7 +14,9 @@ class TimePoint(object):
     def __init__(self,time_value):
 
         if  isinstance(time_value, str):
-            if len(time_value) == 12:
+            if len(time_value) == 10 and time_value[4] == "-":
+                self.set_y2d_dto_from_isostr(time_value)
+            elif len(time_value) == 12:
                 self.set_y2i_dto_from_eifc(time_value)
             elif len(time_value) == 14:
                 self.set_y2s_dto_from_eifc(time_value)
@@ -26,6 +28,11 @@ class TimePoint(object):
         
         self.set_data_file_values()
             
+    def set_y2d_dto_from_isostr(self, time_string):
+        self.dto = datetime.datetime.strptime(time_string, "%Y-%m-%d")
+        self.set_y2i_eifc_from_dto(self.get_dto())
+        self.set_y2s_isostr_from_dto(self.dto)
+
     def set_y2i_dto_from_eifc(self, time_string):
         self.dto = datetime.datetime.strptime(time_string, "%Y%m%d%H%M")
         self.set_y2i_eifc(time_string)

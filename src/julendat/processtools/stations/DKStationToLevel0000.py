@@ -141,7 +141,9 @@ class DKStationToLevel0000:
         """Set necessary attributes automatically.
         """
         self.inventory = StationInventory(filepath=self.station_inventory, \
-                    serial_number=self.ascii_logger_file.get_serial_number())
+            logger_start_time = self.ascii_logger_file.get_start_datetime(), \
+            logger_end_time = self.ascii_logger_file.get_end_datetime(), \
+            serial_number=self.ascii_logger_file.get_serial_number())
         
         if self.inventory.get_found_station_inventory():
             self.plot_id = self.inventory.get_plot_id()
