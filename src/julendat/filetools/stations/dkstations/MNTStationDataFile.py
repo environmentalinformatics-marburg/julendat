@@ -54,7 +54,7 @@ class MNTStationDataFile(StationDataFile):
         StationDataFile.__init__(self, filepath, io_access="r")
         
         self.check_filetype()
-        if self.get_filetype() == 'csv':
+        if self.get_filetype() == 'csv' or self.get_filetype() == 'ascii':
             stationdatafilepath = StationDataFilePath(filepath)
             self.set_plot_id_ascii()
             if stationdatafilepath.get_standard_name():
@@ -62,22 +62,23 @@ class MNTStationDataFile(StationDataFile):
                 self.set_end_datetime(stationdatafilepath.get_end_datetime())         
 
     def set_plot_id_ascii(self):
-        """Sets station plot id extracted from ascii logger file.
+        """Sets station plot id extracted from initial ascii logger file.
         """
         
-        plot_id = self.get_filename().partition("_")[0]
-        if len(plot_id) < 5:
-            if plot_id[0:2] == "HG":
-                plot_id = "HEG" + plot_id[2:]  
-            elif plot_id[0:2] == "HW":
-                plot_id = "HEW" + plot_id[2:]  
-            elif plot_id[0:2] == "SG":
-                plot_id = "SEG" + plot_id[2:]  
-            elif plot_id[0:2] == "SW":
-                plot_id = "SEW" + plot_id[2:]  
-            else:
-                raise Exception, "Invalid plot id."
-        self.set_plot_id(plot_id)
+        if self.get_filetype() == 'csv':
+            plot_id = self.get_filename().partition("_")[0]
+            if len(plot_id) < 5:
+                if plot_id[0:2] == "HG":
+                    plot_id = "HEG" + plot_id[2:]  
+                elif plot_id[0:2] == "HW":
+                    plot_id = "HEW" + plot_id[2:]  
+                elif plot_id[0:2] == "SG":
+                    plot_id = "SEG" + plot_id[2:]  
+                elif plot_id[0:2] == "SW":
+                    plot_id = "SEW" + plot_id[2:]  
+                else:
+                    raise Exception, "Invalid plot id."
+            self.set_plot_id(plot_id)
 
     def set_time_range_ascii(self):
         """Sets time range extracted from ascii logger file.
@@ -118,7 +119,7 @@ class MNTStationDataFile(StationDataFile):
         infile = open(self.get_filepath())
         for header_extension in range (0, self.get_header_line()-1):
             infile.next()
-        reader = csv.reader(infile,delimiter='\t')
+        reader = csv.reader(infile,delimiter=';')
         self.set_column_headers(reader.next())
         infile.close() 
 
@@ -128,7 +129,7 @@ class MNTStationDataFile(StationDataFile):
         infile = open(self.get_filepath())
         for header_extension in range (0, self.get_first_data_line()-1):
             infile.next()
-        reader = csv.reader(infile,delimiter='\t')
+        reader = csv.reader(infile,delimiter=';')
         self.dataset = []
         for row in reader:
             self.dataset.append(row)

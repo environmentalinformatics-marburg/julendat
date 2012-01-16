@@ -18,6 +18,6 @@ project_id = be
 level_0005_timezone = mez 
 
 [general]
-level0050_standards = ki_config_level0050_standards.cnf
-r_filepath = /media/permanent/development/released/julendat/src/julendat/scripts/stations_ki
+level0050_standards = be_config_level0050_standards.cnf
+r_filepath = /media/permanent/development/released/julendat/src/julendat/scripts/stations_be
 

@@ -1,187 +1,282 @@
-[000rug_header_0000]
-Date = Date
-Time = Time
-Temperature   [°C] = Ta_200
-Rel.humidity   [%] = rH_200
-Datum = Date
-Zeit = Time
-Temperatur    [°C] = Ta_200
-rel.Feuchte    [%] = rH_200
+[SOIL_PARAMETRES_AEG]
+BF_1_mineralisch = SM_10
+BF_15_mineralisch = SM_15
+BF_2_mineralisch = SM_20
+BF_3_mineralisch = SM_30
+BF_4_mineralisch = SM_40
+NaN = SM_50   
+BF_1 = SM_10_U
+BF_15 = SM_15_U
+BF_2 = SM_20_U
+BF_3 = SM_30_U
+BF_4 = SM_40_U
+NaN = SM_50_U 
 
-[000rug_header_0005]
+
+[SOIL_PARAMETRES_AEW]
+BF_1_mineralisch = SM_10
+BF_15_mineralisch = SM_15
+BF_2_mineralisch = SM_20
+BF_3_mineralisch = SM_30
+BF_4_mineralisch = SM_40
+NaN = SM_50   
+BF_1 = SM_10_U
+BF_15 = SM_15_U
+BF_2 = SM_20_U
+BF_3 = SM_30_U
+BF_4 = SM_40_U
+NaN = SM_50_U 
+
+
+[SOIL_PARAMETRES_HEG]
+BF_1_mineralisch = SM_10
+BF_15_mineralisch = SM_15
+BF_2_mineralisch = SM_20
+BF_3_mineralisch = SM_30
+BF_4_mineralisch = SM_40
+NaN = SM_50   
+BF_1 = SM_10_U
+BF_15 = SM_15_U
+BF_2 = SM_20_U
+BF_3 = SM_30_U
+BF_4 = SM_40_U
+NaN = SM_50_U 
+
+
+[SOIL_PARAMETRES_HEG06]
+BF_1_mineralisch = SM_10
+BF_15_mineralisch = SM_15
+BF_2_mineralisch = SM_20
+BF_4_mineralisch = SM_30
+NaN = SM_40
+NaN = SM_50
+BF_1 = SM_10_U
+BF_15 = SM_15_U
+BF_2 = SM_20_U
+BF_4 = SM_30_U
+NaN = SM_40_U
+NaN = SM_50_U
+
+
+[SOIL_PARAMETRES_HEW]
+BF_1_mineralisch = SM_10
+BF_15_mineralisch = SM_15
+BF_2_mineralisch = SM_20
+BF_3_mineralisch = SM_30
+BF_4_mineralisch = SM_40
+NaN = SM_50   
+BF_1 = SM_10_U
+BF_15 = SM_15_U
+BF_2 = SM_20_U
+BF_3 = SM_30_U
+BF_4 = SM_40_U
+NaN = SM_50_U 
+
+
+[SOIL_PARAMETRES_SEG]
+BF_1_mineralisch = SM_10
+BF_3_mineralisch = SM_15
+BF_2_mineralisch = SM_20
+NaN = SM_30
+NaN = SM_40
+BF_4_mineralisch = SM_50
+BF_1 = SM_10_U
+BF_3 = SM_15_U
+BF_2 = SM_20_U
+NaN = SM_30_U
+NaN = SM_40_U
+BF_4 = SM_50_U
+
+
+[SOIL_PARAMETRES_SEW]
+BF_1_mineralisch = SM_10
+BF_3_mineralisch = SM_15
+BF_2_mineralisch = SM_20
+NaN = SM_30
+NaN = SM_40
+BF_4_mineralisch = SM_50
+BF_1 = SM_10_U
+BF_3 = SM_15_U
+BF_2 = SM_20_U
+NaN = SM_30_U
+NaN = SM_40_U
+BF_4 = SM_50_U
+
+
+[SOIL_PARAMETRES_SEG39]
+BF_1_mineralisch = SM_10
+BF_2_mineralisch = SM_15
+BF_3_mineralisch = SM_20
+NaN = SM_30
+NaN = SM_40
+NaN = SM_50
+BF_1 = SM_10_U
+BF_2 = SM_15_U
+BF_3 = SM_20_U
+NaN = SM_30_U
+NaN = SM_40_U
+NaN = SM_50_U
+
+
+[SOIL_PARAMETRES_SEG46]
+BF_1_mineralisch = SM_10
+BF_2_mineralisch = SM_15
+BF_3_mineralisch = SM_20
+NaN = SM_30
+NaN = SM_40
+NaN = SM_50
+BF_1 = SM_10_U
+BF_2 = SM_15_U
+BF_3 = SM_20_U
+NaN = SM_30_U
+NaN = SM_40_U
+NaN = SM_50_U
+
+
+[00CEMU_header_0000]
+PlotId = PlotId
+EpPlotId = EpPlotId
+Datum = Datum
+CycleCounter = CycleCounter
+LF_200 = rH_200
+LT_200 = Ta_200
+LT_10 = Ta_10
+BT_1 = Ts_5
+BT_2 = Ts_10
+BT_3 = Ts_20
+BT_4 = Ts_50
+NaN = PAR_200
+NaN = PAR_200_U
+NaN = PAR_300
+NaN = PAR_300_U
+NaN = Albedo
+NaN = SWDR_300
+NaN = SWUR_300
+NaN = LWDR_300
+NaN = LWUR_300
+NaN = SWDR_300_U
+NaN = SWUR_300_U
+NaN = LWDR_300_U
+NaN = LWUR_300_U
+NaN = Rn_300
+NaN = Rn_min_300
+NaN = Tsky
+NaN = Tgnd
+NaN = Trad
+NaN = Trad_R
+NaN = P_RT_NRT
+container_EZ = P_container_RT
+NaN = P_container_NRT
+temp_balance_cell = T_Ott
+ott_voltage = UOtt
+NaN = WD
+NaN = WV
+WV_max = WV_gust
+NaN = p_QNH
+LF_200_MIN = rH_200_min
+LF_200_MAX = rH_200_max
+LT_200_MIN = Ta_200_min
+LT_200_MAX = Ta_200_max
+LT_10_MIN = Ta_10_min
+LT_10_MAX = Ta_10_max
+BT_1_MIN = Ts_5_min
+BT_1_MAX = Ts_5_max
+BT_2_MIN = Ts_10_min
+BT_2_MAX = Ts_10_max
+BT_3_MIN = Ts_20_min
+BT_3_MAX = Ts_20_max
+BT_4_MIN = Ts_50_min
+BT_4_MAX = Ts_50_max
+UB = UB
+precip_intensity_EZ = NaN
+precip_EZ/NEZ = NaN
+precip_amount_NEZ = NaN
+precip_total_NEZ = NaN
+
+
+[00CEMU_header_0005]
 header_0005 = Datetime, 
-              Timezone,
-              Aggregationtime,
-              PlotId,
-              EpPlotId,
-              StationId,
-              Processlevel,
-              Qualityflag,
-              Ta_200,
-              rH_200
+              Timezone, 
+              Aggregationtime, 
+              PlotId, 
+              EpPlotId, 
+              StationId, 
+              Processlevel, 
+              Qualityflag, 
+              CycleCounter, 
+              Ta_200, 
+              rH_200, 
+              Ta_10, 
+              Ts_5, 
+              Ts_10,  
+              Ts_20, 
+              Ts_50, 
+              SM_10, 
+              SM_15, 
+              SM_20, 
+              SM_30, 
+              SM_40, 
+              SM_50, 
+              PAR_200, 
+              rH_200_min, 
+              rH_200_max, 
+              Ta_200_min, 
+              Ta_200_max, 
+              Ta_10_min, 
+              Ta_10_max, 
+              Ts_5_min, 
+              Ts_5_max, 
+              Ts_10_min, 
+              Ts_10_max, 
+              Ts_20_min, 
+              Ts_20_max, 
+              Ts_50_min, 
+              Ts_50_max, 
+              SM_10_U, 
+              SM_15_U, 
+              SM_20_U, 
+              SM_30_U, 
+              SM_40_U, 
+              SM_50_U, 
+              PAR_200_U, 
+              UB
 
-[000rug_header_0050]
+
+[00CEMU_header_0050]
 header_0050 = Datetime, 
-              Timezone,
-              Aggregationtime,
-              PlotId,
-              EpPlotId,
-              StationId,
-              Processlevel,
-              Qualityflag,
-              Ta_200,
-              rH_200
-
-
-[001rug_header_0000]
-Date = Date
-Time = Time
-Temperature   [°C] = Ta_200
-Rel.humidity   [%] = rH_200
-Datum = Date
-Zeit = Time
-Temperatur    [°C] = Ta_200
-rel.Feuchte    [%] = rH_200
-
-[001rug_header_0005]
-header_0005 = Datetime, 
-              Timezone,
-              Aggregationtime,
-              PlotId,
-              EpPlotId,
-              StationId,
-              Processlevel,
-              Qualityflag,
-              Ta_200,
-              rH_200
-
-[001rug_header_0050]
-header_0050 = Datetime, 
-              Timezone,
-              Aggregationtime,
-              PlotId,
-              EpPlotId,
-              StationId,
-              Processlevel,
-              Qualityflag,
-              Ta_200,
-              rH_200
-
-[000pu1_header_0000]
-Date=Date
-Time=Time
-Impulses=P_RT_NRT_I
-Datum=Date
-Zeit=Time
-Impulse=P_RT_NRT_I
-
-[000pu1_header_0005]
-header_0005 = Datetime, 
-              Timezone,
-              Aggregationtime,
-              PlotId,
-              EpPlotId,
-              StationId,
-              Processlevel,
-              Qualityflag,
-              P_RT_NRT,
-              P_RT_NRT_I
-
-[000pu1_header_0050]
-header_0050 = Datetime, 
-              Timezone,
-              Aggregationtime,
-              PlotId,
-              EpPlotId,
-              StationId,
-              Processlevel,
-              Qualityflag,
-              P_RT_NRT
-
-[000wxt_header_0000]
-Date = Date
-Time = Time
-Winddirection  [°] = WD
-Windspeed    [m/s] = WV
-Temperature   [°C] = Ta_200
-Rel.humidity   [%] = rH_200
-Barom. prs   [hPa] = p_200
-Rain          [mm] = P_container_RT
-VoltageHiImp  [mV] = SWDR_300_U
-VoltageHiImp  [mV] = SWUR_300_U
-Voltage DVM   [mV] = LWDR_300_U
-Voltage DVM   [mV] = LWUR_300_U
-Temper. PT100 [°C] = T_CNR
-Temp. PT1000  [°C] = Ts_10
-Datum = Date
-Zeit = Time
-Windrichtung   [°] = WD
-Windgeschw.  [m/s] = WV
-Temperatur    [°C] = Ta_200
-rel.Feuchte    [%] = rH_200
-Barom.Druck  [hPa] = p_200
-Regenmenge    [mm] = P_container_RT
-Spannung DVM  [mV] = SWDR_300_U
-Spannung DVM  [mV] = SWUR_300_U
-Spannung DVM  [mV] = LWDR_300_U
-Spannung DVM  [mV] = LWUR_300_U
-Temp. PT100   [°C] = T_CNR
-Temp. PT1000  [°C] = Ts_10
-
-
-
-
-
-
-
-
-
-[000wxt_header_0005]
-header_0005 = Datetime, 
-              Timezone,
-              Aggregationtime,
-              PlotId,
-              EpPlotId,
-              StationId,
-              Processlevel,
-              Qualityflag,
-              Ta_200,
-              rH_200,
-              Ts_10,
-              SWDR_300,
-              SWUR_300,
-              LWDR_300,
-              LWUR_300,
-              WD,
-              WV,
-              p_200,
-              P_RT_NRT,
-              P_container_RT,
-              SWDR_300_U,
-              SWUR_300_U,
-              LWDR_300_U,
-              LWUR_300_U,
-              T_CNR
-              
-
-[000wxt_header_0050]
-header_0050 = Datetime, 
-              Timezone,
-              Aggregationtime,
-              PlotId,
-              EpPlotId,
-              StationId,
-              Processlevel,
-              Qualityflag,
-              Ta_200,
-              rH_200,
-              Ts_10,
-              SWDR_300,
-              SWUR_300,
-              LWDR_300,
-              LWUR_300,
-              WD,
-              WV,
-              p_200,
-              P_RT_NRT
-
+              Timezone, 
+              Aggregationtime, 
+              PlotId, 
+              EpPlotId, 
+              StationId, 
+              Processlevel, 
+              Qualityflag, 
+              CycleCounter, 
+              Ta_200, 
+              rH_200,  
+              Ta_10, 
+              Ts_5, 
+              Ts_10, 
+              Ts_20, 
+              Ts_50, 
+              SM_10, 
+              SM_15, 
+              SM_20, 
+              SM_30, 
+              SM_40, 
+              SM_50, 
+              PAR_200, 
+              rH_200_min, 
+              rH_200_max, 
+              Ta_200_min, 
+              Ta_200_max, 
+              Ta_10_min, 
+              Ta_10_max, 
+              Ts_5_min, 
+              Ts_5_max, 
+              Ts_10_min, 
+              Ts_10_max, 
+              Ts_20_min, 
+              Ts_20_max, 
+              Ts_50_min, 
+              Ts_50_max

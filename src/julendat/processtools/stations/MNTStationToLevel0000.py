@@ -1,5 +1,5 @@
 """Move downloaded MayerNT logger data to level 0 folder structure.
-Copyright (C) 2011 Thomas Nauss
+Copyright (C) 2011 Thomas Nauss, Insa Otte, Falk Haensel
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
 """
 
-__author__ = "Thomas Nauss <nausst@googlemail.com>"
+__author__ = "Thomas Nauss <nausst@googlemail.com> , Insa Otte, Falk Haensel"
 __version__ = "2012-01-08"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
@@ -127,7 +127,9 @@ class MNTStationToLevel0000:
         """
         pass
         self.inventory = StationInventory(filepath=self.station_inventory, \
-                    plot_id=self.logger_file.get_plot_id())
+            logger_start_time = self.logger_file.get_start_datetime(), \
+            logger_end_time = self.logger_file.get_end_datetime(), \
+            plot_id=self.logger_file.get_plot_id())
         
         if self.inventory.get_found_station_inventory():
             self.plot_id = self.inventory.get_plot_id()

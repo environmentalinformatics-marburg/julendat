@@ -1,4 +1,4 @@
-"""Move MayerNT logger data to level 0 folder structure (DFG-Exploratories).
+"""Process MayerNT logger data from level 0 to level 1 (DFG-Exploratories).
 Copyright (C) 2011 Thomas Nauss, Insa Otte, Falk Haensel
 
 This program is free software: you can redistribute it and/or modify
@@ -19,14 +19,15 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Insa Otte, Falk Haensel"
-__version__ = "2011-01-08"
+__version__ = "2012-01-07"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
+import datetime
 import fnmatch
 import os
-from julendat.processtools.stations.MNTStationToLevel0000 import \
-    MNTStationToLevel0000
+from julendat.processtools.stations.MNTStationToLevel0050 import \
+    MNTStationToLevel0050
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -48,47 +49,56 @@ def locate(pattern, patternpath, root=os.curdir):
 
 def configure(config_file):
     """Reads configuration settings and configure object.
-
+    
     Args:
         config_file: Full path and name of the configuration file.
-        
     """
     config = ConfigParser.ConfigParser()
     config.read(config_file)
-    return config.get('repository', 'toplevel_incoming_path'), \
-           config.get('repository', 'toplevel_temp_path'), \
-           config.get('repository', 'toplevel_processing_logger_path')
+    toplevel_processing_plots_path = config.get('repository', \
+                                          'toplevel_processing_plots_path')
+    project_id = config.get('project','project_id')
+    return toplevel_processing_plots_path, project_id
 
-
-
+    
 def main():
     """Main program function
-    Move data from initial logger import to level 0 folder structure.
+    Process data from level 0000 to level 0050.
     """
     print
-    print 'Module: ki_process_dkstation_level0000_gui'
+    print 'Module: be_process_dkstation_level0050'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
     print   
     
     config_file = "be_config.cnf"
-    toplevel_incoming_path, toplevel_temp_path , \
-        toplevel_processing_logger_path = configure(config_file)
+    toplevel_processing_plots_path, project_id = \
+        configure(config_file=config_file)
+    input_path = toplevel_processing_plots_path + project_id
     
-    station_dataset=locate("*.csv*", "*", toplevel_incoming_path)
+    station_dataset=locate("*00CEMU*.asc", "*ra01_*", input_path)
+    
     for dataset in station_dataset:
         print(dataset)
-        cmd = "cp " + dataset + " " + \
-            toplevel_temp_path + os.path.basename(dataset)
-        os.system(cmd)
-        cmd = "mv " + dataset + " " + \
-            toplevel_processing_logger_path + os.path.basename(dataset)
-        os.system(cmd)
-        
-        MNTStationToLevel0000(input_filepath=toplevel_processing_logger_path + os.path.basename(dataset), config_file=config_file)
-
+        systemdate = datetime.datetime.now()
+        filepath=dataset
+        MNTStationToLevel0050(filepath=filepath, config_file=config_file)
+        '''
+        try:
+            MNTStationToLevel0050(filepath=filepath, config_file=config_file)
+            move_file = "mv " + dataset + " " + \
+                dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
+            os.system(move_file)
+        except Exception as inst:
+            print "An error occured with the following dataset."
+            print "Some details:"
+            print "Filename: " + dataset
+            print "Exception type: " , type(inst)
+            print "Exception args: " , inst.args
+            print "Exception content: " , inst        
+        '''
         
 if __name__ == '__main__':
     main()
-    
+
