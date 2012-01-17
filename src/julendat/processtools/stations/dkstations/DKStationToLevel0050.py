@@ -319,7 +319,6 @@ class DKStationToLevel0050:
         """
         if self.filenames.get_station_id().find("wxt") != -1:
             parameters = ["P_container_RT","P_RT_NRT"]
-            temp_data = []
             for i in range(1,len(self.level_0000_data)):
                 try:
                     p_container_index = self.level_0000_ascii_file.get_column_headers().index(parameters[0])
@@ -448,7 +447,7 @@ class DKStationToLevel0050:
             f = open(r_script,"w")
             f.write(r_cmd)
             f.close()
-            r_cmd = "R --no-save < " + r_script
+            r_cmd = "R CMD BATCH " + r_script + " " + r_script + ".log"
             print r_cmd
             os.system(r_cmd)
 

@@ -49,9 +49,19 @@ class Level01Standards():
         """
         config = ConfigParser.ConfigParser()
         config.read(self.filepath)
-        test = config.items(self.station_id +  '_header_0000')
-        #test = test.rsplit(',\n')
-        self.level0000_column_headers = test
+        self.level0000_column_headers = \
+            config.items(self.station_id +  '_header_0000')
+
+    def set_level0000_soil_standards(self, sp_id):
+        """Sets station entries from station/plot id for soil parameters
+        
+        Args:
+            sp_id: Station or plot id
+        """
+        config = ConfigParser.ConfigParser()
+        config.read(self.filepath)
+        self.level0000_soil_headers = \
+            config.items(sp_id +  '_soil_parameters_header_0000')
 
     def set_level0005_standards(self):
         """Sets station entries information from station id
@@ -81,6 +91,15 @@ class Level01Standards():
         except:
             self.set_level0000_standards()
         return self.level0000_column_headers
+
+    def get_level0000_soil_headers(self, sp_id):
+        """Gets column headers of level 0000 file for soil parameters
+        
+        Returns:
+            Column headers of level 0000 file for soil parameters
+        """
+        self.set_level0000_soil_standards(sp_id)
+        return self.level0000_soil_headers
 
     def get_level0005_column_headers(self):
         """Gets column headers of level 0005 file

@@ -26,7 +26,7 @@ import ConfigParser
 import datetime
 import fnmatch
 import os
-from julendat.processtools.stations.DKStationToLevel0050 import \
+from julendat.processtools.stations.dkstations.DKStationToLevel0050 import \
     DKStationToLevel0050
 
 def locate(pattern, patternpath, root=os.curdir):
@@ -80,7 +80,8 @@ def main():
     station_dataset=locate("*.asc", "*ra01_*", input_path)
     
     for dataset in station_dataset:
-        print(dataset)
+        print " "
+        print "Processing dataset ", dataset
         systemdate = datetime.datetime.now()
         filepath=dataset
         try:

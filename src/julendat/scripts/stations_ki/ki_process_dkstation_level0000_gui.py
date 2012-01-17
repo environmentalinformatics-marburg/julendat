@@ -22,7 +22,7 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2010-08-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
-from julendat.processtools.stations.DKStationToLevel0000 import \
+from julendat.processtools.stations.dkstations.DKStationToLevel0000 import \
     DKStationToLevel0000
 
 def main():

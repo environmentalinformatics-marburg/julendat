@@ -255,12 +255,8 @@ class DKStationToLevel0000:
     def main(self):
         """Maps logger files to level 0 filename and directory structure.
         """
-        print self.filenames.get_filename_dictionary()["level_000_bin-filename"]
-        print self.filenames.get_filename_dictionary()["level_000_bin-path"]
-        print self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
-        print self.filenames.get_filename_dictionary()["level_0000_ascii-filename"]
-        print self.filenames.get_filename_dictionary()["level_0000_ascii-path"]
-        print self.filenames.get_filename_dictionary()["level_0000_ascii-filepath"]
+        print "Initial 0000 filepath: ", \
+            self.filenames.get_filename_dictionary()["level_0000_ascii-filepath"]
 
         # Check if path for level 0 files exists, otherwise create it        
         if not os.path.isdir(self.filenames.get_filename_dictionary()["level_000_bin-path"]):
@@ -271,8 +267,7 @@ class DKStationToLevel0000:
         # Set full path and names of ASCII data files and move them
         self.source = self.ascii_logger_file.get_filepath()
         self.destination = self.filenames.get_filename_dictionary()["level_0000_ascii-filepath"]
-        print self.source
-        print self.destination
+        print "Moving ", self.source, " to ", self.destination
         self.move_data()
         
         if os.path.isfile(self.binary_logger_file.get_filepath()) and \
@@ -280,6 +275,5 @@ class DKStationToLevel0000:
             # Move binary data
             self.source = self.binary_logger_file.get_filepath()
             self.destination = self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
-            print self.source
-            print self.destination
+            print "Moving ", self.source, " to ", self.destination
             self.move_data()

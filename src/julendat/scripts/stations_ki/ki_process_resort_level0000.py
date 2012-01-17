@@ -76,7 +76,8 @@ def main():
     
     station_dataset=locate("*.asc*", "*", toplevel_incoming_path)
     for dataset in station_dataset:
-        #print(dataset)
+        print " "
+        print "Processing dataset ", dataset
         cmd = "cp " + dataset + " " + \
             toplevel_temp_path + os.path.basename(dataset)
         os.system(cmd)
@@ -87,10 +88,9 @@ def main():
             toplevel_processing_logger_path + "noname.bin " + \
             toplevel_processing_logger_path + "noname.asc"
         os.system(cmd)
-        print dataset
         cmd = "python ki_process_dkstation_level0000_gui.py"
         os.system(cmd)
-
+    print "...finished."
 if __name__ == '__main__':
     main()
 

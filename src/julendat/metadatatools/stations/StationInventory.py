@@ -69,7 +69,7 @@ class StationInventory(StationInventoryFile):
             counter = counter + 1
             if counter == 1:
                 act_line = line.rstrip()
-                self.set_calibration_coefficients_headers(act_line.rsplit(',')[10:19])
+                self.set_calibration_coefficients_headers(act_line.rsplit(',')[12:21])
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[5]).strip('"').lstrip('0') == self.get_plot_id().lstrip('0'):
@@ -116,7 +116,7 @@ class StationInventory(StationInventoryFile):
             counter = counter + 1
             if counter == 1:
                 act_line = line.rstrip()
-                self.set_calibration_coefficients_headers(act_line.rsplit(',')[10:19])
+                self.set_calibration_coefficients_headers(act_line.rsplit(',')[12:21])
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[7]).strip('"').lstrip('0') == self.get_serial_number():

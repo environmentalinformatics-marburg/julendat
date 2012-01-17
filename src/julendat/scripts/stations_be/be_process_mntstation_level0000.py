@@ -25,7 +25,7 @@ __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 import ConfigParser
 import fnmatch
 import os
-from julendat.processtools.stations.MNTStationToLevel0000 import \
+from julendat.processtools.stations.mntstations.MNTStationToLevel0000 import \
     MNTStationToLevel0000
 
 def locate(pattern, patternpath, root=os.curdir):
@@ -78,7 +78,8 @@ def main():
     
     station_dataset=locate("*.csv*", "*", toplevel_incoming_path)
     for dataset in station_dataset:
-        print(dataset)
+        print " "
+        print "Processing dataset ", dataset
         cmd = "cp " + dataset + " " + \
             toplevel_temp_path + os.path.basename(dataset)
         os.system(cmd)

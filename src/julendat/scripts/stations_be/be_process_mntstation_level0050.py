@@ -26,7 +26,7 @@ import ConfigParser
 import datetime
 import fnmatch
 import os
-from julendat.processtools.stations.MNTStationToLevel0050 import \
+from julendat.processtools.stations.mntstations.MNTStationToLevel0050 import \
     MNTStationToLevel0050
 
 def locate(pattern, patternpath, root=os.curdir):
@@ -80,11 +80,10 @@ def main():
     station_dataset=locate("*00CEMU*.asc", "*ra01_*", input_path)
     
     for dataset in station_dataset:
-        print(dataset)
+        print " "
+        print "Processing dataset ", dataset
         systemdate = datetime.datetime.now()
         filepath=dataset
-        MNTStationToLevel0050(filepath=filepath, config_file=config_file)
-        '''
         try:
             MNTStationToLevel0050(filepath=filepath, config_file=config_file)
             move_file = "mv " + dataset + " " + \
@@ -97,7 +96,6 @@ def main():
             print "Exception type: " , type(inst)
             print "Exception args: " , inst.args
             print "Exception content: " , inst        
-        '''
         
 if __name__ == '__main__':
     main()

@@ -28,7 +28,7 @@ import os
 import string
 import ConfigParser
 from julendat.processtools import time_utilities
-from julendat.filetools.stations.dkstations.MNTStationDataFile import \
+from julendat.filetools.stations.mntstations.MNTStationDataFile import \
     MNTStationDataFile
 import shutil
 import time
@@ -197,6 +197,7 @@ class MNTStationToLevel0050:
         self.reorder_station_coloumn_entries(\
             self.level_0000_ascii_file.get_column_headers(), \
             self.level0005_column_headers)
+        print "Reorder of input columns:    ", self.reorder
 
         self.write_level_0005()
 
@@ -210,6 +211,17 @@ class MNTStationToLevel0050:
             level0005_standard.get_level0000_column_headers()
         self.level0005_column_headers = \
             level0005_standard.get_level0005_column_headers()
+
+        if self.project_id == "be":
+            sp_id = self.filenames.get_plot_id()
+            if sp_id != "000HEG06" and \
+               sp_id != '000SEG39' and \
+               sp_id != '000SEG39':
+                sp_id = sp_id[:-2] + "xx" 
+            soil_parameter_headers = \
+                level0005_standard.get_level0000_soil_headers(sp_id)
+            self.level0000_column_headers = self.level0000_column_headers + \
+                soil_parameter_headers
 
     def reorder_station_coloumn_entries(self,input_headers,output_headers):
         """Reorder station column entries to match the level 1 standards.
@@ -225,7 +237,6 @@ class MNTStationToLevel0050:
             if match == False:
                 reorder.append(-1)
         self.reorder = reorder
-        print "Reorder of input columns:    ", reorder
 
     def rename_level0000_headers(self):
         """Rename level 0000 headers to 0005+ convention
@@ -240,7 +251,6 @@ class MNTStationToLevel0050:
                     else:
                         if col_new[0].rsplit(" ")[1] == str.lower(ascii_headers[col_old].rsplit(" ")[1]):
                             ascii_headers[col_old] = col_new[1]
-        #ADD soil parameter handling
         
         if self.filenames.get_station_id().find("wxt") != -1:
             if self.level_0000_ascii_file.get_start_datetime().year == 2011 and\
@@ -274,9 +284,6 @@ class MNTStationToLevel0050:
                     datetime.datetime.strptime(row[0],"%d.%m.%Y %H:%M:%S"), \
                     self.level_0005_timezone).strftime("%Y-%m-%d %H:%M:%S")
             try:
-                act_time = time_utilities.convert_timezone( \
-                    datetime.datetime.strptime(row[0],"%d.%m.%Y %H:%M"), \
-                    self.level_0005_timezone).strftime("%Y-%m-%d %H:%M:%S")
                 act_out=      [act_time, \
                                self.level_0005_timezone, \
                                self.filenames.get_aggregation(), \
@@ -314,13 +321,9 @@ class MNTStationToLevel0050:
         """Compute level 1.0 station data sets
         """
         self.get_level0050_standards()
-        print "Level 0005 headers:          ", self.level0005_column_headers
-        print "Level 0050 headers:          ", self.level0050_column_headers
         self.reorder_station_coloumn_entries(\
             self.level0005_column_headers, \
             self.level0050_column_headers)
-        print "Reorder of input columns:    ", self.reorder
-
         
         filenumber = len(self.filenames.get_filename_dictionary()\
                          ["level_0050_ascii-filepath"])
@@ -383,7 +386,7 @@ class MNTStationToLevel0050:
             f = open(r_script,"w")
             f.write(r_cmd)
             f.close()
-            r_cmd = "R --no-save < " + r_script
+            r_cmd = "R CMD BATCH " + r_script + " " + r_script + ".log"
             print r_cmd
             os.system(r_cmd)
 

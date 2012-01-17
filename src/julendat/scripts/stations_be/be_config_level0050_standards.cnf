@@ -1,4 +1,4 @@
-[SOIL_PARAMETRES_AEG]
+[000AEGxx_soil_parameters_header_0000]
 BF_1_mineralisch = SM_10
 BF_15_mineralisch = SM_15
 BF_2_mineralisch = SM_20
@@ -13,7 +13,7 @@ BF_4 = SM_40_U
 NaN = SM_50_U 
 
 
-[SOIL_PARAMETRES_AEW]
+[000AEWxx_soil_parameters_header_0000]
 BF_1_mineralisch = SM_10
 BF_15_mineralisch = SM_15
 BF_2_mineralisch = SM_20
@@ -28,7 +28,7 @@ BF_4 = SM_40_U
 NaN = SM_50_U 
 
 
-[SOIL_PARAMETRES_HEG]
+[000HEGxx_soil_parameters_header_0000]
 BF_1_mineralisch = SM_10
 BF_15_mineralisch = SM_15
 BF_2_mineralisch = SM_20
@@ -43,7 +43,7 @@ BF_4 = SM_40_U
 NaN = SM_50_U 
 
 
-[SOIL_PARAMETRES_HEG06]
+[000HEG06_soil_parameters_header_0000]
 BF_1_mineralisch = SM_10
 BF_15_mineralisch = SM_15
 BF_2_mineralisch = SM_20
@@ -58,7 +58,7 @@ NaN = SM_40_U
 NaN = SM_50_U
 
 
-[SOIL_PARAMETRES_HEW]
+[000HEWxx_soil_parameters_header_0000]
 BF_1_mineralisch = SM_10
 BF_15_mineralisch = SM_15
 BF_2_mineralisch = SM_20
@@ -73,7 +73,7 @@ BF_4 = SM_40_U
 NaN = SM_50_U 
 
 
-[SOIL_PARAMETRES_SEG]
+[000SEGxx_soil_parameters_header_0000]
 BF_1_mineralisch = SM_10
 BF_3_mineralisch = SM_15
 BF_2_mineralisch = SM_20
@@ -88,7 +88,7 @@ NaN = SM_40_U
 BF_4 = SM_50_U
 
 
-[SOIL_PARAMETRES_SEW]
+[000SEWxx_soil_parameters_header_0000]
 BF_1_mineralisch = SM_10
 BF_3_mineralisch = SM_15
 BF_2_mineralisch = SM_20
@@ -103,7 +103,7 @@ NaN = SM_40_U
 BF_4 = SM_50_U
 
 
-[SOIL_PARAMETRES_SEG39]
+[000SEG39_soil_parameters_header_0000]
 BF_1_mineralisch = SM_10
 BF_2_mineralisch = SM_15
 BF_3_mineralisch = SM_20
@@ -118,7 +118,7 @@ NaN = SM_40_U
 NaN = SM_50_U
 
 
-[SOIL_PARAMETRES_SEG46]
+[000SEG46_soil_parameters_header_0000]
 BF_1_mineralisch = SM_10
 BF_2_mineralisch = SM_15
 BF_3_mineralisch = SM_20

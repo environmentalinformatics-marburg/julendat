@@ -471,7 +471,6 @@ class StationDataFilePath(StationDataFile):
         """Checks if file is named according to the naming convention.
         """
         filename = self.get_filename()
-        print filename
         if filename[2] == "_" and filename[11] == "_" \
             and filename[18] == "_" and filename[31]  == "_" \
             and filename[44] == "_" and filename[48] == "_" \
