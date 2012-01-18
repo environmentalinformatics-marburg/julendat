@@ -22,7 +22,7 @@ This GUI has been constructed using PAGE (see http://page.sourceforge.net/).
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2011-08-07"
+__version__ = "2012-01-08"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 #TODO(tnauss): Comment

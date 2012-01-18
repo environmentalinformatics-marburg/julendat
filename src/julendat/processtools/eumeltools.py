@@ -13,21 +13,23 @@ The current version encompasses the following functions:
 -- function check_bit: Check a specific bit
 -- function next_neighbor: Perform a next_neighbor interpolation 
 
-The software is distributed under the
-Creative Commons Attribution-Noncommercial-Share Alike 3.0 Germany
-license (see http://creativecommons.org/licenses/by-nc-sa/3.0/de/deed.en) by
-Thomas Nauss <thomas.nauss@uni-bayreuth.de>.
+Copyright (C) 2011 Thomas Nauss
 
-Beside the terms covered by the license above, permission to use this software
-for research and education purposes is granted as long as there is no direct
-return of profit (e. g. I do not classify tuition as commercial).
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-The software comes without any warranty and without even the implied warranty
-of merchantability or fitness for a particular purpose. Comments, suggestions,
-criticism, or bug reports are welcome.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-From all the errors in this module you can easily build another one.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+Please send any comments, suggestions, criticism, or (for our sake) bug
+reports to nausst@googlemail.com
 """
 
 import numpy
@@ -35,9 +37,8 @@ import sys
 import re
 
 __author__ = "Thomas Nauss <thomas.nauss@uni-bayreuth.de>"
-__version__ = "2010-06-21"
-__license__ = "Creative Commons Attribution-Noncommercial-Share Alike 3.0 " + \
-              "Germany"
+__version__ = "2011-11-02"
+__license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 
 def mask_dimensions(datadimensions, dimension_ranges):

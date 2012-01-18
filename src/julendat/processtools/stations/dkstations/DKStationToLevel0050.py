@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-01-07"
+__version__ = "2012-01-17"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import sys
@@ -443,7 +443,7 @@ class DKStationToLevel0050:
                     r_st + "\n" + \
                     r_et + "\n" + \
                     r_ts + ")\n"
-            r_script = "il0050.R" 
+            r_script = "il0050.rscript" 
             f = open(r_script,"w")
             f.write(r_cmd)
             f.close()

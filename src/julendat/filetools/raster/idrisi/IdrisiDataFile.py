@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>"
-__version__ = "2010-08-07"
+__version__ = "2011-11-02"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import array
@@ -27,11 +27,6 @@ import numpy
 import sys
 import datetime
 from julendat.filetools.raster.RasterDataFile import RasterDataFile
-
-__author__ = "Thomas Nauss <thomas.nauss@uni-bayreuth.de>"
-__version__ = "2009-01-03"
-__license__ = "Creative Commons Attribution-Noncommercial-Share Alike 3.0 " + \
-              "Germany"
 
 
 class IdrisiDataFile(RasterDataFile):

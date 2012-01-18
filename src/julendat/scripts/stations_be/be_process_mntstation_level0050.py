@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Insa Otte, Falk Haensel"
-__version__ = "2012-01-07"
+__version__ = "2012-01-18"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
@@ -66,7 +66,7 @@ def main():
     Process data from level 0000 to level 0050.
     """
     print
-    print 'Module: be_process_dkstation_level0050'
+    print 'Module: be_process_mntstation_level0050'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__

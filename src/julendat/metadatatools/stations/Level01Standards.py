@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-01-06"
+__version__ = "2012-01-17"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser

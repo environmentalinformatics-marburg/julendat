@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>"
-__version__ = "2010-08-07"
+__version__ = "2011-11-02"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import numpy

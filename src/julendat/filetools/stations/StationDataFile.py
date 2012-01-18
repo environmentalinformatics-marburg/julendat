@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>"
-__version__ = "2012-01-06"
+__version__ = "2012-01-16"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 from julendat.filetools.DataFile import DataFile
