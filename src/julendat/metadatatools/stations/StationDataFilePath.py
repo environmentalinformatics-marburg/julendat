@@ -74,6 +74,7 @@ class StationDataFilePath(StationDataFile):
             extension: Filename extension (3 characters)
             postexflag: Additional information sticked after the extension
         """       
+
         self.logger_time_zone = logger_time_zone
         self.level_0005_time_zone = level_0005_time_zone
         
@@ -191,6 +192,28 @@ class StationDataFilePath(StationDataFile):
                 end_datetime=end_datetime, time_zone=self.level_0005_time_zone, \
                 process_level=process_level, quality=quality, \
                 extension=extension)
+            
+        #Level 0100 (monthly time-filled files, standard format)
+        process_level="qc01"
+        quality = "0100"
+        extension="dat"
+        self.filename_dictionary['level_0100_process_level'] = process_level
+        self.filename_dictionary['level_0100_quality'] = quality
+        self.filename_dictionary['level_0100_ascii-filename'] = \
+            self.build_filename(\
+                start_datetime = start_datetime, \
+                end_datetime = end_datetime, \
+                time_zone = self.level_0005_time_zone, \
+                process_level=process_level, \
+                quality=quality, \
+                extension=extension)
+        self.filename_dictionary['level_0100_ascii-path'] = \
+            self.build_path(\
+                process_level=process_level, \
+                quality=quality)
+        self.filename_dictionary['level_0100_ascii-filepath'] = \
+            self.filename_dictionary['level_0100_ascii-path'] + \
+            self.filename_dictionary['level_0100_ascii-filename']           
 
     def get_filename_dictionary(self):
         """Gets dictionary for data filenames of different levels.
