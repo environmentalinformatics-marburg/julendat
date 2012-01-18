@@ -88,7 +88,7 @@ def main():
             toplevel_processing_logger_path + "noname.bin " + \
             toplevel_processing_logger_path + "noname.asc"
         os.system(cmd)
-        cmd = "python ki_process_dkstation_level0000_gui.py"
+        cmd = "python2.7 ki_process_dkstation_level0000_gui.py"
         os.system(cmd)
     print "...finished."
 if __name__ == '__main__':
