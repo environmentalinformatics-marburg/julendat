@@ -44,6 +44,10 @@ class TimeInterval(TimePoint):
             self.time_step_delta = int(self.time_step_delta_str) * 60 
         elif self.time_step_level_str == "h":
             self.time_step_delta = int(self.time_step_delta_str) * 3600 
+        elif self.time_step_level_str == "d":
+            self.time_step_delta = int(self.time_step_delta_str) * 24 * 3600 
+        elif self.time_step_level_str == "m":
+            self.time_step_delta = int(self.time_step_delta_str) * 24 * 30 * 3600 
         self.set_time_step_level()
         
     def set_time_step(self, time_step_delta=None):
@@ -52,7 +56,6 @@ class TimeInterval(TimePoint):
         else:
             time_step_delta = self.time_value_02.get_dto() - \
                               self.time_value_01.get_dto()
-        
         self.time_step_delta = time_step_delta
 
     def get_time_step(self):
@@ -99,10 +102,16 @@ class TimeInterval(TimePoint):
                     d = h // 24.0
                     remainder = h - (d*24)
                     h = time.strftime("%H",time.strptime(str(int(remainder)),"%H"))
-                    d = time.strftime("%d",time.strptime(str(int(d)),"%d"))
-                    time_step_delta_str = d.zfill(2)
-                    time_step_level = "days"
-
+                    if d <= 100:
+                        d = time.strftime("%d",time.strptime(str(int(d)),"%d"))
+                        time_step_delta_str = d.zfill(2)
+                        time_step_level = "days"
+                    else:
+                        m = d // 30
+                        m = time.strftime("%m",time.strptime(str(int(m)),"%m"))
+                        time_step_delta_str = m.zfill(2)
+                        time_step_level = "months"
+                        
         self.time_step_delta_str = time_step_delta_str
         self.time_step_level = time_step_level
 
@@ -123,6 +132,8 @@ class TimeInterval(TimePoint):
             self.time_step_level = "hours"
         elif self.time_step_level_str == "d":
             self.time_step_level = "days"
+        elif self.time_step_level_str == "m":
+            self.time_step_level = "months"
 
     def set_time_step_level_str(self):
         """Gets coded time step level of the data file.
@@ -138,6 +149,8 @@ class TimeInterval(TimePoint):
             self.time_step_level_str = "h"
         elif self.time_step_level == "days":
             self.time_step_level_str = "d"
+        elif self.time_step_level == "months":
+            self.time_step_level_str = "m"
 
     def get_time_step_level_str(self):
         return self.time_step_level_str
@@ -146,11 +159,18 @@ class TimeInterval(TimePoint):
         self.data_file_time_value = self.get_time_step()
     
     def set_data_file_time_value_eifc(self):
+        #TODO: tnauss: Change entire routine
         if self.time_step_level == "seconds":
             self.data_file_time_value_eifc = str(self.get_time_step())[5:]
         elif self.time_step_level == "minutes":
             self.data_file_time_value_eifc = str(self.get_time_step())[2:4]
         elif self.time_step_level == "hours":
             self.data_file_time_value_eifc = str(self.get_time_step())[0:1]
+        elif self.time_step_level == "days":
+            self.data_file_time_value_eifc = str(self.get_time_step())[0:2]
+        elif self.time_step_level == "months":
+            if isinstance(self.get_time_step(), int):
+                self.data_file_time_value_eifc = str(self.get_time_step())[0:2]
+            else:
+                self.data_file_time_value_eifc = str(int(self.get_time_step().days//30))[0:2]
         self.data_file_time_value_eifc = self.data_file_time_value_eifc.zfill(2)
-    
