@@ -139,10 +139,14 @@ class StationToLevel0100:
             if self.level0050_column_headers[pindex] == "Ta_200":
                 thv = 15.0
             elif self.level0050_column_headers[pindex] == "rH_200":
-                thv = 96.0
-            self.process_range_test(self.level0050_column_headers[pindex], \
+                thv = 80.0
+            if pindex == 8:
+                input_filepath = self.filenames.get_filepath()
+            else:
+                input_filepath = self.filenames.get_filename_dictionary()\
+                    ["level_0100_ascii-filepath"]
+            self.process_range_test(input_filepath, self.level0050_column_headers[pindex], \
                                     thv, pindex-8)
-        
         print "...finished."
 
     def get_level0050_standards(self):
@@ -154,10 +158,11 @@ class StationToLevel0100:
         self.level0050_column_headers = \
             level0050_standard.get_level0050_column_headers()
 
-    def process_range_test(self, parameter, thv, qindex):
+    def process_range_test(self, input_filepath, parameter, thv, qindex):
         """Process range test on level 0050 file.
         
         Args:
+            input_filepath: Path of the input file
             parameter: Meteorological parameter for quality control
             qindex: Index position of quality control flag
         """
@@ -172,12 +177,13 @@ class StationToLevel0100:
         r_source = 'source("' + self.r_filepath + os.sep + \
                 'QControlDemo.R")'
         r_keyword = "qcontroldemo"
-        r_ifp = 'inpath="' + self.filenames.get_filepath() + '"'
+        r_ifp = 'inpath="' + input_filepath + '"'
         r_ofp = 'outpath="' + output_filepath + '"'
         r_prm = 'para="' + str(parameter) + '"'
         r_thv = 'maxlimit=' + str(thv)
-        r_qindex = 'digit=' + str(qindex)
-        print qindex
+        r_qindex = 'digit=' + str(2*qindex+1)
+        print r_qindex
+        print r_ifp
         
         r_cmd = r_source + '\n' + \
                 r_keyword + '(\n' + \
@@ -190,6 +196,5 @@ class StationToLevel0100:
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
-        
         r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
         os.system(r_cmd)

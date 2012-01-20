@@ -380,6 +380,7 @@ class StationDataFilePath(StationDataFile):
             path.append( \
                 self.build_path(\
                     process_level=process_level, \
+                    aggregation_level = aggregation_level, \
                     quality=quality))
             filepath.append( \
                 path[i] + \

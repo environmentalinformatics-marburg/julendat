@@ -77,7 +77,7 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_dataset=locate("*00CEMU*.asc", "*ra01_*", input_path)
+    station_dataset=locate("*EMU*.asc", "*ra01_*", input_path)
     
     for dataset in station_dataset:
         print " "
