@@ -61,6 +61,9 @@ def main():
     parser.add_option("-p", "--pla", dest="top_level_station_path", 
                           help = "Name of top level station path",
                           metavar="string", type="str")
+    parser.add_option("-o", "--out", dest="output_path", 
+                          help = "Name of output path",
+                          metavar="string", type="str")
     parser.set_description('Options for module timeseries.')
     (options, args) = parser.parse_args()
     '''
@@ -76,7 +79,7 @@ def main():
     start_datetime = options.start_datetime
     end_datetime = options.end_datetime
     top_level_station_path = options.top_level_station_path   
-
+    output_path = options.output_path 
     # Look for subfolders in top level path
     a = os.walk(top_level_station_path)
     for station_id in a.next()[1]:
@@ -89,7 +92,7 @@ def main():
         act_file_2 = station_path + os.sep + "de.dwd.nkdz.RRMS.xml"
         act_file_3 = station_path + os.sep + "de.dwd.nkdz.SDMS.xml"
         #outfile = os.path.split(act_file_1)[0] + os.sep + os.path.split(act_file_1)[0].split("/")[-1] + ".txt"
-        outfile = station_path + os.sep + station_id + ".txt"
+        outfile = output_path + os.sep + station_id + ".txt"
         print "Processing files:"
         print act_file_1
         print act_file_2
