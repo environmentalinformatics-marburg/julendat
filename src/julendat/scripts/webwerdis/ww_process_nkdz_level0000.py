@@ -76,9 +76,12 @@ def main():
     act_file_2 = args[1]
     act_file_3 = args[2]
     '''
+    if options.top_level_station_path == None:
+        parser.print_help()
+    else:
+        top_level_station_path = options.top_level_station_path   
     start_datetime = options.start_datetime
     end_datetime = options.end_datetime
-    top_level_station_path = options.top_level_station_path   
     output_path = options.output_path 
     # Look for subfolders in top level path
     a = os.walk(top_level_station_path)
@@ -116,8 +119,9 @@ def main():
        
         # Open files
         
-        header =  "Datetime, Aggregationtime, Station, Qualityflag, Ta_200 [Celsius/d], P_container_NRT [mm/m], SD_200 [h/m]"
+        header =  "Datetime, Aggregationtime, Station, Lat, Lon, Alt, Qualityflag, Ta_200, P_container_NRT, SD"
         
+        first_row = False
         dataset_1 = []
         if ta_exists:
             for row in data_1:
@@ -126,6 +130,11 @@ def main():
                     date = row.split(">")[0].split('"')[1]
                     value_1 = float(row.split(">")[1].split("<")[0])
                     dataset_1.append([date, value_1])
+                    if first_row == False:
+                        lat = row.split('"')[5]
+                        lon = row.split('"')[7]
+                        alt = row.split('"')[9]
+                        first_row = True
                 except:
                     continue
     
@@ -136,6 +145,11 @@ def main():
                     date = row2.split(">")[0].split('"')[1]
                     value_2 = float(row2.split(">")[1].split("<")[0])
                     dataset_2.append([date, value_2])
+                    if first_row == False:
+                        lat = row.split('"')[5]
+                        lon = row.split('"')[7]
+                        alt = row.split('"')[9]
+                        first_row = True
                 except:
                     continue
     
@@ -146,6 +160,11 @@ def main():
                    date = row3.split(">")[0].split('"')[1]
                    value_3 = float(row3.split(">")[1].split("<")[0])
                    dataset_3.append([date, value_3])
+                   if first_row == False:
+                        lat = row.split('"')[5]
+                        lon = row.split('"')[7]
+                        alt = row.split('"')[9]
+                        first_row = True
                except:
                    continue
         
@@ -161,7 +180,7 @@ def main():
                 act_time = str(act_year) + "-" + str(act_month)
                 act_time = datetime.datetime.strptime(act_time, "%Y-%m")
                 temp = [time.strftime("%Y-%m",act_time.timetuple())]
-                temp = temp + ["s1m01"] + [station_id] + ['xxxxxxxxx']              
+                temp = temp + ["s1m01"] + [station_id] + [lat] + [lon] + [alt] + ['xxxxxxxxx']              
     
                 found_corresponding_data = False
                 for i in range(len(dataset_1)):
