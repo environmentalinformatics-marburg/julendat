@@ -76,6 +76,10 @@ class MNTStationDataFile(StationDataFile):
                     plot_id = "SEG" + plot_id[2:]  
                 elif plot_id[0:2] == "SW":
                     plot_id = "SEW" + plot_id[2:]  
+                elif plot_id[0:2] == "AG":
+                    plot_id = "AEW" + plot_id[2:]  
+                elif plot_id[0:2] == "AW":
+                    plot_id = "AEW" + plot_id[2:]  
                 else:
                     raise Exception, "Invalid plot id."
             self.set_plot_id(plot_id)
