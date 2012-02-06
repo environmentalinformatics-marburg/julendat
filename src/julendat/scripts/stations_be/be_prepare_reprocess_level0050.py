@@ -1,4 +1,4 @@
-"""Move MayerNT logger data to level 0 folder structure (DFG-Exploratories).
+"""Prepare reprocessing of level 0000 to level 0050 files (DFG-Exploratories).
 Copyright (C) 2011 Thomas Nauss, Insa Otte, Falk Haensel
 
 This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,12 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Insa Otte, Falk Haensel"
-__version__ = "2012-01-18"
+__version__ = "2012-03-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
 import fnmatch
 import os
-import gc
 from julendat.processtools.stations.mntstations.MNTStationToLevel0000 import \
     MNTStationToLevel0000
 
@@ -77,20 +76,15 @@ def main():
     toplevel_incoming_path, toplevel_temp_path , \
         toplevel_processing_logger_path = configure(config_file)
     
-    station_dataset=locate("*.csv*", "*", toplevel_incoming_path)
+    station_dataset=locate("*.asc*", "*", toplevel_incoming_path)
     for dataset in station_dataset:
         print " "
-        print "Processing dataset ", dataset
-        cmd = "cp " + dataset + " " + \
-            toplevel_temp_path + os.path.basename(dataset)
-        os.system(cmd)
+        print "Preparing dataset ", dataset
+        print os.path.basename(dataset).split(".asc")[0][6:] + ".csv"
         cmd = "mv " + dataset + " " + \
-            toplevel_processing_logger_path + os.path.basename(dataset)
+            toplevel_incoming_path + \
+            os.path.basename(dataset).split(".asc")[0][6:] + ".csv"
         os.system(cmd)
-        
-        MNTStationToLevel0000(input_filepath=toplevel_processing_logger_path + os.path.basename(dataset), config_file=config_file)
-
-        gc.collect
         
 if __name__ == '__main__':
     main()

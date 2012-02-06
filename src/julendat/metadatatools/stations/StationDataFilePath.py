@@ -155,7 +155,7 @@ class StationDataFilePath(StationDataFile):
         end_datetime = end_datetime.strftime("%Y%m%d%H%M")
 
         process_level="ca01"
-        quality = "0000"
+        quality = "0005"
         extension="dat"
         self.filename_dictionary['level_0005_process_level'] = process_level
         self.filename_dictionary['level_0005_quality'] = quality
@@ -177,7 +177,7 @@ class StationDataFilePath(StationDataFile):
 
         #Level 0050 (monthly time-filled files, standard format)
         process_level="ca05"
-        quality = "0005"
+        quality = "0050"
         extension="dat"
         self.filename_dictionary['level_0050_process_level'] = process_level
         self.filename_dictionary['level_0050_quality'] = quality
@@ -193,7 +193,7 @@ class StationDataFilePath(StationDataFile):
                 process_level=process_level, quality=quality, \
                 extension=extension)
             
-        #Level 0100 (monthly time-filled files, standard format)
+        #Level 0100 (monthly quality controled  files, standard format)
         process_level="qc01"
         quality = "0100"
         extension="dat"

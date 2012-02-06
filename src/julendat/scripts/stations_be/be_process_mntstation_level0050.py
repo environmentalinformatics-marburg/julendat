@@ -26,6 +26,7 @@ import ConfigParser
 import datetime
 import fnmatch
 import os
+import gc
 from julendat.processtools.stations.mntstations.MNTStationToLevel0050 import \
     MNTStationToLevel0050
 
@@ -96,6 +97,8 @@ def main():
             print "Exception type: " , type(inst)
             print "Exception args: " , inst.args
             print "Exception content: " , inst        
+        
+        gc.collect()
         
 if __name__ == '__main__':
     main()
