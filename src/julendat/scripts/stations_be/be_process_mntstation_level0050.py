@@ -85,6 +85,7 @@ def main():
         print "Processing dataset ", dataset
         systemdate = datetime.datetime.now()
         filepath=dataset
+        MNTStationToLevel0050(filepath=filepath, config_file=config_file)
         try:
             MNTStationToLevel0050(filepath=filepath, config_file=config_file)
             move_file = "mv " + dataset + " " + \

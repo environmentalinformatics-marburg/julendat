@@ -5,6 +5,8 @@ logger_time_zone = mez
 [repository]
 toplevel_path = /media/permanent/development/test/julendat/
 toplevel_incoming_path = /media/permanent/development/test/julendat/incoming/
+toplevel_check_path = /media/permanent/development/test/julendat/incoming/check/
+toplevel_checked_path = /media/permanent/development/test/julendat/incoming/checked/
 toplevel_processing_plots_path = /media/permanent/development/test/julendat/processing/plots/
 toplevel_processing_logger_path = /media/permanent/development/test/julendat/processing/logger/
 toplevel_temp_path = /media/permanent/development/test/julendat/temp/

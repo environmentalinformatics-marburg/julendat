@@ -251,20 +251,6 @@ class MNTStationToLevel0050:
                     else:
                         if col_new[0].rsplit(" ")[1] == str.lower(ascii_headers[col_old].rsplit(" ")[1]):
                             ascii_headers[col_old] = col_new[1]
-        
-        if self.filenames.get_station_id().find("wxt") != -1:
-            if self.level_0000_ascii_file.get_start_datetime().year == 2011 and\
-               self.level_0000_ascii_file.get_start_datetime().month <= 8 and \
-               self.level_0000_ascii_file.get_start_datetime().day <= 20:
-                ascii_headers[8] = 'SWDR_300_U'
-                ascii_headers[9] = 'SWUR_300_U'
-                ascii_headers[10] = 'LWDR_300_U'
-                ascii_headers[11] = 'LWUR_300_U'
-            else:
-                ascii_headers[8] = 'LWDR_300_U'
-                ascii_headers[9] = 'LWUR_300_U'
-                ascii_headers[10] = 'SWDR_300_U'
-                ascii_headers[11] = 'SWUR_300_U'
 
         self.level_0000_ascii_file.set_column_headers(ascii_headers)
         print "New level 0000 headers:      ", ascii_headers

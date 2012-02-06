@@ -182,7 +182,6 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary['level_0050_calibration_level'] = calibration_level
         self.filename_dictionary['level_0050_processing'] = processing
         self.get_month_range()
-        
         self.filename_dictionary['level_0050_ascii-filename'], \
         self.filename_dictionary['level_0050_ascii-path'], \
         self.filename_dictionary['level_0050_ascii-filepath'], \
@@ -288,9 +287,9 @@ class StationDataFilePath(StationDataFile):
             month_number = 13-start_datetime.month + end_datetime.month
         else:
             month_number = end_datetime.month-start_datetime.month+1
-        
         self.month_number = month_number
         start_datetime = self.set_first_time_of_month(start_datetime)
+
         self.set_start_datetime(start_datetime)
         self.last_time_of_month = self.set_last_time_of_month(start_datetime)
 
@@ -327,6 +326,7 @@ class StationDataFilePath(StationDataFile):
         #and adjust output filenames.
         #if self.get_aggregation()[2:] != "i05":
         #    aggregation_level = "cti05"
+  
         aggregation_level = "ct" + self.get_aggregation()[2:]
         
         for i in range(0,self.month_number):

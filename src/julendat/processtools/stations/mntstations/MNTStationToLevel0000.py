@@ -169,6 +169,7 @@ class MNTStationToLevel0000:
                         logger_time_zone=self.logger_time_zone, \
                         aggregation_level="na", \
                         postexflag=postexflag)  
+
         self.filenames.build_filename_dictionary()
 
     def main(self):

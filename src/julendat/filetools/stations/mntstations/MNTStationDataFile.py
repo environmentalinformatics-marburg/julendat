@@ -67,7 +67,6 @@ class MNTStationDataFile(StationDataFile):
         
         if self.get_filetype() == 'csv':
             plot_id = self.get_filename().partition("_")[0]
-            print plot_id
             if len(plot_id) < 5:
                 if plot_id[0:2] == "HG":
                     plot_id = "HEG" + plot_id[2:]  
@@ -84,7 +83,7 @@ class MNTStationDataFile(StationDataFile):
                 else:
                     raise Exception, "Invalid plot id."
             self.set_plot_id(plot_id)
-
+        
     def set_time_range_ascii(self):
         """Sets time range extracted from ascii logger file.
         """
@@ -93,7 +92,6 @@ class MNTStationDataFile(StationDataFile):
         compute_time_interval = False
         logger_data = open(self.get_filepath(),'r')
         line_counter = 0
-        
         for line in logger_data:
             line_counter = line_counter + 1
             try:
@@ -104,7 +102,8 @@ class MNTStationDataFile(StationDataFile):
                     #time_step_delta = end_datetime - start_datetime
                     time_step_delta = TimeInterval(start_datetime, \
                                                      end_datetime)
-                    compute_time_interval = False
+                    if start_datetime != end_datetime:
+                        compute_time_interval = False
                 if start_datetime == None:
                     header_extension = line_counter -1
                     start_datetime = datetime.strptime(\
@@ -113,6 +112,7 @@ class MNTStationDataFile(StationDataFile):
                     compute_time_interval = True
             except:
                 continue
+
         self.set_start_datetime(start_datetime)
         self.set_end_datetime(end_datetime)
         self.set_time_step_delta(time_step_delta)
@@ -125,7 +125,13 @@ class MNTStationDataFile(StationDataFile):
         for header_extension in range (0, self.get_header_line()-1):
             infile.next()
         reader = csv.reader(infile,delimiter=';')
-        self.set_column_headers(reader.next())
+        found_header = False
+        while found_header == False:
+            header_extension = header_extension + 1
+            line = reader.next()
+            if len(line) > 0 and line[0][0] == "D":
+                self.set_column_headers(line)
+                break
         infile.close() 
 
     def read_data(self):

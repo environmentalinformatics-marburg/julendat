@@ -1,5 +1,5 @@
-"""Process inital station files from DFG-Biodiversity-Exploratories.
-Copyright (C) 2011 Thomas Nauss, Tim Appelhans
+"""Prepare reprocessing of level 0000 to level 0050 files (DFG-Exploratories).
+Copyright (C) 2011 Thomas Nauss, Insa Otte, Falk Haensel
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,45 +18,121 @@ Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
 """
 
-__author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-01-04"
+__author__ = "Thomas Nauss <nausst@googlemail.com>, Insa Otte, Falk Haensel"
+__version__ = "2012-03-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
-import datetime
 import fnmatch
+import string
+from datetime import datetime
 import os
+import csv
+from julendat.processtools.stations.mntstations.MNTStationToLevel0000 import \
+    MNTStationToLevel0000
 
-## {{{ http://code.activestate.com/recipes/499305/ (r3)
-## Creatied by Simon Brunning
-## Modified by Thomas Nauss: add patternpath to check for path.     
 def locate(pattern, patternpath, root=os.curdir):
-    '''Locate all files matching supplied filename pattern in and below
-    supplied root directory.'''
+    '''Locate files matching filename pattern recursively
+    
+    This routine is based on the one from Simon Brunning at
+    http://code.activestate.com/recipes/499305/ and extended by the patternpath.
+     
+    Args:
+        pattern: Pattern of the filename
+        patternpath: Pattern of the filepath
+        root: Root directory for the recursive search
+    '''
     for path, dirs, files in os.walk(os.path.abspath(root)):
         for filename in fnmatch.filter(files, pattern):
-## Modified by Thomas Nauss
+            # Modified by Thomas Nauss
             if fnmatch.fnmatch(path, patternpath):
-## End of Thomas Nauss
                 yield os.path.join(path, filename)
-## end of http://code.activestate.com/recipes/499305/ }}}
 
-   
+
+def configure(config_file):
+    """Reads configuration settings and configure object.
+
+    Args:
+        config_file: Full path and name of the configuration file.
+        
+    """
+    config = ConfigParser.ConfigParser()
+    config.read(config_file)
+    return config.get('repository', 'toplevel_check_path'), \
+           config.get('repository', 'toplevel_checked_path')
+
+def check_csv_type(dataset):
+    be_standard = None
+    infile = open(dataset, "r")
+    try:
+        dialect = csv.Sniffer().sniff(infile.read(100))
+        be_standard = True
+    except:
+        be_standard = False 
+    infile.close()
+    return be_standard
+
 def main():
     """Main program function
-    Process data from BExIS database to level 0005 format.
+    Move data from initial logger import to level 0 folder structure.
     """
     print
-    print 'Module: be_prepare_depricated'
+    print 'Module: be_process_mntstation_level0000'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
     print   
     
+    config_file = "be_config.cnf"
+    toplevel_check_path, toplevel_checked_path  = configure(config_file)
     
-'''    
+    station_dataset=locate("*.csv*", "*", toplevel_check_path)
+    if os.path.exists(toplevel_checked_path) != True:
+        os.mkdir(toplevel_checked_path)
+    for dataset in station_dataset:
+        print " "
+        print "Preparing dataset ", dataset
+        be_standard = check_csv_type(dataset)
+        print "BE Standard ", be_standard
+        infile = open(dataset)        
+        outfile = open(toplevel_checked_path + os.path.basename(dataset), "w")
+        empty_line = 0
+        last_line = None
+        for line in infile:
+            if be_standard == True:
+                outline = line
+            else:
+                outline = line.replace(',',';')
+                try:
+                    date = datetime.strptime(\
+                           string.strip(outline.split(';')[0][0:19]), \
+                           "%d.%m.%Y %H:%M:%S")
+                    date = outline.split(';')[0][0:19]
+                    rest = outline.replace('.',',')
+                    rest = rest.split(';')[1:]
+                    outline = date + ";" + ('; '.join(str(i) for i in rest))
+                except:
+                    try:
+                        date = datetime.strptime(\
+                           string.strip(outline.split(';')[0][0:16]), \
+                           "%d.%m.%Y %H:%M")
+                        date = outline.split(';')[0][0:16]
+                        rest = outline.replace('.',',')
+                        rest = rest.split(';')[1:]
+                        outline = date + ";" + ('; '.join(str(i) for i in rest))
+                    except:
+                        outline = line.replace(',',';')
+                        outline = outline.replace('.',',')
 
-'''
+            if len(outline) <= 2:
+                empty_line = empty_line + 1
+                print empty_line
+                if empty_line <= 1:
+                    outfile.write(outline)
+            else:
+                outfile.write(outline)
+                
+            
 if __name__ == '__main__':
     main()
-
+    
