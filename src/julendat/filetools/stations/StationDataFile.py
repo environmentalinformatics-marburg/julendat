@@ -206,21 +206,21 @@ class StationDataFile(DataFile):
         """
         return self.plot_id.lstrip("0")
 
-    def set_process_level(self, process_level=None):
+    def set_calibration_level(self, calibration_level=None):
         """Sets calibration level of the data file.
         
         Args:
-            process_level: Coded calibration procedures applied to the data
+            calibration_level: Coded calibration procedures applied to the data
         """
-        self.process_level = process_level
+        self.calibration_level = calibration_level
 
-    def get_process_level(self):
+    def get_calibration_level(self):
         """Gets calibration level of the data file.
         
         Returns:
             Coded calibration procedures applied to the data
         """
-        return self.process_level
+        return self.calibration_level
 
     def set_aggregation(self, aggregation=None):
         """Sets time aggregation of the data file.

@@ -276,18 +276,18 @@ class DataFile:
         """
         return str(float(self.time_step_delta.get_data_file_time_value()))
 
-    def set_quality(self, quality=None):
-        """Sets quality flag of the data file.
+    def set_processing(self, processing=None):
+        """Sets processing level of the data file.
         
         Args:
-            quality: Coded quality level of the data file
+            processing: Coded processing level of the data file
         """
-        self.quality = quality
+        self.processing = processing
     
-    def get_quality(self):
-        """Gets quality flag of the data file.
+    def get_processing(self):
+        """Gets processing level of the data file.
         
         Returns:
-            Coded quality level of the data file
+            Coded processing level of the data file
         """
-        return self.quality
+        return self.processing

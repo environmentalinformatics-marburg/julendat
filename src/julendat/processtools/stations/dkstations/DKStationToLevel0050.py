@@ -142,10 +142,10 @@ class DKStationToLevel0050:
             self.get_station_inventory_information()
         
         if self.get_run_flag():
-            self.process_level_0005()
+            self.calibration_level_0005()
 
         if self.get_run_flag():
-            self.process_level_0050()
+            self.calibration_level_0050()
         
         print "...finished."
 
@@ -188,7 +188,7 @@ class DKStationToLevel0050:
             self.run_flag = False
             raise Exception, "Error: station-id does not match."
 
-    def process_level_0005(self):
+    def calibration_level_0005(self):
         """Process level 0000 to level 0005 data set
         """
         self.get_level0005_standards()
@@ -347,8 +347,8 @@ class DKStationToLevel0050:
                                self.filenames.get_plot_id(), \
                                'xxx', \
                                self.filenames.get_station_id(), \
-                               self.filenames.get_filename_dictionary()['level_0005_process_level'], \
-                               self.filenames.get_filename_dictionary()['level_0005_quality']]
+                               self.filenames.get_filename_dictionary()['level_0005_calibration_level'], \
+                               self.filenames.get_filename_dictionary()['level_0005_processing']]
                 for i in range(9, max(self.reorder)+1):
                     try:
                         index =  self.reorder.index(i)
@@ -374,7 +374,7 @@ class DKStationToLevel0050:
         outfile.close()
 
             
-    def process_level_0050(self):
+    def calibration_level_0050(self):
         """Compute level 1.0 station data sets
         """
         self.get_level0050_standards()
@@ -475,7 +475,7 @@ class DKStationToLevel0050:
             level_10_input.append(row)
         level_010_file.close()
 
-        process_level_index = self.level0005_column_headers.index("Processlevel")
+        calibration_level_index = self.level0005_column_headers.index("Processlevel")
         qualtiy_flag_index = self.level0005_column_headers.index("Qualityflag")
 
         level_10_counter = 0
@@ -487,8 +487,8 @@ class DKStationToLevel0050:
                 if level_10_input[level_10_counter][0] == station_input[station_counter][0]:
                     
                     act_out = station_input[station_counter][0:8]
-                    act_out[process_level_index] = self.filenames.get_filename_dictionary()['level_0050_process_level']
-                    act_out[qualtiy_flag_index] = self.filenames.get_filename_dictionary()['level_0050_quality']
+                    act_out[calibration_level_index] = self.filenames.get_filename_dictionary()['level_0050_calibration_level']
+                    act_out[qualtiy_flag_index] = self.filenames.get_filename_dictionary()['level_0050_processing']
                     for i in range(9, max(self.reorder)+1):
                         try:
                             index =  self.reorder.index(i)

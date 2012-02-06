@@ -1,6 +1,6 @@
 ## define function
 compute_level_005_file <- function(asciipath, outpath, plotID, loggertype, 
-                       cf, reorder, skip, tz, quality, adjust_time, order_out) {
+                       cf, reorder, skip, tz, processing, adjust_time, order_out) {
 
   ## package 'chron' is needed for the handling of dates and times (as it
   ## ignores time zones and daylight saving)
@@ -74,9 +74,9 @@ compute_level_005_file <- function(asciipath, outpath, plotID, loggertype,
   tab$chdateEAT <- chdateEAT
 
   ## create vectors and fill table (tab) accordingly
-  quality <- rep(quality, length(year))
-  quality <- sprintf("%04d", quality)
-  tab$quality <- quality
+  processing <- rep(processing, length(year))
+  processing <- sprintf("%04d", processing)
+  tab$processing <- processing
 
   plotid <- rep(plotID, length(year))
   plotid <- as.character(plotid)

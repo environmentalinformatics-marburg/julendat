@@ -66,7 +66,7 @@ def main():
     Process data from level 0000 to level 0050.
     """
     print
-    print 'Module: process_level0100'
+    print 'Module: calibration_level0100'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__

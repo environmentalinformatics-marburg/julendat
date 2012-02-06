@@ -1,4 +1,4 @@
-"""Process level 0050 station data to quality controlled level 0100.
+"""Process level 0050 station data to processing controlled level 0100.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -163,8 +163,8 @@ class StationToLevel0100:
         
         Args:
             input_filepath: Path of the input file
-            parameter: Meteorological parameter for quality control
-            qindex: Index position of quality control flag
+            parameter: Meteorological parameter for processing control
+            qindex: Index position of processing control flag
         """
         if not os.path.isdir(self.filenames.get_filename_dictionary()\
             ["level_0100_ascii-path"]):
