@@ -67,6 +67,7 @@ class MNTStationDataFile(StationDataFile):
         
         if self.get_filetype() == 'csv':
             plot_id = self.get_filename().partition("_")[0]
+            print plot_id
             if len(plot_id) < 5:
                 if plot_id[0:2] == "HG":
                     plot_id = "HEG" + plot_id[2:]  
@@ -77,7 +78,7 @@ class MNTStationDataFile(StationDataFile):
                 elif plot_id[0:2] == "SW":
                     plot_id = "SEW" + plot_id[2:]  
                 elif plot_id[0:2] == "AG":
-                    plot_id = "AEW" + plot_id[2:]  
+                    plot_id = "AEG" + plot_id[2:]  
                 elif plot_id[0:2] == "AW":
                     plot_id = "AEW" + plot_id[2:]  
                 else:
