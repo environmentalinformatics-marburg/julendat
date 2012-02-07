@@ -126,7 +126,10 @@ def main():
 
             if len(outline) <= 2:
                 empty_line = empty_line + 1
-                print empty_line
+                if empty_line <= 1:
+                    outfile.write(outline)
+            elif string.count(outline, ';') == (len(outline)-2):
+                empty_line = empty_line + 1
                 if empty_line <= 1:
                     outfile.write(outline)
             else:
