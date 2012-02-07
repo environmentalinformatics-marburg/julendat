@@ -276,7 +276,7 @@ class MNTStationToLevel0050:
                                self.filenames.get_plot_id(), \
                                'xxx', \
                                self.filenames.get_station_id(), \
-                               self.filenames.get_filename_dictionary()['level_0005_calibration_level'], \
+                               self.filenames.get_filename_dictionary()['level_0005_processing'], \
                                #self.filenames.get_filename_dictionary()['level_0005_processing']]
                                "xxx" * (len(self.level0005_column_headers)-9)]
                                
@@ -414,7 +414,7 @@ class MNTStationToLevel0050:
                 if level_10_input[level_10_counter][0] == station_input[station_counter][0]:
                     
                     act_out = station_input[station_counter][0:8]
-                    act_out[calibration_level_index] = self.filenames.get_filename_dictionary()['level_0050_calibration_level']
+                    act_out[calibration_level_index] = self.filenames.get_filename_dictionary()['level_0050_processing']
                     #act_out[qualtiy_flag_index] = self.filenames.get_filename_dictionary()['level_0050_processing']
                     act_out[qualtiy_flag_index] = "xxx" * (len(self.level0050_column_headers)-9)
                     for i in range(9, max(self.reorder)+1):
