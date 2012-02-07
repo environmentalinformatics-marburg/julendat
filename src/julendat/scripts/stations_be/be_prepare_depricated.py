@@ -64,11 +64,35 @@ def configure(config_file):
 def check_csv_type(dataset):
     be_standard = None
     infile = open(dataset, "r")
-    try:
-        dialect = csv.Sniffer().sniff(infile.read(100))
-        be_standard = True
-    except:
-        be_standard = False 
+    
+    identified_csv_type = False
+    be_standard = False
+    counter = 1
+    while identified_csv_type == False:
+        counter = counter + 1
+        line = infile.next()
+        try:
+            date = datetime.strptime(\
+                   string.strip(line[0:19]), \
+                   "%d.%m.%Y %H:%M:%S")
+            if line[19] == ";":
+                be_standard = True
+            if line[19] == ",":
+                be_standard = False
+            identified_csv_type = True
+        except:
+            try:
+                date = datetime.strptime(\
+                       string.strip(line[0:16]), \
+                       "%d.%m.%Y %H:%M")
+                if line[16] == ";":
+                    be_standard = True
+                if line[16] == ",":
+                    be_standard = False
+                identified_csv_type = True
+            except:
+                continue
+
     infile.close()
     return be_standard
 
