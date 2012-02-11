@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Insa Otte, Falk Haensel"
-__version__ = "2012-03-06"
+__version__ = "2012-02-06"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser

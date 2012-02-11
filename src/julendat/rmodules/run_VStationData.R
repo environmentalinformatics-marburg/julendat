@@ -6,8 +6,8 @@ inpath <- "/media/permanent/development/test/julendat/processing/plots/be"
 verbose <- T
 
 ## list all file in input path (and sub folders) justifying pattern definition
-files <- list.files(inpath, recursive = T, pattern = "mez_ca05_nai30_0050.dat")
-files <- grep("_2008", files, value = T)
+files <- list.files(inpath, recursive = T, pattern = "mez_ca05_nai30_0050.dat$")
+files <- grep("CEMU_2009", files, value = T)
 print("HALLO")
 print(files)
 ## read all files into a list
@@ -30,18 +30,18 @@ plotID <- substr(plotID, 1, 8)
 plotval <- unlist(plotval)
 plotval <- ifelse(plotval > 50, NA, ifelse(plotval < -20, NA, plotval))
 
-plotname <- paste("overview", "Ta_200", Sys.Date(), "wide", sep = "_")
-plotname <- paste(plotname, ".png", sep = "")
+plotname <- paste("overview", "Ta_200", format(Sys.time(), "%Y-%m-%d_%H%M%S"),
+                  "wide.png", sep = "_")
 
 ## call function
-png(paste(inpath, plotname, sep = "/"), width = 1024*3, height = 768*3)
+png(paste(inpath, plotname, sep = "/"), width = 1000, height = 3000)
 VStationData(
   plotval = plotval,         # x = t
   datetime = datetime,       # date = datetime
   cond = plotID,          # cond = plot
   fun = mean,                # fun = mean
   arrange = "long",          # arrange = "long"
-  main = "Temperature",      # main = "Temperature"
+  main = "Temperature (AEG)",      # main = "Temperature"
   colour = colList$colPrec  # colour = colList$colPrec
   )
 dev.off()

@@ -1,4 +1,4 @@
-"""Prepare reprocessing of level 0000 to level 0050 files (DFG-Exploratories).
+"""Identify and mark empty level 0050 files (DFG-Exploratories).
 Copyright (C) 2011 Thomas Nauss, Insa Otte, Falk Haensel
 
 This program is free software: you can redistribute it and/or modify
@@ -19,14 +19,12 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Insa Otte, Falk Haensel"
-__version__ = "2012-02-06"
+__version__ = "2012-02-11"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
 import fnmatch
 import os
-from julendat.processtools.stations.mntstations.MNTStationToLevel0000 import \
-    MNTStationToLevel0000
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -55,36 +53,42 @@ def configure(config_file):
     """
     config = ConfigParser.ConfigParser()
     config.read(config_file)
-    return config.get('repository', 'toplevel_incoming_path'), \
-           config.get('repository', 'toplevel_temp_path'), \
-           config.get('repository', 'toplevel_processing_logger_path')
-
-
+    return config.get('repository', 'toplevel_processing_plots_path'), \
+           config.get('project', 'project_id')
 
 def main():
     """Main program function
     Move data from initial logger import to level 0 folder structure.
     """
     print
-    print 'Module: be_process_mntstation_level0000'
+    print 'Module: be_identify_empty_level0050_datasets'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
     print   
     
     config_file = "be_config.cnf"
-    toplevel_incoming_path, toplevel_temp_path , \
-        toplevel_processing_logger_path = configure(config_file)
+    toplevel_processing_plots_path, project_id  = configure(config_file)
     
-    station_dataset=locate("*.asc*", "*", toplevel_incoming_path)
-    for dataset in station_dataset:
-        print " "
-        print "Preparing dataset ", dataset
-        print os.path.basename(dataset).split(".asc")[0][6:] + ".csv"
-        cmd = "mv " + dataset + " " + \
-            toplevel_incoming_path + \
-            os.path.basename(dataset).split(".asc")[0][6:] + ".csv"
-        os.system(cmd)
+    dataset =locate("*0050.dat", "*", toplevel_processing_plots_path + \
+                    project_id)
+    for dataset in dataset:
+        #print " "
+        #print "Checking dataset ", dataset
+        infile = open(dataset, "r")
+        data_line = False
+        first_line = True
+        for line in infile:
+            if len(line) > 23 and first_line == False:
+                data_line = True
+            first_line = False
+        infile.close()
+        if data_line == False:
+            print "Marking empty dataset ", dataset
+            cmd = "mv " + dataset + " " + dataset + ".empty"
+            os.system(cmd)
+    
+    print "...finished."          
         
 if __name__ == '__main__':
     main()
