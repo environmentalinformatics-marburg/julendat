@@ -85,7 +85,7 @@ def main():
         for row in reader:
             if len(row) > 1:
                 data_line = True
-                if row[9] < 200:
+                if row[9] < 200 and row[9] > -39.0:
                     invalid_value = False
         if data_line == False or invalid_value == True:
             print "Marking empty dataset ", dataset
