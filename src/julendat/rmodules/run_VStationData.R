@@ -1,14 +1,16 @@
 source("VStationData.R")
 source("VColList.R")
+#source("/home/eibestations/ei_data_exploratories/scripts/julendat/src/julendat/rmodules/VStationData.R")
+#source("/home/eibestations/ei_data_exploratories/scripts/julendat/src/julendat/rmodules/VColList.R")
 #inpath <- "D:/development/test/julendat/processing/plots/be"
 inpath <- "/media/permanent/development/test/julendat/processing/plots/be"
+#inpath <- "/home/eibestations/ei_data_exploratories/processing/plots/be"
 
 verbose <- T
 
 ## list all file in input path (and sub folders) justifying pattern definition
-files <- list.files(inpath, recursive = T, pattern = "mez_ca05_nai30_0050.dat$")
-files <- grep("CEMU_2009", files, value = T)
-print("HALLO")
+files <- list.files(inpath, recursive = T, pattern = "SEW.*mez_ca05_nai30_0050.dat$")
+files <- grep("CEMU_2011", files, value = T)
 print(files)
 ## read all files into a list
 ldat <- lapply(1:length(files), function(i) {
@@ -41,7 +43,7 @@ VStationData(
   cond = plotID,          # cond = plot
   fun = mean,                # fun = mean
   arrange = "long",          # arrange = "long"
-  main = "Temperature (AEG)",      # main = "Temperature"
+  main = "Temperature (SEW)",      # main = "Temperature"
   colour = colList$colPrec  # colour = colList$colPrec
   )
 dev.off()

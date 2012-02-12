@@ -25,6 +25,7 @@ __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 import ConfigParser
 import fnmatch
 import os
+import csv
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -76,18 +77,21 @@ def main():
         #print " "
         #print "Checking dataset ", dataset
         infile = open(dataset, "r")
+        infile.next()
+        reader = csv.reader(infile,delimiter=',', \
+                            quoting=csv.QUOTE_NONNUMERIC)
         data_line = False
-        first_line = True
-        for line in infile:
-            if len(line) > 23 and first_line == False:
+        invalid_value = True
+        for row in reader:
+            if len(row) > 1:
                 data_line = True
-            first_line = False
-        infile.close()
-        if data_line == False:
+                if row[9] < 200:
+                    invalid_value = False
+        if data_line == False or invalid_value == True:
             print "Marking empty dataset ", dataset
             cmd = "mv " + dataset + " " + dataset + ".empty"
             os.system(cmd)
-    
+        
     print "...finished."          
         
 if __name__ == '__main__':
