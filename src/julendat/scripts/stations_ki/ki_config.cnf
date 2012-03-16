@@ -1,0 +1,24 @@
+[logger]
+initial_logger_file = noname.bin
+logger_time_zone = mez
+station_entries = dk_station_entries.cnf
+
+[repository]
+toplevel_path = /media/permanent/development/test/julendat/
+toplevel_incoming_path = /media/permanent/development/test/julendat/incoming/
+toplevel_processing_plots_path = /media/permanent/development/test/julendat/processing/plots/
+toplevel_processing_logger_path = /media/permanent/development/test/julendat/processing/logger/
+toplevel_temp_path = /media/permanent/development/test/julendat/temp/
+
+
+[inventory]
+station_inventory = ki_config_station_inventory.cnf
+
+[project]
+project_id = ki
+level_0005_timezone = eat 
+
+[general]
+level0050_standards = ki_config_level0050_standards.cnf
+r_filepath = /media/permanent/development/released/julendat/src/julendat/rmodules
+
