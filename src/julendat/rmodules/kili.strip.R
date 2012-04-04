@@ -2,9 +2,11 @@ kili.strip <- function(inputpath,
                        logger = "rug",
                        prm = "Ta_200",                       
                        fun = mean,
-                       arrange = c("long", "wide"),
+                       arrange = "long",
                        year,
-                       colour = colorRampPalette(c("darkblue", "darkseagreen", 
+                       range,
+                       pattern = "*cti05_0005.dat",
+                       colour = colorRampPalette(c("darkblue", "aquamarine", 
                                                    "gold", "darkred"),
                                                  interpolate = "linear"),
                        ...) {
@@ -56,7 +58,8 @@ kili.strip <- function(inputpath,
       "Module   :  kili.strip", "\n",
       "Author   :  Tim Appelhans <tim.appelhans@gmail.com>, Thomas Nauss", "\n",
       "Version  :  2012-03-15", "\n",
-      "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n")
+      "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n",
+      "\n")
   
 ########## FUNCTION BODY #######################################################
   
@@ -72,7 +75,7 @@ kili.strip <- function(inputpath,
   Old.TZ <- Sys.timezone()
   Sys.setenv(TZ = "UTC")
   
-  flist <- list.files(inputpath, recursive = T, pattern = "cti05_0005.dat")
+  flist <- list.files(inputpath, recursive = T, pattern = glob2rx(pattern))
   ki.data.list <- lapply(seq(flist), 
                          function(i) as.kili.data(paste(inputpath,
                                                         flist[i],
@@ -97,8 +100,8 @@ kili.strip <- function(inputpath,
   df2 <- split(df, df$year, drop = T)
   df2 <- df2[[year]]
   
-  minx <- min(na.exclude(df2$x))
-  maxx <- max(na.exclude(df2$x))
+  minx <- if (missing(range)) min(na.exclude(df2$x)) else range[1]
+  maxx <- if (missing(range)) max(na.exclude(df2$x)) else range[2]
  
   condims <- as.character(unique(na.exclude(df2$plotid)))
   #print(condims[2])

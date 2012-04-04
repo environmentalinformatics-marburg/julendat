@@ -1,10 +1,12 @@
 print.kili.strip <- function(inputpath,
                              outputpath = inputpath,
                              logger = "rug",
-                             prm,                       
+                             prm = "Ta_200",                       
                              fun = mean,
-                             arrange = c("long", "wide"),
+                             arrange = "long",
                              year,
+                             range = c(-10, 50),
+                             pattern,
                              colour = colList$colTa,
                              ...) {
   
@@ -21,15 +23,20 @@ print.kili.strip <- function(inputpath,
              prm = prm,
              logger = logger,
              arrange = arrange,
+             fun = fun,
              year = year,
+             range = range,
+             pattern = pattern,
              colour = colour)
   dev.off()
 }
 
-# print.kili.strip("f:/kili_data/testing/overview/ki",
-#                  logger = "wxt",
-#                  prm = "p_200",
-#                  fun = mean,
-#                  arrange = "long",
-#                  colour = colList$colTa,
-#                  year = "2011")
+print.kili.strip("f:/kili_data/plots/ki",
+                 logger = "wxt",
+                 prm = "WV",
+                 fun = mean,
+                 arrange = "long",
+                 range = c(0, 5),
+                 pattern  = "*cti05_0005.dat",
+                 colour = colList$colWV,
+                 year = "2011")

@@ -2,9 +2,11 @@ be.strip <- function(inputpath,
                      logger = "CEMU",
                      prm = "Ta_200",                       
                      fun = mean,
-                     arrange = c("long", "wide"),
+                     arrange = "long",
                      year,
-                     colour = colorRampPalette(c("darkblue", "darkseagreen", 
+                     range,
+                     pattern,
+                     colour = colorRampPalette(c("darkblue", "aquamarine", 
                                                  "gold", "darkred"),
                                                interpolate = "linear"),
                      ...) {
@@ -73,7 +75,7 @@ be.strip <- function(inputpath,
   Old.TZ <- Sys.timezone()
   Sys.setenv(TZ = "UTC")
   
-  flist <- list.files(inputpath, recursive = T, pattern = "0005.dat")
+  flist <- list.files(inputpath, recursive = T, pattern = glob2rx(pattern))
   be.data.list <- lapply(seq(flist), 
                          function(i) as.be.data(paste(inputpath,
                                                       flist[i],
@@ -98,8 +100,8 @@ be.strip <- function(inputpath,
   df2 <- split(df, df$year, drop = T)
   df2 <- df2[[year]]
   
-  minx <- min(na.exclude(df2$x))
-  maxx <- max(na.exclude(df2$x))
+  minx <- if (missing(range)) min(na.exclude(df2$x)) else range[1]
+  maxx <- if (missing(range)) max(na.exclude(df2$x)) else range[2]
  
   condims <- as.character(unique(na.exclude(df2$plotid)))
   #print(condims[2])
@@ -152,7 +154,7 @@ be.strip <- function(inputpath,
     xat <- seq.Date(as.Date(datetime_from), as.Date(datetime_to), by = "month")
     xat <- as.integer(julian(xat, origin = as.Date(origin))) + 15
     
-    levelplot(t(strip_z), ylim = c(-2.5, 24.5), col.regions = colour,
+    levelplot(t(strip_z), ylim = c(-0.5, 24.5), col.regions = colour,
               strip = F, ylab = "Hour of day", xlab = NULL, asp = "iso",
               at = seq(minx, maxx, 0.1),
               strip.left = strip.custom(
@@ -177,11 +179,13 @@ be.strip <- function(inputpath,
     })
   
   out <- ls[[1]]
-  for (i in 2:(length(xlist)))
-    out <- c(out, ls[[i]], x.same = T, y.same = T, 
-             layout = switch(arrange,
-                             "long" = c(1,length(condims)),
-                             "wide" = NULL))
+  if (length(ls) > 1) {
+    for (i in 2:(length(xlist)))
+      out <- c(out, ls[[i]], x.same = T, y.same = T, 
+               layout = switch(arrange,
+                               "long" = c(1,length(condims)),
+                               "wide" = NULL))
+  } else out
   
   out <- update(out, scales = list(y = list(rot = list(0, 0)), tck = c(0, 0)))
   print(out)
