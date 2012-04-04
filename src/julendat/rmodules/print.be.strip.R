@@ -1,10 +1,12 @@
 print.be.strip <- function(inputpath,
                            outputpath = inputpath,
                            logger = "CEMU",
-                           prm,                       
+                           prm = "Ta_200",                       
                            fun = mean,
-                           arrange = c("long", "wide"),
+                           arrange = "long",
                            year,
+                           range = c(-10, 50),
+                           pattern,
                            colour = colList$colTa,
                            ...) {
   
@@ -21,15 +23,20 @@ print.be.strip <- function(inputpath,
            prm = prm,
            logger = logger,
            arrange = arrange,
+           fun = fun,
            year = year,
+           range = range,
+           pattern = pattern,
            colour = colour)
   dev.off()
 }
 
-# print.be.strip("c:/tappelhans/uni/marburg/kili/testing/be_data",
-#                logger = "CEMU",
-#                prm = "Ta_200",
-#                fun = mean,
-#                arrange = "long",
-#                colour = colList$colTa,
-#                year = "2011")
+print.be.strip("c:/tappelhans/uni/marburg/kili/testing/be_data",
+               logger = "CEMU",
+               prm = "Ta_200",
+               fun = mean,
+               arrange = "long",
+               range = c(-30, 40),
+               pattern = "*HE*0005.dat",
+               colour = colList$colPrec,
+               year = "2009")
