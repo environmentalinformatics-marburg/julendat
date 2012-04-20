@@ -293,4 +293,7 @@ class StationDataFile(DataFile):
         elif self.get_extension() == 'csv' or \
             self.get_extension() == 'CSV':
             filetype = 'csv'
+        elif self.get_extension() == 'txt' or \
+            self.get_extension() == 'TXT':
+            filetype = 'ascii'
         self.set_filetype(filetype)    
