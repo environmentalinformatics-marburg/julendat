@@ -96,12 +96,14 @@ class HDFEOS2RSTConverter(DataConverter):
                       str(self.get_output_projection().get_projection()[20]) + \
                       " -of RST 'HDF4_EOS:EOS_GRID:" + \
                       '"' + \
-                      self.get_input_data_filename() + \
+                      self.get_filepathname() + \
                       '":' + \
                       self.get_sds_name() + \
                       "' " + \
                       self.get_output_filenames()[counter]
             os.system(command)
+            print command
+#                      self.get_input_data_filename() + \
     
 
     def hdflook(self):
@@ -366,16 +368,21 @@ class HDFEOS2RSTConverter(DataConverter):
         """
                 
         filetype = 'rst'
+#        timestep = RasterDataFilePath.get_convention_time(
+#                                                self.get_input_data_filename())
         timestep = RasterDataFilePath.get_convention_time(
-                                                self.get_input_data_filename())
+                                                self.get_filepathname())
         
+#        satellite_system = RasterDataFilePath.get_convention_satellite_system(
+#                                                self.get_input_data_filename())
         satellite_system = RasterDataFilePath.get_convention_satellite_system(
-                                                self.get_input_data_filename())
+                                                self.get_filepathname())
 
         product = self.get_output_product()
         units = self.get_output_data_units()
         resolution = self.get_output_projection().get_projection()[1]
         projection = self.get_output_projection().get_projection()[16]
+        
         output_filenames = []
         for counter in range(0, len(self.get_output_bands())):
             band = self.get_output_bands()[counter]

@@ -24,7 +24,7 @@ __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import optparse
 
-from hdfeos2rstconverter import HDFEOS2RSTConverter
+from julendat.convertertools.HDFEOS2RSTConverter import HDFEOS2RSTConverter
 
 #TODO(tnauss): Adjust to julendat.
 
