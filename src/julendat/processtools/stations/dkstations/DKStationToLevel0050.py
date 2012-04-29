@@ -347,14 +347,18 @@ class DKStationToLevel0050:
                                self.filenames.get_plot_id(), \
                                'xxx', \
                                self.filenames.get_station_id(), \
-                               self.filenames.get_filename_dictionary()['level_0005_calibration_level'], \
-                               self.filenames.get_filename_dictionary()['level_0005_processing']]
+                               #self.filenames.get_filename_dictionary()['level_0005_calibration_level'], \
+                               self.filenames.get_filename_dictionary()['level_0005_processing'], \
+                               '000' * (len(self.level0005_column_headers)-8)]
                 for i in range(9, max(self.reorder)+1):
                     try:
                         index =  self.reorder.index(i)
                         act_out = act_out + [float(row[index])]
                     except:
                         act_out = act_out + [float('nan')]
+                
+                if len(act_out) < len(self.level0005_column_headers):
+                    act_out = act_out + [float('nan')]*(len(self.level0005_column_headers)-len(act_out))
                 output.append(act_out)
             except:
                 continue
@@ -488,13 +492,16 @@ class DKStationToLevel0050:
                     
                     act_out = station_input[station_counter][0:8]
                     act_out[calibration_level_index] = self.filenames.get_filename_dictionary()['level_0050_calibration_level']
-                    act_out[qualtiy_flag_index] = self.filenames.get_filename_dictionary()['level_0050_processing']
+                    #act_out[qualtiy_flag_index] = self.filenames.get_filename_dictionary()['level_0050_processing']
+                    act_out[qualtiy_flag_index] = "000" * (len(self.level0050_column_headers)-8)
                     for i in range(9, max(self.reorder)+1):
                         try:
                             index =  self.reorder.index(i)
                             act_out = act_out + [float(station_input[station_counter][index])]
                         except:
                             act_out = act_out + [float('nan')]
+                    if len(act_out) < len(self.level0050_column_headers):
+                        act_out = act_out + [float('nan')]*(len(self.level0050_column_headers)-len(act_out))    
                     out.append(act_out)
                     #out.append(station_input[station_counter])
                     found = True

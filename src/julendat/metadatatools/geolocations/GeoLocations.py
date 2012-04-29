@@ -163,6 +163,34 @@ class GeoLocations(object):
             self.xresolution = 1000
             self.yresolution = 1000
 
+            
+        elif self.standard_projection == 'Standard_CMORPH':
+            self.projection_resolution = 0.25
+            self.projection = 'latlong'
+            self.zone = ''
+            self.hemisphere = ''
+            self.width= 1440
+            self.height = 480
+            self.latitude_min = -60.0
+            self.latitude_max = 60.0
+            self.longitude_min = -180.0
+            self.longitude_max = 180.0
+            self.projection_datum = 8
+            self.coord_xmin = -180.00
+            self.coord_xmax = 180.0
+            self.coord_ymin = -60.0
+            self.coord_ymax = 60.0
+            self.convention_projection = \
+                    RasterDataFilePath.get_convention_projection(
+                                                self.standard_projection)
+            self.convention_idrisi_meta_projection = \
+                    RasterDataFilePath.get_convention_idrisi_meta_projection_for_utm(
+                                                self.zone, self.hemisphere)
+
+            self.epsg = 4326
+            self.xresolution = 0.25
+            self.yresolution = 0.25            
+
 
     def get_projection(self):
         """Set units of data set.

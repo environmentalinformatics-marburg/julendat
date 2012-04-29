@@ -278,7 +278,7 @@ class MNTStationToLevel0050:
                                self.filenames.get_station_id(), \
                                self.filenames.get_filename_dictionary()['level_0005_processing'], \
                                #self.filenames.get_filename_dictionary()['level_0005_processing']]
-                               "xxx" * (len(self.level0005_column_headers)-9)]
+                               '000' * (len(self.level0005_column_headers)-9)]
                                
                 for i in range(9, max(self.reorder)+1):
                     try:
@@ -421,7 +421,7 @@ class MNTStationToLevel0050:
                     act_out = station_input[station_counter][0:8]
                     act_out[calibration_level_index] = self.filenames.get_filename_dictionary()['level_0050_processing']
                     #act_out[qualtiy_flag_index] = self.filenames.get_filename_dictionary()['level_0050_processing']
-                    act_out[qualtiy_flag_index] = "xxx" * (len(self.level0050_column_headers)-9)
+                    act_out[qualtiy_flag_index] = '000' * (len(self.level0050_column_headers)-9)
                     for i in range(9, max(self.reorder)+1):
                         try:
                             index =  self.reorder.index(i)
