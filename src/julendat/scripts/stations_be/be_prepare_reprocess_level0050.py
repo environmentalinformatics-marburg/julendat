@@ -80,10 +80,9 @@ def main():
     for dataset in station_dataset:
         print " "
         print "Preparing dataset ", dataset
-        print os.path.basename(dataset).split(".asc")[0][6:] + ".csv"
         cmd = "mv " + dataset + " " + \
-            toplevel_processing_plots_path + \
-            os.path.basename(dataset).split(".asc")[0][6:] + ".csv"
+            os.path.dirname(dataset) + os.sep + \
+            os.path.basename(dataset).split(".asc")[0] + '.asc'
         os.system(cmd)
         
 if __name__ == '__main__':
