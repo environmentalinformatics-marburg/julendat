@@ -55,7 +55,7 @@ def configure(config_file):
     """
     config = ConfigParser.ConfigParser()
     config.read(config_file)
-    return config.get('repository', 'toplevel_incoming_path'), \
+    return config.get('repository', 'toplevel_processing_plots_path'), \
            config.get('repository', 'toplevel_temp_path'), \
            config.get('repository', 'toplevel_processing_logger_path')
 
@@ -73,16 +73,16 @@ def main():
     print   
     
     config_file = "be_config.cnf"
-    toplevel_incoming_path, toplevel_temp_path , \
+    toplevel_processing_plots_path, toplevel_temp_path , \
         toplevel_processing_logger_path = configure(config_file)
     
-    station_dataset=locate("*.asc*", "*", toplevel_incoming_path)
+    station_dataset=locate("*.asc*", "*", toplevel_processing_plots_path)
     for dataset in station_dataset:
         print " "
         print "Preparing dataset ", dataset
         print os.path.basename(dataset).split(".asc")[0][6:] + ".csv"
         cmd = "mv " + dataset + " " + \
-            toplevel_incoming_path + \
+            toplevel_processing_plots_path + \
             os.path.basename(dataset).split(".asc")[0][6:] + ".csv"
         os.system(cmd)
         
