@@ -22,8 +22,48 @@ __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2012-01-17"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
+import ConfigParser
+import fnmatch
+import os
 from julendat.processtools.stations.dkstations.DKStationToLevel0000 import \
     DKStationToLevel0000
+
+def locate(pattern, patternpath, root=os.curdir):
+    '''Locate files matching filename pattern recursively
+    
+    This routine is based on the one from Simon Brunning at
+    http://code.activestate.com/recipes/499305/ and extended by the patternpath.
+     
+    Args:
+        pattern: Pattern of the filename
+        patternpath: Pattern of the filepath
+        root: Root directory for the recursive search
+    '''
+    for path, dirs, files in os.walk(os.path.abspath(root)):
+        for filename in files:
+            # Modified by Thomas Nauss
+            print filename
+            os.rename(os.path.join(path, filename), 
+                      os.path.join(path, filename.replace (" ", "_").lower()))
+
+    for path, dirs, files in os.walk(os.path.abspath(root)):
+        for filename in fnmatch.filter(files, pattern):
+            # Modified by Thomas Nauss
+            if fnmatch.fnmatch(path, patternpath):
+                yield os.path.join(path, filename)
+
+def configure(config_file):
+    """Reads configuration settings and configure object.
+    
+    Args:
+        config_file: Full path and name of the configuration file.
+    """
+    config = ConfigParser.ConfigParser()
+    config.read(config_file)
+    toplevel_processing_logger_path = config.get('repository', \
+                                          'toplevel_processing_logger_path')
+    initial_logger_file = config.get('logger','initial_logger_file')
+    return toplevel_processing_logger_path, initial_logger_file
 
 def main():
     """Main program function
@@ -37,8 +77,32 @@ def main():
     print   
     
     config_file = "ki_config.cnf"
-    DKStationToLevel0000(config_file=config_file)
+    toplevel_processing_logger_path, initial_logger_file = \
+        configure(config_file=config_file)
+    input_path = toplevel_processing_logger_path
     
+    station_dataset = locate("*.asc", "*", input_path)
+    
+    for dataset in station_dataset:
+        print " "
+        print "Processing dataset ", dataset
+        try:
+            cmd = "cp " + dataset + " " + \
+                os.path.dirname(dataset) + os.sep + \
+                initial_logger_file
+            os.system(cmd)
+            cmd = "mv " + dataset + " " + \
+                os.path.dirname(dataset) + os.sep + \
+                os.path.basename(initial_logger_file).split(".bin")[0] + '.asc'
+            os.system(cmd)
+            DKStationToLevel0000(config_file=config_file)
+        except Exception as inst:
+            print "An error occured with the following dataset."
+            print "Some details:"
+            print "Filename: " + dataset
+            print "Exception type: " , type(inst)
+            print "Exception args: " , inst.args
+            print "Exception content: " , inst        
         
 if __name__ == '__main__':
     main()
