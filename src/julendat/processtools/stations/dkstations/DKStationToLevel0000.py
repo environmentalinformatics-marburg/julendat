@@ -41,7 +41,8 @@ class DKStationToLevel0000:
     """Instance for moving downloaded D&K logger data to level 0 folders.
     """
 
-    def __init__(self, config_file, run_mode="auto-gui"):
+    def __init__(self, binary_logger_filepath, ascii_logger_filepath,
+                  config_file, run_mode="auto-gui"):
         """Inits DKStationToLevel0000.
         The instance is initialized by reading a configuration file and the 
         initialization of the proprietary station data file instance.
@@ -50,9 +51,13 @@ class DKStationToLevel0000:
         station data file to the processing path structure.  
         
         Args:
+            binary_logger_filepath: Full path and name to binary logger file
+            ascii_logger_filepath: Full path and name to ascii logger file
             config_file: Configuration file.
             run_mode: Running mode (auto-gui, manual)
         """
+        self.binary_logger_filepath = binary_logger_filepath
+        self.ascii_logger_filepath = ascii_logger_filepath        
         self.set_run_mode(run_mode)
         self.configure(config_file)
         self.init_StationFile()
@@ -89,9 +94,9 @@ class DKStationToLevel0000:
         self.config_file = config_file
         config = ConfigParser.ConfigParser()
         config.read(self.config_file)
-        self.initial_logger_filepath = \
-            config.get('repository', 'toplevel_processing_logger_path') + \
-            config.get('logger', 'initial_logger_file')
+        #self.initial_logger_filepath = \
+        #    config.get('repository', 'toplevel_processing_logger_path') + \
+        #    config.get('logger', 'initial_logger_file')
         self.logger_time_zone = config.get('logger', 'logger_time_zone')
         self.tl_data_path = config.get('repository', 'toplevel_processing_plots_path')
         self.project_id = config.get('project', 'project_id')
@@ -102,23 +107,23 @@ class DKStationToLevel0000:
         """
         try:
             self.binary_logger_file = DKStationDataFile(\
-                                      filepath=self.initial_logger_filepath)
+                                      filepath=self.binary_logger_filepath)
             # Check if ascii station logger file exists.
-            ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + "asc"
-            if os.path.isfile(ascii_filepath):
+            #ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + "asc"
+            if os.path.isfile(self.ascii_logger_filepath):
                 ascii_file_exsists = True
-            else:
-                ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + \
-                    "ASC"
-                if os.path.isfile(ascii_filepath):
-                    ascii_file_exsists = True
-                else:
-                    ascii_file_exsists = False
+            #else:
+            #    ascii_filepath = self.binary_logger_file.get_filepath()[:-3] + \
+            #        "ASC"
+            #    if os.path.isfile(ascii_filepath):
+            #        ascii_file_exsists = True
+            #    else:
+            #        ascii_file_exsists = False
 
             # Init ascii station logger file.
             if ascii_file_exsists == True:
                 self.ascii_logger_file = DKStationDataFile(\
-                                         filepath=ascii_filepath)
+                                         filepath=self.ascii_logger_filepath)
                 self.ascii_logger_file.set_time_range_ascii()
                 
                 self.run_flag = self.ascii_logger_file.get_file_exists()
@@ -258,7 +263,7 @@ class DKStationToLevel0000:
         print "Initial 0000 filepath: ", \
             self.filenames.get_filename_dictionary()["level_0000_ascii-filepath"]
 
-        # Check if path for level 0 files exists, otherwise create it        
+        # Check if path for level 0 files exists, otherwise create it
         if not os.path.isdir(self.filenames.get_filename_dictionary()["level_000_bin-path"]):
             os.makedirs(self.filenames.get_filename_dictionary()["level_000_bin-path"])
         if not os.path.isdir(self.filenames.get_filename_dictionary()["level_0000_ascii-path"]):
