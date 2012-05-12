@@ -130,7 +130,13 @@ class DKStationToLevel0000:
             else:
                 self.run_flag = False
 
-        except:
+        except Exception as inst:
+            print "Error in init_StationFile."
+            print "Some details:"
+            print "Filename: " + self.ascii_logger_filepath
+            print "Exception type: " , type(inst)
+            print "Exception args: " , inst.args
+            print "Exception content: " , inst        
             #TODO(tnauss): Handle exception more properly.
             self.run_flag = False
 
