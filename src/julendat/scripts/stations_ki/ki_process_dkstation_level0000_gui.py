@@ -25,6 +25,8 @@ __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 import ConfigParser
 import fnmatch
 import os
+import shutil
+from datetime import datetime
 from julendat.processtools.stations.dkstations.DKStationToLevel0000 import \
     DKStationToLevel0000
 
@@ -40,17 +42,36 @@ def locate(pattern, patternpath, root=os.curdir):
         root: Root directory for the recursive search
     '''
     for path, dirs, files in os.walk(os.path.abspath(root)):
-        for filename in files:
-            # Modified by Thomas Nauss
-            print filename
-            os.rename(os.path.join(path, filename), 
-                      os.path.join(path, filename.replace (" ", "_").lower()))
-
-    for path, dirs, files in os.walk(os.path.abspath(root)):
         for filename in fnmatch.filter(files, pattern):
             # Modified by Thomas Nauss
             if fnmatch.fnmatch(path, patternpath):
                 yield os.path.join(path, filename)
+
+def backup_files(toplevel_processing_logger_path, toplevel_temp_path):
+    '''Backup files - just in case.
+
+    Args:
+        toplevel_processing_logger_path: Path to backup
+        toplevel_temp_path: Path where backup will be stored
+    '''
+    bu_path = toplevel_temp_path + \
+                datetime.now().strftime('%Y%m%d-%H%M%S')
+    shutil.copytree(toplevel_processing_logger_path,bu_path)
+
+def remedy_filenames(root=os.curdir):
+    '''Rename files to lower case letters and replace spaces.
+    
+    This routine is based on the one from Simon Brunning at
+    http://code.activestate.com/recipes/499305/ and extended by the patternpath.
+     
+    Args:
+        root: Root directory for the recursive search
+    '''
+    for path, dirs, files in os.walk(os.path.abspath(root)):
+        for filename in files:
+            # Modified by Thomas Nauss
+            os.rename(os.path.join(path, filename), 
+                      os.path.join(path, filename.replace (" ", "_").lower()))
 
 def configure(config_file):
     """Reads configuration settings and configure object.
@@ -62,11 +83,15 @@ def configure(config_file):
     config.read(config_file)
     toplevel_processing_logger_path = config.get('repository', \
                                           'toplevel_processing_logger_path')
+    toplevel_temp_path = config.get('repository', \
+                                    'toplevel_temp_path')
     initial_logger_file = config.get('logger','initial_logger_file')
-    return toplevel_processing_logger_path, initial_logger_file
+    return toplevel_processing_logger_path, toplevel_temp_path, \
+           initial_logger_file
 
 def main():
     """Main program function
+    Change initial file names to lower case filenames and replace spaces.
     Move data from initial logger import to level 0 folder structure.
     """
     print
@@ -77,25 +102,24 @@ def main():
     print   
     
     config_file = "ki_config.cnf"
-    toplevel_processing_logger_path, initial_logger_file = \
+    toplevel_processing_logger_path, toplevel_temp_path, initial_logger_file = \
         configure(config_file=config_file)
-    input_path = toplevel_processing_logger_path
     
-    station_dataset = locate("*.asc", "*", input_path)
+    backup_files(toplevel_processing_logger_path, toplevel_temp_path)
+    remedy_filenames(toplevel_processing_logger_path)
+    station_dataset = locate("*.bin", "*", toplevel_processing_logger_path)
     
     for dataset in station_dataset:
         print " "
         print "Processing dataset ", dataset
         try:
-            cmd = "cp " + dataset + " " + \
-                os.path.dirname(dataset) + os.sep + \
-                initial_logger_file
-            os.system(cmd)
-            cmd = "mv " + dataset + " " + \
-                os.path.dirname(dataset) + os.sep + \
-                os.path.basename(initial_logger_file).split(".bin")[0] + '.asc'
-            os.system(cmd)
-            DKStationToLevel0000(config_file=config_file)
+            binary_logger_filepath = dataset
+            ascii_logger_filepath = os.path.dirname(dataset) + os.sep + \
+                os.path.basename(dataset).split(".bin")[0] + '.asc'
+            DKStationToLevel0000( binary_logger_filepath=binary_logger_filepath, \
+                                 ascii_logger_filepath=ascii_logger_filepath, \
+                                 config_file=config_file)
+
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"
