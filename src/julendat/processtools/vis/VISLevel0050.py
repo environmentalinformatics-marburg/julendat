@@ -140,9 +140,9 @@ class VISLevel0050:
                 r_fun = 'fun = mean,'
                 if parameter == 'P_RT_NRT':
                     r_fun = 'fun = sum,'
-                for year in range(2010, 2013):
+                for year in range(2011, 2013):
                     r_year = 'year = "' + str(year) + '"'
-
+                    print "Visualizing " + r_logger + " " + r_prm + " " + r_year 
                     r_cmd = r_source + "\n" + \
                         r_script + "\n" + \
                         r_inputpath + "\n" + \
@@ -156,11 +156,12 @@ class VISLevel0050:
                         r_colour + " \n" + \
                         r_year + ")\n"
     
-                    r_script = "vis0050.rscript" 
-                    f = open(r_script,"w")
+                    script = "vis0050.rscript" 
+                    f = open(script,"w")
                     f.write(r_cmd)
                     f.close()
-                    r_cmd = "R CMD BATCH " + r_script + " " + r_script + ".log"
+                    r_cmd = "R CMD BATCH " + script + " " + script + ".log"
+                    print r_cmd
                     os.system(r_cmd)
 
     def get_level0005_standards(self):
