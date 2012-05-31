@@ -105,37 +105,45 @@ aggregate.ki.data <- function(input,
   
   aggdf <- as.data.frame(do.call("rbind", agglist))
   names(aggdf) <- aggnames
-  
-  posWD <- grep(glob2rx("WD*"), aggnames)
-  posu <- grep(glob2rx("u*"), aggnames)
-  posv <- grep(glob2rx("v*"), aggnames)
-  
-  wd <- lapply(seq(posWD), function(i) {
-    uv2wd(aggdf[, posu[i]], aggdf[, posv[i]])
-  }
-  )
 
-  for (i in 1:(length(wd) - 2)) {
-    aggdf[, posWD[i]] <- uv2wd(aggdf[, posu[i]], aggdf[, posv[i]])
-  }
+  if (any(names(ki.data@Parameter) == "WD") == TRUE)
+  {
+    posWD <- grep(glob2rx("WD*"), aggnames)
+    posu <- grep(glob2rx("u*"), aggnames)
+    posv <- grep(glob2rx("v*"), aggnames)
+    
+    wd <- lapply(seq(posWD), function(i) {
+      uv2wd(aggdf[, posu[i]], aggdf[, posv[i]])
+      }
+                 )
+    
+    for (i in 1:(length(wd) - 2)) {
+      aggdf[, posWD[i]] <- uv2wd(aggdf[, posu[i]], aggdf[, posv[i]])
+      }
   
-  exuv <- length(ki.data@Parameter) * length(aggdescr)
-  aggdf <- aggdf[, 1:exuv]
+    exuv <- length(ki.data@Parameter) * length(aggdescr)
+    aggdf <- aggdf[, 1:exuv]
+  }
   
   exsum <- grep(glob2rx("*_sum"), names(aggdf))
-  prsum <- grep(glob2rx("P_RT_NRT_sum"), names(aggdf))
-  prmean <- grep(glob2rx("P_RT_NRT"), names(aggdf))
-  aggdf[, prmean] <- aggdf[, prsum]
+  
+  if (any(names(ki.data@Parameter) == "P_RT_NRT") == TRUE)
+  {
+    prsum <- grep(glob2rx("P_RT_NRT_sum"), names(aggdf))
+    prmean <- grep(glob2rx("P_RT_NRT"), names(aggdf))
+    aggdf[, prmean] <- aggdf[, prsum]
+  }
+  
   aggdf <- aggdf[, -exsum]
   
-  wdmin <- grep(glob2rx("WD_min"), names(aggdf))
-  wdmax <- grep(glob2rx("WD_max"), names(aggdf))
-  wdq25 <- grep(glob2rx("WD_25"), names(aggdf))
-  wdq75 <- grep(glob2rx("WD_75"), names(aggdf))
+#   wdmin <- grep(glob2rx("WD_min"), names(aggdf))
+#   wdmax <- grep(glob2rx("WD_max"), names(aggdf))
+#   wdq25 <- grep(glob2rx("WD_25"), names(aggdf))
+#   wdq75 <- grep(glob2rx("WD_75"), names(aggdf))
   
   aggdf <- round(aggdf, 2)
     
-  aggdf[, c(wdmin, wdmax, wdq25, wdq75)] <- NA
+  #aggdf[, c(wdmin, wdmax, wdq25, wdq75)] <- NA
 #   aggdf <- aggdf[, -c(wdmin, wdmax, wdq25, wdq75)]
   
   aggdf <- data.frame(Datetime = rownames(aggdf), 
