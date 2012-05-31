@@ -8,8 +8,8 @@ toplevel_path = /media/permanent/development/test/julendat/
 toplevel_incoming_path = /media/permanent/development/test/julendat/incoming/
 toplevel_processing_plots_path = /media/permanent/development/test/julendat/processing/plots/
 toplevel_processing_logger_path = /media/permanent/development/test/julendat/processing/logger/
+toplevel_vis_path = /media/permanent/development/test/julendat/processing/vis/
 toplevel_temp_path = /media/permanent/development/test/julendat/temp/
-
 
 [inventory]
 station_inventory = ki_config_station_inventory.cnf
