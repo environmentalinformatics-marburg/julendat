@@ -280,7 +280,34 @@ class StationDataFile(DataFile):
             Calibration coefficient header names
         """
         return self.calib_coefficents_headers    
-    
+
+    def set_module_serial_numbers(self, module_serial_numbers):
+        """Sets serial numbers of additional sensor modules
+        """
+        self.module_serial_numbers = module_serial_numbers  
+        
+    def get_module_serial_numbers(self):
+        """Gets serial numbers of additional sensor modules
+        
+        Returns:
+            Serial numbers of additional sensor modules
+        """
+        return self.module_serial_numbers    
+
+    def set_module_serial_numbers_headers(self, \
+                                          module_serial_numbers_headers):
+        """Sets headers of serial numbers of additional sensor modules
+        """
+        self.module_serial_numbers_headers = module_serial_numbers_headers
+        
+    def get_module_serial_numbers_headers(self):
+        """Gets headers of serial numbers of additional sensor modules
+        
+        Returns:
+            Header names for serial numbers of additional sensor modules
+        """
+        return self.module_serial_numbers_headers    
+
     def check_filetype(self):
         """Sets filetype of the logger file (binary/ascii).
         """

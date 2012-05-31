@@ -176,6 +176,9 @@ class DKStationToLevel0050:
         self.calibration_coefficients_headers = \
             inventory.get_calibration_coefficients_headers()
         self.calibration_coefficients = inventory.get_calibration_coefficients()
+        self.module_serial_numbers_headers = \
+            inventory.get_module_serial_numbers_headers()
+        self.module_serial_numbers = inventory.get_module_serial_numbers()
         if self.filenames.get_raw_plot_id() != inventory.get_plot_id():
             print "Error: plot-id does not match"
             print "File:       ", self.filenames.get_raw_plot_id()
@@ -201,7 +204,7 @@ class DKStationToLevel0050:
         self.reorder_station_coloumn_entries(\
             self.level_0000_ascii_file.get_column_headers(), \
             self.level0005_column_headers)
-
+        
         self.write_level_0005()
 
     def get_level0005_standards(self):
@@ -214,7 +217,10 @@ class DKStationToLevel0050:
             level0005_standard.get_level0000_column_headers()
         self.level0005_column_headers = \
             level0005_standard.get_level0005_column_headers()
+        self.level0050_column_headers = \
+            level0005_standard.get_level0050_column_headers()
 
+        
     def reorder_station_coloumn_entries(self,input_headers,output_headers):
         """Reorder station column entries to match the level 1 standards.
         """
@@ -258,9 +264,42 @@ class DKStationToLevel0050:
                 ascii_headers[9] = 'LWUR_300_U'
                 ascii_headers[10] = 'SWDR_300_U'
                 ascii_headers[11] = 'SWUR_300_U'
-
+        
         self.level_0000_ascii_file.set_column_headers(ascii_headers)
-        print "New level 0000 headers:      ", ascii_headers
+
+        if self.filenames.get_station_id().find("rad") != -1:
+            self.rename_rad_sensor_headers()
+        print self.level0005_column_headers
+
+        print "New level 0000 headers:      ", \
+            self.level_0000_ascii_file.get_column_headers()
+
+    def rename_rad_sensor_headers(self):
+        """Rename headers of rad sensors (multiple "Voltage" entries)
+        """
+
+        headers  = ['SERIAL_PYR01', 'SERIAL_PYR02', \
+                      'SERIAL_PAR01', 'SERIAL_PAR02']
+        for header in headers:
+            header_index = self.module_serial_numbers_headers.index(header)
+            module_serial_number = self.module_serial_numbers[header_index]
+            if module_serial_number != 'NaN':
+                if int(module_serial_number) <= 11:
+                    sensor_type = 'par_'
+                elif int(module_serial_number) >= 12:
+                    sensor_type = 'swdr_'
+
+                level_0000_column_headers = self.level_0000_ascii_file.get_column_headers()
+                level0000_column_headers_index = level_0000_column_headers.index('radx')
+                level_0000_column_headers[level0000_column_headers_index] = sensor_type + str(int(module_serial_number)).zfill(2)
+
+                #level0005_column_headers_index = self.level0005_column_headers.index('radx')
+                #self.level0005_column_headers[level0005_column_headers_index] = sensor_type + str(int(module_serial_number)).zfill(2)
+
+                #level0050_column_headers_index = self.level0050_column_headers.index('radx')
+                #self.level0050_column_headers[level0050_column_headers_index] = sensor_type + str(int(module_serial_number)).zfill(2)
+
+        self.level_0000_ascii_file.set_column_headers(level_0000_column_headers)
 
     def calibrate_level_0005(self):
         """Calibrate level 0000 datasets
@@ -311,6 +350,28 @@ class DKStationToLevel0050:
 
             new_header = self.level_0000_ascii_file.get_column_headers() + parameters
             self.level_0000_ascii_file.set_column_headers(new_header)
+
+        elif self.filenames.get_station_id().find("rad") != -1:
+            templates  = ['par_', 'swdr_']
+            print self.level_0000_ascii_file.get_column_headers()
+            parameters = []
+            for entry in self.level_0000_ascii_file.get_column_headers():
+                for template in templates:
+                    if entry.startswith(template):   
+                        parameters.append(entry)
+                    
+            self.level_0000_data = []
+            for row in self.level_0000_ascii_file.get_data():
+                act_row = row
+                for parameter in parameters:
+                    try:
+                        raw_value_index = self.level_0000_ascii_file.get_column_headers().index(parameter)
+                        calib_coefficient = float(10)
+                        row[raw_value_index] = float(row[raw_value_index]) * calib_coefficient
+                    except:
+                        continue
+                self.level_0000_data.append(act_row)
+        
         else:
             self.level_0000_data = self.level_0000_ascii_file.get_data()
 
@@ -420,6 +481,7 @@ class DKStationToLevel0050:
             level0050_standard.get_level0005_column_headers()
         self.level0050_column_headers = \
             level0050_standard.get_level0050_column_headers()
+
                     
     def init_path(self, path):
         """Init path

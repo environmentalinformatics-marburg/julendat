@@ -70,6 +70,8 @@ class StationInventory(StationInventoryFile):
             if counter == 1:
                 act_line = line.rstrip()
                 self.set_calibration_coefficients_headers(act_line.rsplit(',')[12:21])
+                print act_line.rsplit(',')[12:21]
+                print act_line.rsplit(',')[22:]
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[5]).strip('"').lstrip('0') == self.get_plot_id().lstrip('0'):
@@ -95,7 +97,6 @@ class StationInventory(StationInventoryFile):
                             self.set_header_line(int(string.strip(line.rsplit(',')[10])))
                             self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
                             self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
-                            misc = act_line.rsplit(',')[22:]
                             foundID = True
         inventory_data.close()
         plot_id_list = sorted(set(plot_id_list))
@@ -117,6 +118,7 @@ class StationInventory(StationInventoryFile):
             if counter == 1:
                 act_line = line.rstrip()
                 self.set_calibration_coefficients_headers(act_line.rsplit(',')[12:21])
+                self.set_module_serial_numbers_headers(act_line.rsplit(',')[22:])
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 if string.strip(line.rsplit(',')[7]).strip('"').lstrip('0') == self.get_serial_number():
@@ -140,7 +142,7 @@ class StationInventory(StationInventoryFile):
                             self.set_header_line(int(string.strip(line.rsplit(',')[10])))
                             self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
                             self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
-                            misc = act_line.rsplit(',')[22:]
+                            self.set_module_serial_numbers(act_line.rsplit(',')[22:])
                             foundID = True
         inventory_data.close()
         plot_id_list = sorted(set(plot_id_list))
