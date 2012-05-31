@@ -129,26 +129,39 @@ class VISLevel0050:
         r_pattern = 'pattern  = "*cti05_0050.dat",'
         r_colour = 'colour = VColList$Ta_200,'
         r_year = 'year = "2011"'
+        
+        loggers = ['rug', 'wxt']
+        parameters = ['Ta_200', 'rH_200', 'P_RT_NRT', 'SWDR_300', \
+                      'SWUR_300', 'LWDR_300', 'LWUR_300', 'Ts_10']
+        for logger in loggers:
+            r_logger = 'logger = "' + logger + '",'
+            for parameter in parameters:
+                r_prm = 'prm = "' + parameter + '",'
+                r_fun = 'fun = mean,'
+                if parameter == 'P_RT_NRT':
+                    r_fun = 'fun = sum,'
+                for year in range(2010, 2013):
+                    r_year = 'year = "' + str(year) + '"'
+
+                    r_cmd = r_source + "\n" + \
+                        r_script + "\n" + \
+                        r_inputpath + "\n" + \
+                        r_outputpath + "\n" + \
+                        r_logger + " \n" + \
+                        r_prm + " \n" + \
+                        r_fun + " \n" + \
+                        r_arrange + " \n" + \
+                        r_range + " \n" + \
+                        r_pattern + " \n" + \
+                        r_colour + " \n" + \
+                        r_year + ")\n"
     
-        r_cmd = r_source + "\n" + \
-                r_script + "\n" + \
-                r_inputpath + "\n" + \
-                r_outputpath + "\n" + \
-                r_logger + " \n" + \
-                r_prm + " \n" + \
-                r_fun + " \n" + \
-                r_arrange + " \n" + \
-                r_range + " \n" + \
-                r_pattern + " \n" + \
-                r_colour + " \n" + \
-                r_year + ")\n"
-    
-        r_script = "vis0050.rscript" 
-        f = open(r_script,"w")
-        f.write(r_cmd)
-        f.close()
-        r_cmd = "R CMD BATCH " + r_script + " " + r_script + ".log"
-        os.system(r_cmd)
+                    r_script = "vis0050.rscript" 
+                    f = open(r_script,"w")
+                    f.write(r_cmd)
+                    f.close()
+                    r_cmd = "R CMD BATCH " + r_script + " " + r_script + ".log"
+                    os.system(r_cmd)
 
     def get_level0005_standards(self):
         """Sets format standards for level 1 station data files
