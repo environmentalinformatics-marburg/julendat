@@ -14,6 +14,7 @@ NaN,Nan,NaN,NaN,coffee plantation,cof3,003rad,80091025303,1999-01-01,2099-12-31,
 NaN,Nan,NaN,NaN,coffee plantation,cof3,004rad,80091025301,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,6,NaN
 NaN,Nan,NaN,NaN,coffee plantation,cof4,000rug,51021020157,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,coffee plantation,cof5,000rug,51021020194,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+NaN,NaN,NaN,NaN,forest Erica,fer0,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,forest Erica,fer1,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,forest Erica,fer2,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,forest Erica,fer3,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
@@ -29,15 +30,15 @@ NaN,Nan,NaN,NaN,forest Ocotea,foc1,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,forest Ocotea,foc2,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,forest Ocotea,foc3,000rug,51021020231,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,forest Ocotea,foc4,000rug,51021020219,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
-NaN,Nan,NaN,NaN,forest Ocotea,foc5,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+NaN,Nan,NaN,NaN,forest Ocotea,foc5,000rug,51071120458,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,forest Ocotea d,fod1,000rug,51021020228,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,forest Ocotea d,fod2,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,forest Ocotea d,fod3,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,forest Ocotea d,fod4,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,forest Ocotea d,fod5,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,forest Podocarpus d,fpd1,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
-NaN,Nan,NaN,NaN,forest Podocarpus d,fpd2,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
-NaN,Nan,NaN,NaN,forest Podocarpus d,fpd3,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+NaN,Nan,NaN,NaN,forest Podocarpus d,fpd2,000rug,21081020285,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+NaN,Nan,NaN,NaN,forest Podocarpus d,fpd3,000rug,51021020202,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,forest Podocarpus d,fpd4,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,forest Podocarpus d,fpd5,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,forest Podocarpus,fpo1,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
@@ -55,7 +56,7 @@ NaN,Nan,NaN,NaN,forest lower montane,gra4,000rug,51021020182,2010-12-14,2011-02-
 NaN,Nan,NaN,NaN,grasland,gra5,000rug,51021020167,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,helichrysum,hel1,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,helichrysum,hel2,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
-NaN,NaN,NaN,NaN,helichrysum,hel3,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+NaN,NaN,NaN,NaN,helichrysum,hel3,000rug,51021020222,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,helichrysum,hel4,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,NaN,NaN,NaN,helichrysum,hel5,NaN,NaN,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,homegarden,hom1,000rug,51021020193,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
@@ -92,3 +93,6 @@ NaN,Nan,NaN,NaN,savanna,sav4,000rug,51021020160,1999-01-01,2099-12-31,5,6,NaN,Na
 NaN,Nan,NaN,NaN,savanna,sav4,000rug,51021020176,2010-12-20,2011-02-19,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,savanna,sav5,000rug,51021020211,1999-01-01,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
 NaN,Nan,NaN,NaN,savanna,sav5,000rug,51021020218,2010-12-15,2011-02-19,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+NaN,Nan,NaN,NaN,homegarden,hom4,000rad,080091025305,2011-12-31,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,08,09
+NaN,Nan,NaN,NaN,homegarden,hom4,001rad,080091025300,2011-12-31,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,10,11
+NaN,Nan,NaN,NaN,homegarden,hom4,002rad,080091025306,2011-12-31,2099-12-31,5,6,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,12,NaN,NaN,NaN

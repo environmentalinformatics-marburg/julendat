@@ -42,7 +42,10 @@ class Level01Standards():
             serial_number: Serial number of the station
         """       
         self.filepath = filepath
-        self.station_id = station_id
+        if station_id.find("rad") != -1:
+            self.station_id = '000rad'
+        else:
+            self.station_id = station_id
 
     def set_level0000_standards(self):
         """Sets station entries information from station id
