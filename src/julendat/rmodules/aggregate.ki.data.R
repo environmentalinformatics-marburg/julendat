@@ -7,6 +7,8 @@ aggregate.ki.data <- function(input,
   source("as.ki.data.R")
   source("wdws2uv.R")
   source("uv2wd.R")
+  
+  stopifnot(require("reshape"))
 
   ki.data <- as.ki.data(input)
 
@@ -54,7 +56,14 @@ aggregate.ki.data <- function(input,
                    length.out = length(unique(agglevel)))
   processlevel <- rep(ki.data@Processlevel, 
                       length.out = length(unique(agglevel)))
-  qualityflag <- rep(ki.data@Qualityflag, length.out = length(unique(agglevel)))
+  qualityflag <- ki.data@Qualityflag
+  print(head(qualityflag))
+  qualityflag <- as.numeric(substr(qualityflag, 2, nchar(qualityflag)))
+  print(head(qualityflag))
+  qualityflag <- aggregate(qualityflag, by = list(agglevel), FUN = max,
+                           na.rm = T)
+  qualityflag <- qualityflag[["x"]]
+  qualityflag <- paste("x", qualityflag, sep = "")
   
   prm.df <- as.data.frame(ki.data@Parameter, stringsAsFactors = F)
   
@@ -136,14 +145,20 @@ aggregate.ki.data <- function(input,
   
   aggdf <- aggdf[, -exsum]
   
-#   wdmin <- grep(glob2rx("WD_min"), names(aggdf))
-#   wdmax <- grep(glob2rx("WD_max"), names(aggdf))
-#   wdq25 <- grep(glob2rx("WD_25"), names(aggdf))
-#   wdq75 <- grep(glob2rx("WD_75"), names(aggdf))
+  if (any(names(ki.data@Parameter) == "WD") == TRUE)
+  {
+    wdmin <- grep(glob2rx("WD_min"), names(aggdf))
+    wdmax <- grep(glob2rx("WD_max"), names(aggdf))
+    wdq25 <- grep(glob2rx("WD_25"), names(aggdf))
+    wdq75 <- grep(glob2rx("WD_75"), names(aggdf))
+  }
   
   aggdf <- round(aggdf, 2)
-    
-  #aggdf[, c(wdmin, wdmax, wdq25, wdq75)] <- NA
+  
+  if (any(names(ki.data@Parameter) == "WD") == TRUE)
+  {
+    aggdf[, c(wdmin, wdmax, wdq25, wdq75)] <- NA
+  }
 #   aggdf <- aggdf[, -c(wdmin, wdmax, wdq25, wdq75)]
   
   aggdf <- data.frame(Datetime = rownames(aggdf), 
