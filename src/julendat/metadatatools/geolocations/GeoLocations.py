@@ -165,7 +165,7 @@ class GeoLocations(object):
 
             
         elif self.standard_projection == 'Standard_CMORPH':
-            self.projection_resolution = 0.25
+            self.projection_resolution = 25000
             self.projection = 'latlong'
             self.zone = ''
             self.hemisphere = ''
@@ -183,13 +183,11 @@ class GeoLocations(object):
             self.convention_projection = \
                     RasterDataFilePath.get_convention_projection(
                                                 self.standard_projection)
-            self.convention_idrisi_meta_projection = \
-                    RasterDataFilePath.get_convention_idrisi_meta_projection_for_utm(
-                                                self.zone, self.hemisphere)
+            self.convention_idrisi_meta_projection = "latlong"
 
             self.epsg = 4326
-            self.xresolution = 0.25
-            self.yresolution = 0.25            
+            self.xresolution = 25000
+            self.yresolution = 25000            
 
 
     def get_projection(self):

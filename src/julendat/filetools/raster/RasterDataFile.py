@@ -42,7 +42,7 @@ class RasterDataFile(DataFile):
         Args:
             filetype: Type of the data file.
         """
-        DataFile.__init__(self, filepath, io_access="r")
+        DataFile.__init__(self, filepath, io_access)
         self.set_filetype(filetype)
 
 

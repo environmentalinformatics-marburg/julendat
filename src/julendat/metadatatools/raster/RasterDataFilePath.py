@@ -49,6 +49,8 @@ def get_product_from_filename(filename):
     
     if get_extension_from_filename(filename) == '.hdf':
         product = filename.partition('.')[0]
+    if get_extension_from_filename(filename) == '.cmorph':
+        product = 'cmorph'
     return product
 
 
@@ -76,6 +78,13 @@ def get_convention_time(filename):
         except:
             timestep = time.strftime("%Y%m%d%H%M",
                        time.strptime(filename[-36:-22],"%Y%j.h%Hv%M"))
+    
+    elif get_extension_from_filename(filename) == '.cmorph':
+        try:
+            timestep = time.strftime("%Y%m%d",
+                       time.strptime(filename[0:8],"%Y%m%d"))
+        except:
+            tinmestep = None
 
     return timestep
 
@@ -86,11 +95,15 @@ def get_convention_satellite_system(filename):
     @param filename : Full name of data file 
 
     """
+
     if get_extension_from_filename(filename) == '.hdf':
         if filename.partition('.')[0][0:3] == 'MOD':
             satellite = 'ta01m'
         elif filename.partition('.')[0][0:3] == 'MYD':
             satellite = 'aq01m'
+    elif get_extension_from_filename(filename) == '.cmorph':
+        if filename.find("cpc") != -1:
+            satellite = 'cpc01'
     return satellite
 
 
@@ -147,13 +160,15 @@ def get_convention_projection(standard_projection):
         convention_projection = 'p32nde'
     elif standard_projection == 'Standard_French_Guyana_01000':
         convention_projection = 'p22nfg'
-
+    elif standard_projection == 'Standard_CMORPH':
+        convention_projection = 'pgscm'
     return convention_projection
 
 
 def get_convention_filename(
         filetype, timestep, satellite_system, product, units, band, resolution, 
-        projection, projection_resolution='none', quality='na001'):
+        projection, projection_resolution='none', aggregation='na001',
+        quality='0000'):
     """Get convention filename
         
     @param filetype : File type of the data file 
@@ -170,6 +185,7 @@ def get_convention_filename(
     """
     if isinstance(band,str)!=True:
         band = '%03i' % band
+
     if resolution != 'none':
         if isinstance(resolution,str)!=True:
             projection_resolution = '%06i' % resolution
@@ -184,8 +200,9 @@ def get_convention_filename(
         resolution = '%04i' % resolution
 
     filename = timestep + '_' + satellite_system + '_' + product + units + \
-               band + '_' + quality + '_' + resolution + '_' + \
-               projection + '_' + projection_resolution + '.' + filetype
+               band + '_' + aggregation + '_' + quality + '_' + \
+               resolution + '_' +  projection + '_' + projection_resolution + \
+               '.' + filetype
     return filename
 
 
