@@ -57,8 +57,8 @@ def locate(pattern, patternpath, root=os.curdir):
 # Set framework for command line arguments and runtime configuration.
 
 parser = optparse.OptionParser("usage: %prog [options] input_path")
-parser.add_option("-o", dest="output_filepath",
-                  help="Full path/name of the output datasets.",
+parser.add_option("-o", dest="output_path",
+                  help="Full path for the output datasets.",
                   metavar="string")
 parser.add_option("-p", dest="filepattern",
                   help="Pattern of filenames to be considered.",
@@ -66,17 +66,17 @@ parser.add_option("-p", dest="filepattern",
 parser.set_description('Options for module cmorph2rst.')
 (options, args) = parser.parse_args()
 
-#if len(args) < 1:
-#    parser.print_help()
-#    parser.error("No input filepath given.")
+if len(args) < 1:
+    parser.print_help()
+    parser.error("No input filepath given.")
 
 # Set filenames and variables
-#input_path = args[0]
-input_path = "/media/permanent/development/test/julendat/cmorph/"
-if options.output_filepath != None: 
-    output_filepath = options.output_filepath
+input_path = args[0]
+
+if options.output_path != None: 
+    output_path = options.output_path
 else:
-    output_filepath = input_path
+    output_path = output_path
 
 if options.filepattern != None: 
     filepattern = options.filepattern
@@ -96,6 +96,14 @@ for dataset in cmorph_dataset:
     act_file = act_file + ".cmorph"
     cmorphfile = CMORPH2RSTConverter(act_file,'rst','none')
     cmorphfile.convert()
+    os.remove(act_file)
+    cmd = "mv " + os.path.splitext(dataset)[0] + ".Z" + " " + \
+           os.path.splitext(dataset)[0] + ".Z.done"
+    os.system(cmd)
+    if output_path != input_path:
+        cmd = "mv " + input_path + os.sep + "*.r*" + " " + \
+        output_path
+        os.system(cmd) 
 
 #hdffile.convert(sds_name, sds_index, data_units, projection)
 

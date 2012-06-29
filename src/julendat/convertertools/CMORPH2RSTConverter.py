@@ -80,16 +80,12 @@ class CMORPH2RSTConverter(DataConverter):
         cmorph_file = open(self.get_filepath(), mode='rb')
         daily_sum = numpy.zeros((480,1440), dtype='f')
         for name in self.get_output_filenames():
-            print name
             # Read merged microwave precipitation only for actual timestep
             temp = numpy.fromfile(cmorph_file,dtype='<f',count=691200).byteswap()
             # Read CMORPH precipitation estimates for actual timestep
             data = numpy.fromfile(cmorph_file,dtype='<f',count=691200).byteswap()
             data = numpy.reshape(data,(480,1440))
             daily_sum = daily_sum + data
-            print data[250,500]
-            print daily_sum[250,500]
-            print type(data)
             self.write_data(name, data)
         cmorph_file.close()
         self.write_data(self.get_daily_output_filenames(), daily_sum)
