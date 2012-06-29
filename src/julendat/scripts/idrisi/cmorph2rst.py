@@ -23,8 +23,10 @@ __version__ = "2012-04-29"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import optparse
+import fnmatch
+import os
 
-from julendat.convertertools.HDFEOS2RSTConverter import HDFEOS2RSTConverter
+from julendat.convertertools.CMORPH2RSTConverter import CMORPH2RSTConverter
 
 #TODO(tnauss): Adjust to julendat.
 
@@ -35,57 +37,66 @@ print 'Author: ' + __author__
 print 'License: ' + __license__
 print
 
+def locate(pattern, patternpath, root=os.curdir):
+    '''Locate files matching filename pattern recursively
+    
+    This routine is based on the one from Simon Brunning at
+    http://code.activestate.com/recipes/499305/ and extended by the patternpath.
+     
+    Args:
+        pattern: Pattern of the filename
+        patternpath: Pattern of the filepath
+        root: Root directory for the recursive search
+    '''
+    for path, dirs, files in os.walk(os.path.abspath(root)):
+        for filename in fnmatch.filter(files, pattern):
+            # Modified by Thomas Nauss
+            if fnmatch.fnmatch(path, patternpath):
+                yield os.path.join(path, filename)
+
 # Set framework for command line arguments and runtime configuration.
-'''
-parser = optparse.OptionParser("usage: %prog [options] data_file")
-parser.add_option("-o", dest="output_mapfile",
-                  help="Full path/name of the output map(s) (can be tuple).",
+
+parser = optparse.OptionParser("usage: %prog [options] input_path")
+parser.add_option("-o", dest="output_filepath",
+                  help="Full path/name of the output datasets.",
                   metavar="string")
-parser.add_option("-s","--sds", nargs=1, dest="sds_name",
-                  help="Name of SDS",
+parser.add_option("-p", dest="filepattern",
+                  help="Pattern of filenames to be considered.",
                   metavar="string")
-parser.add_option("-d","--du", nargs=1, dest="data_units",
-                  help="Output data units",
-                  metavar="string")
-parser.add_option("-p","--projection", nargs=1, dest="projection",
-                  help="Output standard projection",
-                  metavar="string")
-parser.set_description('Options for module rst2map.')
+parser.set_description('Options for module cmorph2rst.')
 (options, args) = parser.parse_args()
 
-if len(args) < 1:
-    parser.print_help()
-    parser.error("No input file given.")
+#if len(args) < 1:
+#    parser.print_help()
+#    parser.error("No input filepath given.")
 
 # Set filenames and variables
-act_file = args[0]
-
-if options.sds_name != None: 
-    sds_name = options.sds_name
+#input_path = args[0]
+input_path = "/media/permanent/development/test/julendat/cmorph/"
+if options.output_filepath != None: 
+    output_filepath = options.output_filepath
 else:
-    sds_name = None
-if options.data_units != None: 
-    data_units = options.data_units
+    output_filepath = input_path
+
+if options.filepattern != None: 
+    filepattern = options.filepattern
 else:
-    data_units = None
-if options.projection != None: 
-    projection = options.projection
-else:
-    projection = None
+    filepattern = "*"
 
-sds_index = None
-'''
-act_file ='/media/permanent/development/test/julendat/cmorph/20021208_3hr-025deg_cpc+comb.Z'
-#sds_name = 'EV_1KM_RefSB'
-#sds_name = 'EV_250_Aggr1km_RefSB'
-#sds_name = 'EV_500_Aggr1km_RefSB'
-#sds_name = 'EV_1KM_Emissive'
-#data_units = 'Radiance'
-#projection = 'Standard_French_Guyana_01000'
+cmorph_dataset=locate("*.Z", filepattern, input_path)
+os.chdir(input_path)
+for dataset in cmorph_dataset:
+    print " "
+    print "Processing dataset ", dataset
+    cmd = "7z e " + dataset
+    os.system(cmd)
+    act_file = os.path.splitext(dataset)[0]
+    cmd = "mv " + act_file + " " + act_file + ".cmorph"
+    os.system(cmd)
+    act_file = act_file + ".cmorph"
+    cmorphfile = CMORPH2RSTConverter(act_file,'rst','none')
+    cmorphfile.convert()
 
-#print projection
-
-#hdffile = HDFEOS2RSTConverter(act_file ,'rst','none')
 #hdffile.convert(sds_name, sds_index, data_units, projection)
 
 print '...finished.'

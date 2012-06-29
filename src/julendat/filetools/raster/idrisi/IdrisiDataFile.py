@@ -43,8 +43,7 @@ class IdrisiDataFile(RasterDataFile):
             filetype: Type of the data file.
             io_access: Read/write access to data file ('r' or 'w').
         """       
-        RasterDataFile.__init__(self, filepath, filetype, io_access="r")
-
+        RasterDataFile.__init__(self, filepath, filetype, io_access)
         self.set_metadata_file()
         if self.get_io_access() == 'r':
             self.set_metadata()
@@ -167,6 +166,7 @@ class IdrisiDataFile(RasterDataFile):
     def open_metadata_file(self):
         """Opens the metadata file for read/write.
         """
+
         try:
             file = open(self.get_metadata_file(),self.get_io_access())
             return file
@@ -335,6 +335,8 @@ class IdrisiDataFile(RasterDataFile):
         """
         if datavalues is None:
             datavalues = self.get_data()
+        else:
+            self.set_data(datavalues)
             
         linebreak = '\r\n'
     

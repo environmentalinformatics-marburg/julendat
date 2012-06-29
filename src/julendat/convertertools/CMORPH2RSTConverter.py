@@ -60,12 +60,41 @@ class CMORPH2RSTConverter(DataConverter):
         class instance.
         
         """
-    
-        self.set_output_projection(projection)
-        self.set_output_filenames()            
+        self.set_output_projection("Standard_CMORPH")
+        self.set_output_product("pp70")
+        self.set_output_data_units("mm")
+        self.set_output_bands()
+        self.set_output_filenames()
+        self.set_output_data_type('real')            
         if self.get_output_projection() != 'Standard_CMORPH':
             self.reproject()
+        self.extract()
 
+
+    def extract(self):
+        """Extract CMORPH data and store datasets in individual Idrisi files.
+        
+        """
+        atype = '>f'
+        ntype = numpy.float32
+        cmorph_file = open(self.get_filepath(), mode='rb')
+        daily_sum = numpy.zeros((480,1440), dtype='f')
+        for name in self.get_output_filenames():
+            print name
+            # Read merged microwave precipitation only for actual timestep
+            temp = numpy.fromfile(cmorph_file,dtype='<f',count=691200).byteswap()
+            # Read CMORPH precipitation estimates for actual timestep
+            data = numpy.fromfile(cmorph_file,dtype='<f',count=691200).byteswap()
+            data = numpy.reshape(data,(480,1440))
+            daily_sum = daily_sum + data
+            print data[250,500]
+            print daily_sum[250,500]
+            print type(data)
+            self.write_data(name, data)
+        cmorph_file.close()
+        self.write_data(self.get_daily_output_filenames(), daily_sum)
+            
+        
 
     def reproject(self):
         """Reproject hdf file using gdalwarp.
@@ -141,16 +170,7 @@ class CMORPH2RSTConverter(DataConverter):
         
         """
 
-        self.output_bands = RasterDataFilePath.get_bands_from_hdf_eos(
-                                                        self.get_sds_name())
-
-        if self.get_sds_index()[0] == None:
-            sds_index = []
-            for counter in range(0,len(self.output_bands)):
-                sds_index.append(counter+1)
-
-            self.set_sds_index(sds_index)
-
+        self.output_bands = ["00","03","06","09","12","15","18","21"]
 
     def get_output_bands(self):
         """Get bands of the output data set.
@@ -170,39 +190,6 @@ class CMORPH2RSTConverter(DataConverter):
         self.output_data_units = RasterDataFilePath.get_convention_units(
                                                             output_data_units)
 
-    def set_output_data_conversion_keyword(self):
-        """Set data conversion algorithm for the output data set.
-        
-        """
-
-        if self.get_output_data_units() == 'rd':
-            self.output_data_conversion_keyword = 'Radiance'
-        if self.get_output_data_units() == 'p0':
-            self.output_data_conversion_keyword = 'Reflectance'
-        if self.get_output_data_units() == 'dk':
-            self.output_data_conversion_keyword = 'BTT'
-        if self.get_output_data_units() == 'um':
-            self.output_data_conversion_keyword = 'y=a(x-b)'
-        if self.get_output_data_units() == 'dl':
-            if self.get_sds_name() == '250m 16 days NDVI' or \
-               self.get_sds_name() == '250m 16 days EVI' :
-                self.output_data_conversion_keyword = 'None'
-            else:
-                self.output_data_conversion_keyword = 'y=a(x-b)'
-        
-        if self.output_data_conversion_keyword == 'None':
-            self.set_output_data_type('integer')
-        else:
-            self.set_output_data_type('real')
-
-
-    def get_output_data_conversion_keyword(self):
-        """Get data conversion algorithm for the output data set.
-        
-        """
-
-        return self.output_data_conversion_keyword
-
 
     def set_output_data_type(self,output_data_type):
         """Set data types for the output file.
@@ -220,14 +207,12 @@ class CMORPH2RSTConverter(DataConverter):
         return self.output_data_type
 
 
-    def set_output_product(self):
+    def set_output_product(self, output_product="None"):
         """Set output data set product.
         
         """
 
-        self.output_product = RasterDataFilePath.get_product_from_hdf_eos(
-                                    self.get_sds_name(),
-                                    self.get_output_data_units())
+        self.output_product = output_product
 
     def get_output_product(self):
         """Get output data set product.
@@ -245,8 +230,6 @@ class CMORPH2RSTConverter(DataConverter):
         filetype = 'rst'
 #        timestep = RasterDataFilePath.get_convention_time(
 #                                                self.get_input_data_filename())
-        timestep = RasterDataFilePath.get_convention_time(
-                                                self.get_filepathname())
         
 #        satellite_system = RasterDataFilePath.get_convention_satellite_system(
 #                                                self.get_input_data_filename())
@@ -255,16 +238,29 @@ class CMORPH2RSTConverter(DataConverter):
 
         product = self.get_output_product()
         units = self.get_output_data_units()
+        aggregation = "m1h03"
         resolution = self.get_output_projection().get_projection()[1]
         projection = self.get_output_projection().get_projection()[16]
         
         output_filenames = []
-        for counter in range(0, len(self.get_output_bands())):
-            band = self.get_output_bands()[counter]
+        for hour in self.get_output_bands():
+            band = "nb1"
+            timestep = RasterDataFilePath.get_convention_time(
+                                                self.get_filepathname()) + \
+                       hour + "00"
+                       
+            
             output_filenames.append(RasterDataFilePath.get_convention_filename(
                     filetype, timestep, satellite_system, product, units,
-                    band, resolution, projection))
+                    band, resolution, projection, aggregation=aggregation))
         self.output_filenames = output_filenames
+        
+        aggregation = "m1d01"
+        timestep = RasterDataFilePath.get_convention_time(
+                                                self.get_filepathname())+"0000"
+        self.daily_outputfilename = RasterDataFilePath.get_convention_filename(
+                    filetype, timestep, satellite_system, product, units,
+                    band, resolution, projection, aggregation=aggregation)
 
 
     def get_output_filenames(self):
@@ -274,8 +270,15 @@ class CMORPH2RSTConverter(DataConverter):
         
         return self.output_filenames
 
+
+    def get_daily_output_filenames(self):
+        """Get output filename of daily summed file.
+        
+        """
+        
+        return self.daily_outputfilename
     
-    def write_metadata(self, filename):
+    def write_data(self, filename, data):
         """Write metadata for output file format (Idrisi).
         
         @param filename: Filename of the output data file (Idrisi format)
@@ -294,12 +297,10 @@ class CMORPH2RSTConverter(DataConverter):
         min_y = self.get_output_projection().get_projection()[14]
         max_y = self.get_output_projection().get_projection()[15]
         min_val = 0
-        max_val = 100
+        max_val = 30
         min_disp_val = min_val
         max_disp_val = max_val
-        data = None
-
-        idrisi_file = IdrisiDataFile(self.get_output_data_path() + '/' + filename,'rst','w')
+        idrisi_file = IdrisiDataFile(self.get_output_path() + '/' + filename,'rst','w')
         idrisi_file.set_metadata(title,
                      datatype, filetype,
                      ncols, nrows,
@@ -308,7 +309,12 @@ class CMORPH2RSTConverter(DataConverter):
                      min_val, max_val,
                      min_disp_val, max_disp_val,
                      data)
+        #idrisi_file.write_meta()
 
-        idrisi_file.write_meta()
+        #output = IdrisiDataFile(name,'rst','w')
+        #output.set_variable_metadata(scene[0].get_metadata())
+        #output.set_array_datatype()
+        idrisi_file.write_data(data)
+
         
         
