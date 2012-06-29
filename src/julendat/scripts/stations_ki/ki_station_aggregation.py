@@ -92,7 +92,7 @@ def main():
         r_source = 'source("write.aggregate.ki.data.R")'
         r_script = 'write.aggregate.ki.data('
         r_inputfilepath = 'inputfilepath = "' + dataset + '",'
-        r_outputfilepath = 'outputpath = "' + dataset + "_test" + '",'
+        r_outputfilepath = 'outputfilepath = "' + dataset + "_test" + '",'
         r_level = 'level = "month"' 
         
         r_cmd = r_source + "\n" + \

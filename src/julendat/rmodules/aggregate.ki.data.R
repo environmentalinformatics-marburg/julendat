@@ -7,6 +7,7 @@ aggregate.ki.data <- function(input,
   source("as.ki.data.R")
   source("wdws2uv.R")
   source("uv2wd.R")
+  stopifnot(require(reshape))
 
   ki.data <- as.ki.data(input)
 
