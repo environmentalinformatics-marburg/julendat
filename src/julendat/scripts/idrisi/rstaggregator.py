@@ -1,4 +1,4 @@
-"""Convert CMORPH binary files to Idrisi raster files.
+"""Aggregate Idrisi raster files.
 Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
@@ -26,12 +26,12 @@ import optparse
 import fnmatch
 import os
 
-from julendat.convertertools.CMORPH2RSTConverter import CMORPH2RSTConverter
+from julendat.filetools.raster.idrisi.IdrisiDataFile import IdrisiDataFile
 
 #TODO(tnauss): Adjust to julendat.
 
 print
-print 'Module: cmorph2rst'
+print 'Module: rstaggregator'
 print 'Version: ' + __version__
 print 'Author: ' + __author__
 print 'License: ' + __license__
@@ -51,7 +51,7 @@ def locate(pattern, patternpath, root=os.curdir):
     for path, dirs, files in os.walk(os.path.abspath(root)):
         for filename in fnmatch.filter(files, pattern):
             # Modified by Thomas Nauss
-            if fnmatch.fnmatch(path, patternpath):
+            if fnmatch.fnmatch(filename, patternpath):
                 yield os.path.join(path, filename)
 
 # Set framework for command line arguments and runtime configuration.
@@ -60,6 +60,10 @@ parser = optparse.OptionParser("usage: %prog [options] input_path")
 parser.add_option("-o", dest="output_path",
                   help="Full path for the output datasets.",
                   metavar="string")
+parser.add_option("-t", nargs=2, dest="timeframe",
+                  help="Start and end year for aggregation.",
+                  metavar="int", type=int)
+
 parser.add_option("-p", dest="filepattern",
                   help="Pattern of filenames to be considered.",
                   metavar="string")
@@ -76,35 +80,52 @@ input_path = args[0]
 if options.output_path != None: 
     output_path = options.output_path
 else:
-    output_path = output_path
+    output_path = input_path
 
+if options.timeframe != None: 
+    timeframe = options.timeframe
+else:
+    timeframe = [2010, 2012]
+    
 if options.filepattern != None: 
     filepattern = options.filepattern
 else:
     filepattern = "*"
 
-cmorph_dataset=locate("*.Z", filepattern, input_path)
-os.chdir(input_path)
-for dataset in cmorph_dataset:
-    print " "
-    print "Processing dataset ", dataset
-    cmd = "7z e " + dataset
-    os.system(cmd)
-    act_file = os.path.splitext(dataset)[0]
-    cmd = "mv " + act_file + " " + act_file + ".cmorph"
-    os.system(cmd)
-    act_file = act_file + ".cmorph"
-    cmorphfile = CMORPH2RSTConverter(act_file,'rst','none')
-    cmorphfile.convert()
-    os.remove(act_file)
-    cmd = "mv " + os.path.splitext(dataset)[0] + ".Z" + " " + \
-           os.path.splitext(dataset)[0] + ".Z.done"
-    os.system(cmd)
-    if output_path != input_path:
-        cmd = "mv " + input_path + os.sep + "*.r*" + " " + \
-        output_path
-        os.system(cmd) 
 
-#hdffile.convert(sds_name, sds_index, data_units, projection)
+for year in range (timeframe[0],timeframe[1]):
+    for month in range (1,13):
+        act_year = '%04i' % year
+        act_month = '%02i' % month 
+        filepattern = act_year + act_month + "*m1d01*"
+        print filepattern
+        cmorph_dataset=locate("*.rst", filepattern, input_path)
 
+        first_run = True
+        aggregation = []
+
+        for dataset in cmorph_dataset:
+            print " "
+            print "Processing dataset ", dataset
+            act_file = IdrisiDataFile(dataset,'rst')
+            if first_run:
+                aggregation = act_file.get_data()
+                first_run = False
+                output_filename = os.path.basename(dataset)
+                output_filename = act_year + act_month + "000000" + \
+                                  output_filename[12:29] + \
+                                  "m1m01" + \
+                                  output_filename[34:]
+                output_filepath = output_path + os.sep + \
+                                  output_filename
+
+            else:
+                aggregation = aggregation + act_file.get_data()
+        
+            out_file = IdrisiDataFile(output_filepath,'rst','w')
+            out_file.set_data(aggregation)
+            out_file.set_variable_metadata(act_file.get_metadata())
+            out_file.set_array_datatype()
+            out_file.write_data()
+    
 print '...finished.'
