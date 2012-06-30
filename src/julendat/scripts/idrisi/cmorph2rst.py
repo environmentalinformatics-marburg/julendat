@@ -76,7 +76,7 @@ input_path = args[0]
 if options.output_path != None: 
     output_path = options.output_path
 else:
-    output_path = output_path
+    output_path = input_path
 
 if options.filepattern != None: 
     filepattern = options.filepattern
