@@ -173,11 +173,11 @@ class GeoLocations(object):
             self.height = 480
             self.latitude_min = -60.0
             self.latitude_max = 60.0
-            self.longitude_min = -180.0
-            self.longitude_max = 180.0
+            self.longitude_min = 0.0
+            self.longitude_max = 3600.0
             self.projection_datum = 8
-            self.coord_xmin = -180.00
-            self.coord_xmax = 180.0
+            self.coord_xmin = 0.00
+            self.coord_xmax = 360.0
             self.coord_ymin = -60.0
             self.coord_ymax = 60.0
             self.convention_projection = \
