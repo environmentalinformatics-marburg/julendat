@@ -85,6 +85,7 @@ class CMORPH2RSTConverter(DataConverter):
             # Read CMORPH precipitation estimates for actual timestep
             data = numpy.fromfile(cmorph_file,dtype='<f',count=691200).byteswap()
             data = numpy.reshape(data,(480,1440))
+            data = data.clip(0) * 3.0
             daily_sum = daily_sum + data
             self.write_data(name, data)
         cmorph_file.close()
