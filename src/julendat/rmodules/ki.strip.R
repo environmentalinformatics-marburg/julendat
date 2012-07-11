@@ -144,6 +144,7 @@ print(length(xlist))
                    julian(index_date + 1, origin = as.Date(origin)))
     
     strip_z[mat_x] <- z_x$x
+    #strip_z <- strip_z[nrow(strip_z):1, ]
     
     xblockx <- sort(julian(tseries, origin = as.Date(origin)))
     xbar <- format(tseries, "%b")
@@ -151,7 +152,7 @@ print(length(xlist))
     xat <- seq.Date(as.Date(datetime_from), as.Date(datetime_to), by = "month")
     xat <- as.integer(julian(xat, origin = as.Date(origin))) + 15
     
-    levelplot(t(strip_z), ylim = c(-2.5, 24.5), col.regions = colour,
+    levelplot(t(strip_z), ylim = c(24.5, -0.5), col.regions = colour,
               strip = F, ylab = "Hour of day", xlab = NULL, asp = "iso",
               at = seq(minx, maxx, 0.1),
               strip.left = strip.custom(
@@ -159,7 +160,7 @@ print(length(xlist))
                 par.strip.text = list(col = "white", font = 2, cex = 0.8)),
               as.table = T, cuts = 200, between = list(x = 0, y = 0),
               scales = list(x = list(at = xat, labels = xlabs),
-                            y = list(at = c(6, 12, 18))),
+                            y = list(at = c(18, 12, 6))),
               colorkey = list(space = "top", width = 1, height = 0.7,
                               at = seq(minx, maxx, 0.1)), 
               main = paste("overview", prm, logger, year, sep = " "),
@@ -167,8 +168,8 @@ print(length(xlist))
                 grid.rect(gp=gpar(col=NA, fill="grey50"))
                 panel.levelplot(x, ...)
                 panel.xblocks(xblockx, y = xbar, height = unit(1, "native"),
-                              col = c("black", "white"), block.y = 24.5,
-                              border = "black", last.step = 1.1, lwd = 0.3)
+                              col = c("black", "white"), block.y = -0.5,
+                              border = "black", last.step = 1.25, lwd = 0.3)
                               
                 panel.abline(h = c(6, 18), lty = 2, lwd = 0.5, col = "grey90")
                 },  
@@ -176,15 +177,20 @@ print(length(xlist))
     })
   
   out <- ls[[1]]
+  out2 <- out
   #print(out)
-  for (i in 2:(length(xlist)))
-    out <- c(out, ls[[i]], x.same = T, y.same = T, 
-             layout = switch(arrange,
-                             "long" = c(1,length(condims)),
-                             "wide" = NULL))
+  if (length(ls) > 1) {
+    for (i in 2:(length(xlist)))
+        out <- c(out, ls[[i]], x.same = T, y.same = T, 
+                 layout = switch(arrange,
+                                 "long" = c(1,length(condims)),
+                                 "wide" = NULL))
+  }                            
   
-  out <- update(out, scales = list(y = list(rot = list(0, 0)), tck = c(0, 0)))
-  print(out)
+  out <- update(out, scales = list(y = list(rot = list(0, 0)), tck = c(0, 0)),
+                ylim = c(23, 1))
+
+  ifelse(length(ls) > 1, print(out), print(out2))
   
   ## revert system local time zone setting to original
   Sys.setenv(TZ = Old.TZ)
