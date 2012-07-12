@@ -4,12 +4,12 @@ logger_time_zone = mez
 station_entries = dk_station_entries.cnf
 
 [repository]
-toplevel_path = /media/permanent/development/test/julendat/
-toplevel_incoming_path = /media/permanent/development/test/julendat/incoming/
-toplevel_processing_plots_path = /media/permanent/development/test/julendat/processing/plots/
-toplevel_processing_logger_path = /media/permanent/development/test/julendat/processing/logger/
-toplevel_vis_path = /media/permanent/development/test/julendat/processing/vis/
-toplevel_temp_path = /media/permanent/development/test/julendat/temp/
+toplevel_path = c:/tappelhans/uni/software/development/julendat/
+toplevel_incoming_path = c:/tappelhans/uni/software/development/testdata/kili/incoming/
+toplevel_processing_plots_path = c:/tappelhans/uni/software/development/testdata/kili/processing/plots/
+toplevel_processing_logger_path = c:/tappelhans/uni/software/development/testdata/kili/processing/logger/
+toplevel_vis_path = c:/tappelhans/uni/software/development/testdata/kili/processing/vis/
+toplevel_temp_path = c:/tappelhans/uni/software/development/testdata/kili/temp/
 
 [inventory]
 station_inventory = ki_config_station_inventory.cnf
@@ -20,5 +20,5 @@ level_0005_timezone = eat
 
 [general]
 level0050_standards = ki_config_level0050_standards.cnf
-r_filepath = /media/permanent/development/released/julendat/src/julendat/rmodules
+r_filepath = c:/tappelhans/uni/software/development/julendat/src/julendat/rmodules/
 
