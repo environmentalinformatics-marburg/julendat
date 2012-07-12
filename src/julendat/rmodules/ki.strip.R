@@ -187,8 +187,7 @@ print(length(xlist))
                                  "wide" = NULL))
   }                            
   
-  out <- update(out, scales = list(y = list(rot = list(0, 0)), tck = c(0, 0)),
-                ylim = c(23, 1))
+  out <- update(out, scales = list(y = list(rot = list(0, 0)), tck = c(0, 0)))
 
   ifelse(length(ls) > 1, print(out), print(out2))
   
