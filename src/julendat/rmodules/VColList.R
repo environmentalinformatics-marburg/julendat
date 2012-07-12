@@ -20,4 +20,4 @@ VColList <- list(
   
   p_200 = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
   
-  P_RT_NRT = colorRampPalette(brewer.pal(9, "YlGnBu")))
+  P_RT_NRT = colorRampPalette(c("snow", brewer.pal(9, "YlGnBu"), "grey10")))
