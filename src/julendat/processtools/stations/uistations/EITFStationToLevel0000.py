@@ -167,25 +167,30 @@ class EITFStationToLevel0000:
 
         self.tfinventory_plotid = []
         self.tfinventory_color = []
-        for entry in range(0,len(self.inventory.get_plot_color_tupple())):
-            if self.inventory.get_plot_color_tupple()[entry][1] != "NaN":
-            #if re.match("tfp", self.inventory.get_plot_color_tupple()[entry][0]):
-                self.tfinventory_plotid.append(self.inventory.get_plot_color_tupple()[entry][0])
-                self.tfinventory_color.append(self.inventory.get_plot_color_tupple()[entry][1])
-        #if self.inventory.get_found_station_inventory():
-        #    self.plot_id = self.inventory.get_plot_id()
-        #    self.station_id = self.inventory.get_station_id()
+        self.tfinventory_buckets = []
+        self.tfinventory_isotope_buckets = []
+        for entry in range(0,len(self.inventory.get_plot_tf_metadata_tupple())):
+            if self.inventory.get_plot_tf_metadata_tupple()[entry][1] != "NaN":
+                self.tfinventory_plotid.append(\
+                        self.inventory.get_plot_tf_metadata_tupple()[entry][0])
+                self.tfinventory_color.append(\
+                        self.inventory.get_plot_tf_metadata_tupple()[entry][1])
+                self.tfinventory_buckets.append(\
+                        self.inventory.get_plot_tf_metadata_tupple()[entry][2])
+                self.tfinventory_isotope_buckets.append(\
+                        self.inventory.get_plot_tf_metadata_tupple()[entry][3])
+
 
     def run(self):
         """Executes class functions according to run_mode settings. 
         """
-        self.tfplot_id = "flm"
-        self.tfplot_color = "Red"
-        self.report_tf_bucket_data_gui()
-        self.report_misc_bucket_data_gui()
-        self.isotope_tf_instructions_gui()
-        self.isotope_misc_instructions_gui()
-        sys.exit()
+        #self.tfplot_id = "flm"
+        #self.tfplot_color = "Red"
+        #self.report_tf_bucket_data_gui()
+        #self.report_misc_bucket_data_gui()
+        #self.isotope_tf_instructions_gui()
+        #self.isotope_misc_instructions_gui()
+        #sys.exit()
         if self.get_run_mode() == "manual":
             pass
         elif self.get_run_mode() == "auto-gui":
