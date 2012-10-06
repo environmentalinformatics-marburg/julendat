@@ -308,6 +308,33 @@ class StationDataFile(DataFile):
         """
         return self.module_serial_numbers_headers    
 
+    def set_module_plot_colors_colors(self, module_plot_colors_colors):
+        """Sets colors used for identification of plots
+        """
+        self.module_plot_colors_colors = module_plot_colors_colors  
+        
+    def get_module_plot_colors_colors(self):
+        """Gets colors used for identification of plots
+        
+        Returns:
+            Colors used for identification of plots
+        """
+        return self.module_plot_colors_colors    
+
+    def set_module_plot_colors_headers(self, \
+                                          module_plot_colors_headers):
+        """Sets headers of colors used for identification of plots
+        """
+        self.module_plot_colors_headers = module_plot_colors_headers
+        
+    def get_module_plot_colors_headers(self):
+        """Gets headers of colors used for identification of plots
+        
+        Returns:
+            Header names for colors used for identification of plots
+        """
+        return self.module_plot_colors_headers    
+    
     def check_filetype(self):
         """Sets filetype of the logger file (binary/ascii).
         """

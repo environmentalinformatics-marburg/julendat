@@ -24,43 +24,45 @@ __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
 import os
+import re
 import sys
 import shutil
 import Tkinter
+from datetime import datetime
 from julendat.filetools.stations.dkstations.DKStationDataFile import \
     DKStationDataFile
 from julendat.metadatatools.stations.StationDataFilePath import \
     StationDataFilePath
 from julendat.metadatatools.stations.StationInventory import StationInventory
-from julendat.guitools.stations.GUIAutoPlotSelection import GUIAutoPlotSelection
+from julendat.guitools.stations.GUITFPlotSelection import GUITFPlotSelection
 from julendat.guitools.stations.GUIManualPlotSelection import \
     GUIManualPlotSelection
+from julendat.guitools.stations.GUITFReportData import \
+    GUITFReportData
+from julendat.guitools.stations.GUIAutoPlotSelection import \
+    GUIAutoPlotSelection
 
 
-class UIStationToLevel0000:   
+class EITFStationToLevel0000:   
     """Instance for querying and storing throughfall data to level 0 folders.
     """
 
-    def __init__(self, binary_logger_filepath, ascii_logger_filepath,
-                  config_file, run_mode="auto-gui"):
-        """Inits UIStationToLevel0000.
+    def __init__(self, config_file, run_mode="auto-gui"):
+        """Inits EIStationToLevel0000.
         The instance is initialized by reading a configuration file and the 
-        initialization of the proprietary station data file instance.
+        initialization of the throughfall station setup data file instance.
         If the run mode is set to "auto-gui", this is followed by an automatic
-        configuration of filenames and filepathes and the movement of the
-        station data file to the processing path structure.  
+        configuration of filenames and filepathes and the storage of the
+        throughfall data file to the processing path structure.  
         
         Args:
-            binary_logger_filepath: Full path and name to binary logger file
-            ascii_logger_filepath: Full path and name to ascii logger file
             config_file: Configuration file.
             run_mode: Running mode (auto-gui, manual)
         """
-        self.binary_logger_filepath = binary_logger_filepath
-        self.ascii_logger_filepath = ascii_logger_filepath        
         self.set_run_mode(run_mode)
         self.configure(config_file)
-        self.init_StationFile()
+        #self.init_StationFile()
+        self.run_flag = True
         if self.get_run_flag():
             self.auto_configure()
             self.run()
@@ -98,12 +100,13 @@ class UIStationToLevel0000:
         #    config.get('repository', 'toplevel_processing_logger_path') + \
         #    config.get('logger', 'initial_logger_file')
         self.logger_time_zone = config.get('logger', 'logger_time_zone')
-        self.tl_data_path = config.get('repository', 'toplevel_processing_plots_path')
+        self.tl_data_path = config.get('repository', 
+                                       'toplevel_processing_plots_path')
         self.project_id = config.get('project', 'project_id')
         self.station_inventory = config.get('inventory', 'station_inventory')
 
     def init_StationFile(self):
-        """Initializes D&K station data file.
+        """Initializes  station data file.
         """
         try:
             self.binary_logger_file = DKStationDataFile(\
@@ -150,15 +153,23 @@ class UIStationToLevel0000:
 
     def auto_configure(self):
         """Set necessary attributes automatically.
+           Get list of all throughfall plots from inventory file.
         """
+        print(datetime.now())
         self.inventory = StationInventory(filepath=self.station_inventory, \
-            logger_start_time = self.ascii_logger_file.get_start_datetime(), \
-            logger_end_time = self.ascii_logger_file.get_end_datetime(), \
-            serial_number=self.ascii_logger_file.get_serial_number())
-        
-        if self.inventory.get_found_station_inventory():
-            self.plot_id = self.inventory.get_plot_id()
-            self.station_id = self.inventory.get_station_id()
+            logger_start_time = datetime.now(), \
+            logger_end_time = datetime.now(), \
+            serial_number = "00000000006")
+
+        self.tfinventory_plotid = []
+        self.tfinventory_color = []
+        for entry in range(0,len(self.inventory.get_plot_color_tupple())):
+            if re.match("tfp", self.inventory.get_plot_color_tupple()[entry][0]):
+                self.tfinventory_plotid.append(self.inventory.get_plot_color_tupple()[entry][0])
+                self.tfinventory_color.append(self.inventory.get_plot_color_tupple()[entry][1])
+        #if self.inventory.get_found_station_inventory():
+        #    self.plot_id = self.inventory.get_plot_id()
+        #    self.station_id = self.inventory.get_station_id()
 
     def run(self):
         """Executes class functions according to run_mode settings. 
@@ -166,11 +177,93 @@ class UIStationToLevel0000:
         if self.get_run_mode() == "manual":
             pass
         elif self.get_run_mode() == "auto-gui":
-            self.auto_gui()
+            self.select_tfplot_gui()
+            if self.tfplot_id != False:
+                self.confirm_tfplot_gui()
+            else:
+                os.sys.exit()
+            if self.correct_plot_id == True:
+                self.report_data_gui()
+            else:
+                self.run()
 
-    def auto_gui(self):
-        """Executes class functions in default auto-gui mode.
+
+    def select_tfplot_gui(self):
+        """GUI for the selection of the throughfall plot.
+        The selection is based on plot id and color.
+        
+        Returns:
+            tfplot_id: Plot id of throughfall plot
+            tfplot_color: Color code of throughfall plot      
         """
+        gui = Tkinter.Tk()
+        gui.title("Throughfall plot data report...")
+        gui.geometry('600x350+50+50')
+        intro = "\n Everybody be cool. You, be cool. \n"
+        question = "Which plot would you like to report?"
+        outro = "\n Select the color and plot id." + \
+                "\n If you want to stop  the program, press <Cancel>.\n" 
+        app = GUITFPlotSelection(master = gui, \
+                                intro=intro, question=question, outro=outro,
+                                plot_id_list = self.tfinventory_plotid,
+                                plot_color_list = self.tfinventory_color)
+        gui.mainloop()
+        self.tfplot_id = app.get_plot_id()
+        self.tfplot_color = app.get_plot_color()
+        print self.tfplot_id, self.tfplot_color
+        gui.destroy()        
+
+        
+    def confirm_tfplot_gui(self):
+        """GUI for the confirmation of the throughfall plot.
+        The user must confirm his initial selection (select_tfplot_gui).
+        If he does not confirm it, he has the opportunity to start over again.
+        
+        Returns:
+            correct_plot_id: Flag if plot selection is correct.
+        """
+        gui = Tkinter.Tk()
+        gui.title("Just to be sure...")
+        gui.geometry('600x350+50+50')
+        intro = "\n Please read very carefully. \n"
+        question = "Are you sure you want to process \n" \
+                   "plot " + self.tfplot_id + " (" + \
+                   self.tfplot_color + ")?"
+        outro = "\n Press only <Yes> if you are sure." + \
+                "\n If you press <No> you can select the plot again.\n" 
+        app = GUIAutoPlotSelection(master = gui, \
+                                intro=intro, question=question, outro=outro)
+        gui.mainloop()
+        self.correct_plot_id = app.get_correct_plot_id()
+        print self.correct_plot_id
+        gui.destroy()        
+
+
+    def report_data_gui(self):
+        """GUI to commit the manually measured data values.
+        
+        Returns:
+            tfplot_id: Plot id of throughfall plot
+            tfplot_color: Color code of throughfall plot      
+        """
+        gui = Tkinter.Tk()
+        gui.title("Report data")
+        gui.geometry('600x350+50+50')
+        intro = "\n Let's hear what you have to say... \n"
+        question = "Which plot would you like to report?"
+        outro = "\n Thank you. Let's continue to the isotope stuff." + \
+                "\n If you want to stop the program, press <Cancel>.\n" 
+        app = GUITFReportData(master = gui, \
+                              intro=intro, question=question, outro=outro,
+                              plot_id = self.tfplot_id, 
+                              plot_color = self.tfplot_color)
+        gui.mainloop()
+        self.text_input = app.get_values()
+        print self.text_input
+        gui.destroy()  
+        
+                
+'''        
         auto_plot_selection = self.inventory.get_found_station_inventory()
             
         if self.get_run_flag():
@@ -288,3 +381,4 @@ class UIStationToLevel0000:
             self.destination = self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
             print "Moving ", self.source, " to ", self.destination
             self.move_data()
+'''

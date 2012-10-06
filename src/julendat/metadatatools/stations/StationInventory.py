@@ -57,23 +57,26 @@ class StationInventory(StationInventoryFile):
             self.set_station_inventory_from_serial_number()
         
     def set_station_inventory_from_plot_id(self):
-        """Sets station inventory information from serial number
+        """Sets station inventory information from plot id number
         """
         #TODO(tnauss): Implement error handling by end of 2011
         foundID = False
         error = False
         inventory_data = open(self.get_filepath(),'r')
         plot_id_list = []
+        plot_color_list = []
         counter = 0
         for line in inventory_data:
             counter = counter + 1
             if counter == 1:
                 act_line = line.rstrip()
                 self.set_calibration_coefficients_headers(act_line.rsplit(',')[12:21])
-                print act_line.rsplit(',')[12:21]
-                print act_line.rsplit(',')[22:]
+                #print act_line.rsplit(',')[12:21]
+                #print act_line.rsplit(',')[22:28]
+                #print act_line.rsplit(',')[28:]
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
+                plot_color_list.append(string.strip(line.rsplit(',')[28]).strip('"'))
                 if string.strip(line.rsplit(',')[5]).strip('"').lstrip('0') == self.get_plot_id().lstrip('0'):
                     if foundID == True:
                         install_date = TimePoint(string.strip(line.rsplit(',')[8]))
@@ -97,8 +100,11 @@ class StationInventory(StationInventoryFile):
                             self.set_header_line(int(string.strip(line.rsplit(',')[10])))
                             self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
                             self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
+                            self.set_module_serial_numbers(act_line.rsplit(',')[22:28])
+                            self.set_module_plot_colors_colors(act_line.rsplit(',')[28:])
                             foundID = True
         inventory_data.close()
+        self.plot_color_tupple = zip(plot_id_list, plot_color_list)
         plot_id_list = sorted(set(plot_id_list))
         plot_id_list.append("not sure")
         self.plot_id_list = plot_id_list 
@@ -112,15 +118,21 @@ class StationInventory(StationInventoryFile):
         error = False
         inventory_data = open(self.get_filepath(),'r')
         plot_id_list = []
+        plot_color_list = []
         counter = 0
         for line in inventory_data:
             counter = counter + 1
             if counter == 1:
                 act_line = line.rstrip()
                 self.set_calibration_coefficients_headers(act_line.rsplit(',')[12:21])
-                self.set_module_serial_numbers_headers(act_line.rsplit(',')[22:])
+                self.set_module_serial_numbers_headers(act_line.rsplit(',')[22:28])
+                self.set_module_plot_colors_headers(act_line.rsplit(',')[28:])
+                #print act_line.rsplit(',')[12:21]
+                #print act_line.rsplit(',')[22:28]
+                #print act_line.rsplit(',')[28:]
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
+                plot_color_list.append(string.strip(line.rsplit(',')[28]).strip('"'))
                 if string.strip(line.rsplit(',')[7]).strip('"').lstrip('0') == self.get_serial_number():
                     if foundID == True:
                         install_date = TimePoint(string.strip(line.rsplit(',')[8]))
@@ -142,9 +154,11 @@ class StationInventory(StationInventoryFile):
                             self.set_header_line(int(string.strip(line.rsplit(',')[10])))
                             self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
                             self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
-                            self.set_module_serial_numbers(act_line.rsplit(',')[22:])
+                            self.set_module_serial_numbers(act_line.rsplit(',')[22:28])
+                            self.set_module_plot_colors_colors(act_line.rsplit(',')[28:])
                             foundID = True
         inventory_data.close()
+        self.plot_color_tupple = zip(plot_id_list, plot_color_list)
         plot_id_list = sorted(set(plot_id_list))
         plot_id_list.append("not sure")
         self.plot_id_list = plot_id_list 
@@ -172,5 +186,14 @@ class StationInventory(StationInventoryFile):
             Returns list of plot ids.
         """
         return self.plot_id_list
+
+    def get_plot_color_tupple(self):
+        """Gets tupple of lists of all plot ids and color combinations.
+        
+        Returns:
+            Returns tupple of lists of plot ids and color combinations.
+        """
+        return self.plot_color_tupple
+
 
 
