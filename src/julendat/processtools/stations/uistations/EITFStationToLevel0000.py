@@ -164,7 +164,8 @@ class EITFStationToLevel0000:
         self.tfinventory_plotid = []
         self.tfinventory_color = []
         for entry in range(0,len(self.inventory.get_plot_color_tupple())):
-            if re.match("tfp", self.inventory.get_plot_color_tupple()[entry][0]):
+            if self.inventory.get_plot_color_tupple()[entry][1] != "NaN":
+            #if re.match("tfp", self.inventory.get_plot_color_tupple()[entry][0]):
                 self.tfinventory_plotid.append(self.inventory.get_plot_color_tupple()[entry][0])
                 self.tfinventory_color.append(self.inventory.get_plot_color_tupple()[entry][1])
         #if self.inventory.get_found_station_inventory():
