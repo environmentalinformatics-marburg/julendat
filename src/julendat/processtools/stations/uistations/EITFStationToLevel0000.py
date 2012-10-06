@@ -37,8 +37,12 @@ from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.guitools.stations.GUITFPlotSelection import GUITFPlotSelection
 from julendat.guitools.stations.GUIManualPlotSelection import \
     GUIManualPlotSelection
-from julendat.guitools.stations.GUITFReportData import \
-    GUITFReportData
+from julendat.guitools.stations.GUITFBucketData import \
+    GUITFBucketData
+from julendat.guitools.stations.GUIMiscBucketData import \
+    GUIMiscBucketData
+from julendat.guitools.stations.GUITFIsotopeData import \
+    GUITFIsotopeData
 from julendat.guitools.stations.GUIAutoPlotSelection import \
     GUIAutoPlotSelection
 
@@ -175,6 +179,13 @@ class EITFStationToLevel0000:
     def run(self):
         """Executes class functions according to run_mode settings. 
         """
+        self.tfplot_id = "flm"
+        self.tfplot_color = "Red"
+        self.report_tf_bucket_data_gui()
+        self.report_misc_bucket_data_gui()
+        self.isotope_tf_instructions_gui()
+        self.isotope_misc_instructions_gui()
+        sys.exit()
         if self.get_run_mode() == "manual":
             pass
         elif self.get_run_mode() == "auto-gui":
@@ -184,7 +195,8 @@ class EITFStationToLevel0000:
             else:
                 os.sys.exit()
             if self.correct_plot_id == True:
-                self.report_data_gui()
+                self.report_bucket_data_gui()
+                self.report_isotope_data_gui()
             else:
                 self.run()
 
@@ -240,7 +252,7 @@ class EITFStationToLevel0000:
         gui.destroy()        
 
 
-    def report_data_gui(self):
+    def report_tf_bucket_data_gui(self):
         """GUI to commit the manually measured data values.
         
         Returns:
@@ -250,19 +262,91 @@ class EITFStationToLevel0000:
         gui = Tkinter.Tk()
         gui.title("Report data")
         gui.geometry('600x350+50+50')
-        intro = "\n Let's hear what you have to say... \n"
-        question = "Which plot would you like to report?"
-        outro = "\n Thank you. Let's continue to the isotope stuff." + \
-                "\n If you want to stop the program, press <Cancel>.\n" 
-        app = GUITFReportData(master = gui, \
+        intro = "\n Enter bucket volumes (and: you, be cool)! \n"
+        question = None
+        outro = None 
+        app = GUITFBucketData(master = gui, \
                               intro=intro, question=question, outro=outro,
                               plot_id = self.tfplot_id, 
                               plot_color = self.tfplot_color)
         gui.mainloop()
-        self.text_input = app.get_values()
-        print self.text_input
+        self.bucket_values = app.get_values()
+        print self.bucket_values
         gui.destroy()  
         
+    def report_misc_bucket_data_gui(self):
+        """GUI to commit the manually measured data values.
+        
+        Returns:
+            tfplot_id: Plot id of throughfall plot
+            tfplot_color: Color code of throughfall plot      
+        """
+        gui = Tkinter.Tk()
+        gui.title("Report data")
+        gui.geometry('600x350+50+50')
+        intro = "\n Enter bucket volumes (and: you, be cool)! \n"
+        question = None
+        outro = None 
+        app = GUIMiscBucketData(master = gui, \
+                              intro=intro, question=question, outro=outro,
+                              plot_id = self.tfplot_id, 
+                              plot_color = self.tfplot_color)
+        gui.mainloop()
+        self.bucket_values = app.get_values()
+        print self.bucket_values
+        gui.destroy()  
+
+
+    def isotope_tf_instructions_gui(self):
+        """GUI to commit the manually measured data values used for isotope 
+        analysis.
+        
+        Returns:
+            tfplot_id: Plot id of throughfall plot
+            tfplot_color: Color code of throughfall plot      
+        """
+        gui = Tkinter.Tk()
+        gui.title("Isotope analysis")
+        gui.geometry('600x350+50+50')
+        intro = "\n Please prepare the 20 ml probe for throughfall analysis."+ \
+                "\n Extract given ml and pour them TOGETHER in 20 ml bottle. \n" 
+        bucket_id = [3, 7, 10, 14, 17, 21, 24, 28]
+        bucket_amount = [1.23,2,3,4.34,5,6,7,8]
+        outro = None 
+        app = GUITFIsotopeData(master = gui, \
+                              intro=intro, bucket_id=bucket_id, \
+                              bucket_amount = bucket_amount,\
+                              outro=outro,
+                              plot_id = self.tfplot_id, 
+                              plot_color = self.tfplot_color)
+        gui.mainloop()
+        gui.destroy()  
+
+
+    def isotope_misc_instructions_gui(self):
+        """GUI to commit the manually measured data values used for isotope 
+        analysis.
+        
+        Returns:
+            tfplot_id: Plot id of throughfall plot
+            tfplot_color: Color code of throughfall plot      
+        """
+        gui = Tkinter.Tk()
+        gui.title("Isotope analysis")
+        gui.geometry('600x350+50+50')
+        intro = "\n Please prepare the 20 ml probes for fog and rainfall analysis."+ \
+                "\n Extract given ml and pour them in SEPARATE 20 ml bottles. \n" 
+        bucket_id = ["Rainfall", "Fog"]
+        bucket_amount = [20, 20]
+        outro = None 
+        app = GUITFIsotopeData(master = gui, \
+                              intro=intro, bucket_id=bucket_id, \
+                              bucket_amount = bucket_amount,\
+                              outro=outro,
+                              plot_id = self.tfplot_id, 
+                              plot_color = self.tfplot_color)
+        gui.mainloop()
+        gui.destroy()  
                 
 '''        
         auto_plot_selection = self.inventory.get_found_station_inventory()
