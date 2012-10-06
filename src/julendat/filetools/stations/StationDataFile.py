@@ -308,18 +308,18 @@ class StationDataFile(DataFile):
         """
         return self.module_serial_numbers_headers    
 
-    def set_module_plot_colors_colors(self, module_plot_colors_colors):
-        """Sets colors used for identification of plots
+    def set_module_tf_metadata(self, module_tf_metadata):
+        """Sets throufall plot metadata
         """
-        self.module_plot_colors_colors = module_plot_colors_colors  
+        self.module_tf_metadata = module_tf_metadata  
         
-    def get_module_plot_colors_colors(self):
-        """Gets colors used for identification of plots
+    def get_module_tf_metadata(self):
+        """Gets throughfall plot metadata
         
         Returns:
-            Colors used for identification of plots
+            Metadata of the throughfall plots
         """
-        return self.module_plot_colors_colors    
+        return self.module_tf_metadata    
 
     def set_module_plot_colors_headers(self, \
                                           module_plot_colors_headers):

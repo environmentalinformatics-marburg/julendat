@@ -65,6 +65,8 @@ class StationInventory(StationInventoryFile):
         inventory_data = open(self.get_filepath(),'r')
         plot_id_list = []
         plot_color_list = []
+        plot_tf_buckets = []
+        plot_tf_isotope_buckets = []
         counter = 0
         for line in inventory_data:
             counter = counter + 1
@@ -77,6 +79,8 @@ class StationInventory(StationInventoryFile):
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 plot_color_list.append(string.strip(line.rsplit(',')[28]).strip('"'))
+                plot_tf_buckets.append(string.strip(line.rsplit(',')[29]).strip('"'))
+                plot_tf_isotope_buckets.append(line.rsplit(',')[30:38])
                 if string.strip(line.rsplit(',')[5]).strip('"').lstrip('0') == self.get_plot_id().lstrip('0'):
                     if foundID == True:
                         install_date = TimePoint(string.strip(line.rsplit(',')[8]))
@@ -101,10 +105,12 @@ class StationInventory(StationInventoryFile):
                             self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
                             self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
                             self.set_module_serial_numbers(act_line.rsplit(',')[22:28])
-                            self.set_module_plot_colors_colors(act_line.rsplit(',')[28:])
+                            self.set_module_tf_metadata(act_line.rsplit(',')[28:])
                             foundID = True
         inventory_data.close()
-        self.plot_color_tupple = zip(plot_id_list, plot_color_list)
+        self.plot_tf_metadata_tupple = zip(plot_id_list, plot_color_list, \
+                                           plot_tf_buckets, \
+                                           plot_tf_isotope_buckets)
         plot_id_list = sorted(set(plot_id_list))
         plot_id_list.append("not sure")
         self.plot_id_list = plot_id_list 
@@ -119,6 +125,8 @@ class StationInventory(StationInventoryFile):
         inventory_data = open(self.get_filepath(),'r')
         plot_id_list = []
         plot_color_list = []
+        plot_tf_buckets = []
+        plot_tf_isotope_buckets = []
         counter = 0
         for line in inventory_data:
             counter = counter + 1
@@ -133,6 +141,8 @@ class StationInventory(StationInventoryFile):
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
                 plot_color_list.append(string.strip(line.rsplit(',')[28]).strip('"'))
+                plot_tf_buckets.append(string.strip(line.rsplit(',')[29]).strip('"'))
+                plot_tf_isotope_buckets.append(line.rsplit(',')[30:38])
                 if string.strip(line.rsplit(',')[7]).strip('"').lstrip('0') == self.get_serial_number():
                     if foundID == True:
                         install_date = TimePoint(string.strip(line.rsplit(',')[8]))
@@ -155,10 +165,12 @@ class StationInventory(StationInventoryFile):
                             self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
                             self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
                             self.set_module_serial_numbers(act_line.rsplit(',')[22:28])
-                            self.set_module_plot_colors_colors(act_line.rsplit(',')[28:])
+                            self.set_module_tf_metadata(act_line.rsplit(',')[28:])
                             foundID = True
         inventory_data.close()
-        self.plot_color_tupple = zip(plot_id_list, plot_color_list)
+        self.plot_tf_metadata_tupple = zip(plot_id_list, plot_color_list, \
+                                           plot_tf_buckets, \
+                                           plot_tf_isotope_buckets)
         plot_id_list = sorted(set(plot_id_list))
         plot_id_list.append("not sure")
         self.plot_id_list = plot_id_list 
@@ -187,13 +199,13 @@ class StationInventory(StationInventoryFile):
         """
         return self.plot_id_list
 
-    def get_plot_color_tupple(self):
-        """Gets tupple of lists of all plot ids and color combinations.
+    def get_plot_tf_metadata_tupple(self):
+        """Gets tupple of lists of plot ids, color and throughfall metadata.
         
         Returns:
-            Returns tupple of lists of plot ids and color combinations.
+            Returns tupple of lists of plot ids, color and throughfall metadata.
         """
-        return self.plot_color_tupple
+        return self.plot_tf_metadata_tupple
 
 
 
