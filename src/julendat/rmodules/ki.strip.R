@@ -107,7 +107,7 @@ ki.strip <- function(inputpath,
   condims <- as.character(unique(na.exclude(df2$plotid)))
 
   xlist <- split(df2, df2$plotid, drop = T)
-print(length(xlist))
+
   ls <- lapply(seq(xlist), function(i) {
 
     datetime <- as.character(xlist[[i]]$datetime)
@@ -144,7 +144,6 @@ print(length(xlist))
                    julian(index_date + 1, origin = as.Date(origin)))
     
     strip_z[mat_x] <- z_x$x
-    #strip_z <- strip_z[nrow(strip_z):1, ]
     
     xblockx <- sort(julian(tseries, origin = as.Date(origin)))
     xbar <- format(tseries, "%b")
