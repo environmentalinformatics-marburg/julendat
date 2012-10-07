@@ -31,7 +31,7 @@ class GUITFBucketData:
     """
 
     def __init__(self, master, intro, question, outro, \
-                  plot_id, plot_color):
+                  plot_id, plot_color, buckets_number, marked_buckets):
         """GUITFPlotSelection.
         The instance is initialized by a Tkinter.Tk() object and some intro,
         question and outro text. In addition, two lists containing id and
@@ -50,37 +50,37 @@ class GUITFBucketData:
         
         self.plot_id_list = plot_id
         self.plot_color_list = plot_color
+        self.text_input = None
        
         self.frame = Tkinter.Frame(master)
         self.frame.pack()
         self.intro = Tkinter.Label(self.frame, \
-            font=("Helvetica", 16), \
+            font=("Helvetica", 12), \
             text=intro).grid(row=0, column=0, columnspan=8)
        
         self.entry_label = []
         self.entry_widget = []
-        entry_range = 10
-        for i in range(0, entry_range):
-            self.entry_label.append(Tkinter.Label(self.frame,text="Bucket " + \
-                                                  str(i+1).zfill(2)))
-            self.entry_label[i].grid(row=1+i,column=0)
+        
+        for i in range(0, buckets_number):
+            base_row = 10 * (i // 10)
+            base_column = 2 * (i // 10)
+            if str(i) in marked_buckets:
+                self.entry_label.append(Tkinter.Label(self.frame, \
+                                                      text="Bucket " + \
+                                                      str(i+1).zfill(2) + "*"))
+            else:
+                self.entry_label.append(Tkinter.Label(self.frame, \
+                                                      text="Bucket " + \
+                                                      str(i+1).zfill(2) + " "))
+            self.entry_label[i].grid(row = 1 + i -base_row, column= base_column + 0)
             self.entry_widget.append(Tkinter.Entry(self.frame, width = 10))
-            self.entry_widget[i].grid(row=1+i,column=1)        
-        for i in range(entry_range, 2 * entry_range):
-            self.entry_label.append(Tkinter.Label(self.frame,text="Bucket " + \
-                                                  str(i+1)))
-            self.entry_label[i].grid(row=i-entry_range+1,column=2)
-            self.entry_widget.append(Tkinter.Entry(self.frame, width = 10))
-            self.entry_widget[i].grid(row=i-entry_range+1,column=3)        
-        for i in range(2 * entry_range, 3 * entry_range):
-            self.entry_label.append(Tkinter.Label(self.frame,text="Bucket " + \
-                                                  str(i+1)))
-            self.entry_label[i].grid(row=i-2*entry_range+1,column=4)
-            self.entry_widget.append(Tkinter.Entry(self.frame, width = 10))
-            self.entry_widget[i].grid(row=i-2*entry_range+1,column=5)        
+            self.entry_widget[i].grid(row = 1 + i -base_row, column = base_column + 1)        
         self.button_submit = Tkinter.Button(self.frame, text="Submit", \
             fg="black", font=("Helvetica", 12), \
             command=self.submit).grid(row=2+i, column=0, columnspan=8)
+        self.outro = Tkinter.Label(self.frame, \
+            font=("Helvetica", 12), \
+            text=outro).grid(row=3+i, column=0, columnspan=8)
             
 
     def submit(self):

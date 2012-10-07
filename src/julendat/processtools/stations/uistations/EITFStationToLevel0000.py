@@ -200,8 +200,8 @@ class EITFStationToLevel0000:
             else:
                 os.sys.exit()
             if self.correct_plot_id == True:
-                self.report_bucket_data_gui()
-                self.report_isotope_data_gui()
+                self.report_tf_bucket_data_gui()
+                self.report_misc_bucket_data_gui()
             else:
                 self.run()
 
@@ -228,7 +228,10 @@ class EITFStationToLevel0000:
         gui.mainloop()
         self.tfplot_id = app.get_plot_id()
         self.tfplot_color = app.get_plot_color()
-        print self.tfplot_id, self.tfplot_color
+        self.tfplot_buckets = int(\
+         self.tfinventory_buckets[self.tfinventory_plotid.index(self.tfplot_id)])
+        self.tfplot_isotope_buckets = \
+         self.tfinventory_isotope_buckets[self.tfinventory_plotid.index(self.tfplot_id)]
         gui.destroy()        
 
         
@@ -269,11 +272,13 @@ class EITFStationToLevel0000:
         gui.geometry('600x350+50+50')
         intro = "\n Enter bucket volumes (and: you, be cool)! \n"
         question = None
-        outro = None 
+        outro = "Buckets marked with * are used for isotope analysis." 
         app = GUITFBucketData(master = gui, \
-                              intro=intro, question=question, outro=outro,
-                              plot_id = self.tfplot_id, 
-                              plot_color = self.tfplot_color)
+                              intro=intro, question=question, outro=outro, \
+                              plot_id = self.tfplot_id, \
+                              plot_color = self.tfplot_color, \
+                              buckets_number =  self.tfplot_buckets, \
+                              marked_buckets =  self.tfplot_isotope_buckets)
         gui.mainloop()
         self.bucket_values = app.get_values()
         print self.bucket_values
