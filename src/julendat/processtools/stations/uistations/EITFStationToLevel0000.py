@@ -202,8 +202,31 @@ class EITFStationToLevel0000:
             if self.correct_plot_id == True:
                 self.report_tf_bucket_data_gui()
                 self.report_misc_bucket_data_gui()
+                self.calculate_isotope_mix()
+                self.isotope_tf_instructions_gui()
+                self.isotope_misc_instructions_gui()
             else:
                 self.run()
+
+
+    def calculate_isotope_mix(self):
+        """Compute isotope mixture based on submitted data.
+        
+        Returns:
+            tfplot_id: Plot id of throughfall plot
+            tfplot_color: Color code of throughfall plot      
+        """
+        self.isotope_values = []
+        for i in self.tfplot_isotope_buckets:
+            print i
+            self.isotope_values.append(float(self.bucket_values[int(i)-1]))
+        self.isotope_sum = sum(self.isotope_values)
+        self.isotope_share = []
+        for i in range(0, len(self.tfplot_isotope_buckets)):
+            self.isotope_share.append(round(\
+                self.isotope_values[i]/self.isotope_sum * 20.0, 0))
+        self.isotope_share[-1] = 20.0 - sum(self.isotope_share) + \
+                                 self.isotope_share[-1]  
 
 
     def select_tfplot_gui(self):
@@ -281,7 +304,6 @@ class EITFStationToLevel0000:
                               marked_buckets =  self.tfplot_isotope_buckets)
         gui.mainloop()
         self.bucket_values = app.get_values()
-        print self.bucket_values
         gui.destroy()  
         
     def report_misc_bucket_data_gui(self):
@@ -302,8 +324,7 @@ class EITFStationToLevel0000:
                               plot_id = self.tfplot_id, 
                               plot_color = self.tfplot_color)
         gui.mainloop()
-        self.bucket_values = app.get_values()
-        print self.bucket_values
+        self.misc_bucket_values = app.get_values()
         gui.destroy()  
 
 
@@ -318,14 +339,14 @@ class EITFStationToLevel0000:
         gui = Tkinter.Tk()
         gui.title("Isotope analysis")
         gui.geometry('600x350+50+50')
+        header = "YOU, BE COOL!"
         intro = "\n Please prepare the 20 ml probe for throughfall analysis."+ \
                 "\n Extract given ml and pour them TOGETHER in 20 ml bottle. \n" 
-        bucket_id = [3, 7, 10, 14, 17, 21, 24, 28]
-        bucket_amount = [1.23,2,3,4.34,5,6,7,8]
         outro = None 
         app = GUITFIsotopeData(master = gui, \
-                              intro=intro, bucket_id=bucket_id, \
-                              bucket_amount = bucket_amount,\
+                              header=header, intro=intro, \
+                              bucket_id=self.tfplot_isotope_buckets, \
+                              bucket_amount = self.isotope_share,\
                               outro=outro,
                               plot_id = self.tfplot_id, 
                               plot_color = self.tfplot_color)
@@ -344,20 +365,39 @@ class EITFStationToLevel0000:
         gui = Tkinter.Tk()
         gui.title("Isotope analysis")
         gui.geometry('600x350+50+50')
-        intro = "\n Please prepare the 20 ml probes for fog and rainfall analysis."+ \
-                "\n Extract given ml and pour them in SEPARATE 20 ml bottles. \n" 
-        bucket_id = ["Rainfall", "Fog"]
-        bucket_amount = [20, 20]
+        header = "YOU, BE COOL!"
+        intro = "\n Please prepare the 20 ml probes for fog analysis."+ \
+                "\n Extract given ml and pour them in a 20 ml bottle. \n" 
+        bucket_id = ["Fog"]
+        bucket_amount = [20]
         outro = None 
         app = GUITFIsotopeData(master = gui, \
-                              intro=intro, bucket_id=bucket_id, \
+                              header = header, intro=intro, \
+                              bucket_id=bucket_id, \
                               bucket_amount = bucket_amount,\
                               outro=outro,
                               plot_id = self.tfplot_id, 
                               plot_color = self.tfplot_color)
         gui.mainloop()
         gui.destroy()  
-                
+
+        gui = Tkinter.Tk()
+        gui.title("Isotope analysis")
+        gui.geometry('600x350+50+50')
+        intro = "\n Please prepare the 20 ml probes for rainfall analysis."+ \
+                "\n Extract given ml and pour them in a 20 ml bottle. \n" 
+        bucket_id = ["Rainfall"]
+        bucket_amount = [20]
+        outro = None 
+        app = GUITFIsotopeData(master = gui, \
+                              header = header, intro=intro, \
+                              bucket_id=bucket_id, \
+                              bucket_amount = bucket_amount,\
+                              outro=outro,
+                              plot_id = self.tfplot_id, 
+                              plot_color = self.tfplot_color)
+        gui.mainloop()
+        gui.destroy()  
 '''        
         auto_plot_selection = self.inventory.get_found_station_inventory()
             

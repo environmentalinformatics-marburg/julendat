@@ -64,7 +64,7 @@ class GUITFBucketData:
         for i in range(0, buckets_number):
             base_row = 10 * (i // 10)
             base_column = 2 * (i // 10)
-            if str(i) in marked_buckets:
+            if str(i+1) in marked_buckets:
                 self.entry_label.append(Tkinter.Label(self.frame, \
                                                       text="Bucket " + \
                                                       str(i+1).zfill(2) + "*"))
