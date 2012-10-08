@@ -105,7 +105,6 @@ class StationDataFilePath(StationDataFile):
         """Sets dictionary for data filenames of different levels.
         """
         self.filename_dictionary = {}
-
         #Level 0 (binary)
         calibration_level="rb01"
         processing = "0000"

@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-09-19"
+__version__ = "2012-10-08"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
@@ -28,7 +28,8 @@ import re
 import sys
 import shutil
 import Tkinter
-from datetime import datetime
+import datetime
+from julendat.processtools.TimeInterval import TimeInterval
 from julendat.filetools.stations.dkstations.DKStationDataFile import \
     DKStationDataFile
 from julendat.metadatatools.stations.StationDataFilePath import \
@@ -63,6 +64,8 @@ class EITFStationToLevel0000:
             config_file: Configuration file.
             run_mode: Running mode (auto-gui, manual)
         """
+        self.temp_isotope_bottle = 50
+        self.final_isotope_bottle = 20
         self.set_run_mode(run_mode)
         self.configure(config_file)
         #self.init_StationFile()
@@ -107,6 +110,7 @@ class EITFStationToLevel0000:
         self.tl_data_path = config.get('repository', 
                                        'toplevel_processing_plots_path')
         self.project_id = config.get('project', 'project_id')
+        self.logger_time_zone = config.get('project', 'level_0005_timezone')
         self.station_inventory = config.get('inventory', 'station_inventory')
 
     def init_StationFile(self):
@@ -159,10 +163,9 @@ class EITFStationToLevel0000:
         """Set necessary attributes automatically.
            Get list of all throughfall plots from inventory file.
         """
-        print(datetime.now())
         self.inventory = StationInventory(filepath=self.station_inventory, \
-            logger_start_time = datetime.now(), \
-            logger_end_time = datetime.now(), \
+            logger_start_time = datetime.datetime.now(), \
+            logger_end_time = datetime.datetime.now(), \
             serial_number = "00000000006")
 
         self.tfinventory_plotid = []
@@ -200,15 +203,85 @@ class EITFStationToLevel0000:
             else:
                 os.sys.exit()
             if self.correct_plot_id == True:
+                self.report_datetime_gui()
                 self.report_tf_bucket_data_gui()
                 self.report_misc_bucket_data_gui()
                 self.calculate_isotope_mix()
+                self.write_dataset()
                 self.isotope_tf_instructions_gui()
                 self.isotope_misc_instructions_gui()
             else:
                 self.run()
 
+    def set_level0_filenames(self):
+        """Sets level0 filenames and path information
+        """
+        end_datetime = datetime.datetime.now()
+        time_step_delta = TimeInterval(end_datetime - \
+                                       datetime.timedelta(hours=1), \
+                                       end_datetime)
+        
+        
+        self.filenames = StationDataFilePath(\
+                        toplevel_path=self.tl_data_path, \
+                        project_id=self.project_id, \
+                        plot_id=self.tfplot_id, \
+                        station_id="000tfi", \
+                        start_datetime=self.start_datetime, \
+                        end_datetime=end_datetime, \
+                        time_step_delta = time_step_delta, \
+                        logger_time_zone=self.logger_time_zone, \
+                        aggregation_level="na", \
+                        postexflag=None)
 
+        self.filenames.build_filename_dictionary()
+
+    
+    def write_dataset(self):
+        """Compute isotope mixture based on submitted data.
+        
+        Returns:
+            tfplot_id: Plot id of throughfall plot
+            tfplot_color: Color code of throughfall plot      
+        """
+        
+        self.set_level0_filenames()
+
+        if not os.path.isdir(self.filenames.get_filename_dictionary()\
+                             ["level_0000_ascii-path"]):
+            os.makedirs(self.filenames.get_filename_dictionary()\
+                        ["level_0000_ascii-path"])
+        output_file = open(self.filenames.get_filename_dictionary()\
+                           ["level_0000_ascii-filepath"],"w")
+        output_file.write("Plot: " + self.tfplot_id + "\n" + \
+                          "Serial number: " + \
+                          self.inventory.get_serial_number() + "\n" + \
+                          "Logging Methode: Manual \n" + \
+                          "Interval: Manual \n" + \
+                          "Isotope TF plots: ")
+        for i in range(0, len(self.tfplot_isotope_buckets) - 1):
+            output_file.write(\
+                        str(self.tfplot_isotope_buckets[i]).zfill(2) + ", ")
+        output_file.write(str(self.tfplot_isotope_buckets[-1]).zfill(2) + \
+                          "\n" + \
+                          "Isotope TF mixture: ")
+        for i in range(0, len(self.isotope_share) - 1):
+            output_file.write(str(self.isotope_share[i]).zfill(2) + ", ")
+        output_file.write(str(self.isotope_share[-1]).zfill(2) + \
+                          "\n" + \
+                          "Date    Time")
+        for i in range(0, self.tfplot_buckets):
+            output_file.write(", B_" + str(i).zfill(2))
+        output_file.write(", Fog , Rainfall \n")
+        output_file.write(self.start_datetime.strftime("%Y-%m-%d") + ", " + \
+                          self.start_datetime.strftime("%H:%M:%S"))
+        for i in self.bucket_values:
+            output_file.write(", " + str(i))
+        for i in self.misc_bucket_values:
+            output_file.write(", " + str(i))
+        output_file.close()
+
+        
     def calculate_isotope_mix(self):
         """Compute isotope mixture based on submitted data.
         
@@ -218,16 +291,31 @@ class EITFStationToLevel0000:
         """
         self.isotope_values = []
         for i in self.tfplot_isotope_buckets:
-            print i
             self.isotope_values.append(float(self.bucket_values[int(i)-1]))
         self.isotope_sum = sum(self.isotope_values)
         self.isotope_share = []
         for i in range(0, len(self.tfplot_isotope_buckets)):
             self.isotope_share.append(round(\
-                self.isotope_values[i]/self.isotope_sum * 20.0, 0))
-        self.isotope_share[-1] = 20.0 - sum(self.isotope_share) + \
-                                 self.isotope_share[-1]  
-
+                self.isotope_values[i]/self.isotope_sum * \
+                self.temp_isotope_bottle, 0))
+        self.isotope_share[-1] = self.temp_isotope_bottle - \
+                                 sum(self.isotope_share) + \
+                                 self.isotope_share[-1]
+        
+        check = [x for x in self.isotope_share if x < 0.0]
+        if check:
+            check = False
+        else: 
+            check = True  
+        
+        if check == False:
+            for i in range(0, len(self.tfplot_isotope_buckets)):
+                self.isotope_share.append(
+                    self.isotope_values[i]//self.isotope_sum * \
+                    self.temp_isotope_bottle)
+            self.isotope_share[-1] = self.temp_isotope_bottle - \
+            sum(self.isotope_share) + \
+                                     self.isotope_share[-1]
 
     def select_tfplot_gui(self):
         """GUI for the selection of the throughfall plot.
@@ -279,8 +367,32 @@ class EITFStationToLevel0000:
                                 intro=intro, question=question, outro=outro)
         gui.mainloop()
         self.correct_plot_id = app.get_correct_plot_id()
-        print self.correct_plot_id
         gui.destroy()        
+
+
+    def report_datetime_gui(self):
+        """GUI to commit the manually measured data values.
+        
+        Returns:
+            tfplot_id: Plot id of throughfall plot
+            tfplot_color: Color code of throughfall plot      
+        """
+        gui = Tkinter.Tk()
+        gui.title("Report data")
+        gui.geometry('600x350+50+50')
+        intro = "\n Enter the date and time you visited the plot \n"
+        question = None
+        outro = None 
+        entry_label = ["Year", "Month", "Day", "Hour", "Minute"]
+        app = GUIMiscBucketData(master = gui,
+                              intro=intro, question=question, outro=outro,
+                              entry_label = entry_label,
+                              plot_id = self.tfplot_id, 
+                              plot_color = self.tfplot_color)
+        gui.mainloop()
+        self.start_datetime = datetime.datetime.strptime(\
+                                '-'.join(app.get_values()),"%Y-%m-%d-%H-%M")
+        gui.destroy()  
 
 
     def report_tf_bucket_data_gui(self):
@@ -319,8 +431,10 @@ class EITFStationToLevel0000:
         intro = "\n Enter bucket volumes (and: you, be cool)! \n"
         question = None
         outro = None 
-        app = GUIMiscBucketData(master = gui, \
+        entry_label = ["Bucket Rainfall", "Bucket Fog"]
+        app = GUIMiscBucketData(master = gui,
                               intro=intro, question=question, outro=outro,
+                              entry_label = entry_label,
                               plot_id = self.tfplot_id, 
                               plot_color = self.tfplot_color)
         gui.mainloop()
@@ -340,8 +454,10 @@ class EITFStationToLevel0000:
         gui.title("Isotope analysis")
         gui.geometry('600x350+50+50')
         header = "YOU, BE COOL!"
-        intro = "\n Please prepare the 20 ml probe for throughfall analysis."+ \
-                "\n Extract given ml and pour them TOGETHER in 20 ml bottle. \n" 
+        intro = "\n Please prepare the " + str(self.temp_isotope_bottle) + \
+                 "ml probe for throughfall analysis."+ \
+                "\n Extract given ml and pour them TOGETHER in " + \
+                str(self.temp_isotope_bottle) + " ml bottle. \n" 
         outro = None 
         app = GUITFIsotopeData(master = gui, \
                               header=header, intro=intro, \
@@ -366,10 +482,12 @@ class EITFStationToLevel0000:
         gui.title("Isotope analysis")
         gui.geometry('600x350+50+50')
         header = "YOU, BE COOL!"
-        intro = "\n Please prepare the 20 ml probes for fog analysis."+ \
-                "\n Extract given ml and pour them in a 20 ml bottle. \n" 
-        bucket_id = ["Fog"]
-        bucket_amount = [20]
+        intro = "\n Please fill " + str(self.final_isotope_bottle) + " ml" + \
+                "\n of the just prepared " + str(self.temp_isotope_bottle) + \
+                " ml throughfall bottle" + \
+                "\n into the final isotope probe bottle. \n"
+        bucket_id = ["Througfall"]
+        bucket_amount = [self.final_isotope_bottle]
         outro = None 
         app = GUITFIsotopeData(master = gui, \
                               header = header, intro=intro, \
@@ -384,10 +502,13 @@ class EITFStationToLevel0000:
         gui = Tkinter.Tk()
         gui.title("Isotope analysis")
         gui.geometry('600x350+50+50')
-        intro = "\n Please prepare the 20 ml probes for rainfall analysis."+ \
-                "\n Extract given ml and pour them in a 20 ml bottle. \n" 
-        bucket_id = ["Rainfall"]
-        bucket_amount = [20]
+        header = "YOU, BE COOL!"
+        intro = "\n Please prepare the " + str(self.final_isotope_bottle) + \
+                " ml probes for fog analysis."+ \
+                "\n Extract given ml and pour them in a " + \
+                str(self.final_isotope_bottle) + " ml bottle. \n" 
+        bucket_id = ["Fog"]
+        bucket_amount = [self.final_isotope_bottle]
         outro = None 
         app = GUITFIsotopeData(master = gui, \
                               header = header, intro=intro, \
@@ -398,122 +519,22 @@ class EITFStationToLevel0000:
                               plot_color = self.tfplot_color)
         gui.mainloop()
         gui.destroy()  
-'''        
-        auto_plot_selection = self.inventory.get_found_station_inventory()
-            
-        if self.get_run_flag():
-            if auto_plot_selection:
-                gui = Tkinter.Tk()
-                gui.title("Just to be sure...")
-                gui.geometry('600x350+50+50')
-                intro = "\n Please read very carefully. \n"
-                question = "Are you standing on plot " + self.get_plot_id() + "?"
-                outro = "\n Press only <Yes> if you are sure." + \
-                        "\n If you press <No> you can specify the location manually.\n" 
-                app = GUIAutoPlotSelection(gui, intro=intro, question=question, outro=outro)
-                gui.mainloop()
-                correct_plot_id = app.get_correct_plot_id()
-                gui.destroy()        
-            else:
-                correct_plot_id = False
-        
-            if correct_plot_id != True:
-                #plot_id_list = ["cof1", "cof2", "cof3", "cof4", "not sure"]
-                plot_id_list = self.inventory.get_plot_id_list()
-                gui = Tkinter.Tk()
-                if auto_plot_selection:
-                    gui.title("Just to be really sure...")
-                    message="ARE YOU SURE?"
-                else:
-                    gui.title("Manual plot selection...")
-                    message="The station/logger serial number has not been " +\
-                            "found in the station inventory file. \n" + \
-                            "Please select the plot from the list. \n" + \
-                            "Please inform us that the station file is not " +\
-                            "up to date."
-                gui.geometry('600x350+50+50')
-                app = GUIManualPlotSelection(gui, plot_id_list,message)
-                gui.mainloop()
-                gui.destroy()
-                manual_plot_id = app.get_correct_plot_id()
-        
-                if self.inventory.get_found_station_inventory() == False:
-                    if manual_plot_id == "not sure":
-                        plot_id = "xx000000"
-                    else:
-                        plot_id = "xx" + manual_plot_id
-                    self.station_id = "xxx"
-                    postexflag = "not_in_inventory"
-                elif manual_plot_id == "not sure":
-                    plot_id = "xx000000"
-                    postexflag = "autoplot_" + self.get_plot_id()
-                elif self.inventory.get_found_station_inventory():
-                    plot_id = "xx" + manual_plot_id
-                    postexflag = "autoplot_" + self.get_plot_id()
-            
-                self.set_level0_filenames(project_id=self.project_id, \
-                    plot_id=plot_id, postexflag=postexflag)
-            
-            else:
-                self.set_level0_filenames(project_id=self.project_id)
 
-            self.main()
-        
-    def move_data(self):
-        """Moves files.
-        """
-        shutil.move(self.source, self.destination)
-
-    def get_plot_id(self):
-        """Gets coded plot id flag information.
-        
-        Returns:
-            Runtime coded plot ID 
-        """
-        return self.plot_id
-    
-    def set_level0_filenames(self, project_id=None, \
-                             plot_id=None, postexflag=None):
-        """Sets level0 filenames and path information
-        """
-        if plot_id == None:
-            plot_id = self.plot_id
-        self.filenames = StationDataFilePath(\
-                        toplevel_path=self.tl_data_path, \
-                        project_id=project_id, \
-                        plot_id=plot_id, \
-                        station_id=self.station_id, \
-                        start_datetime=self.ascii_logger_file.get_start_datetime(), \
-                        end_datetime=self.ascii_logger_file.get_end_datetime(), \
-                        time_step_delta = self.ascii_logger_file.get_time_step_delta(), \
-                        logger_time_zone=self.logger_time_zone, \
-                        aggregation_level="na", \
-                        postexflag=postexflag)  
-        self.filenames.build_filename_dictionary()
-
-    def main(self):
-        """Maps logger files to level 0 filename and directory structure.
-        """
-        print "Initial 0000 filepath: ", \
-            self.filenames.get_filename_dictionary()["level_0000_ascii-filepath"]
-
-        # Check if path for level 0 files exists, otherwise create it
-        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_000_bin-path"]):
-            os.makedirs(self.filenames.get_filename_dictionary()["level_000_bin-path"])
-        if not os.path.isdir(self.filenames.get_filename_dictionary()["level_0000_ascii-path"]):
-            os.makedirs(self.filenames.get_filename_dictionary()["level_0000_ascii-path"])
-        
-        # Set full path and names of ASCII data files and move them
-        self.source = self.ascii_logger_file.get_filepath()
-        self.destination = self.filenames.get_filename_dictionary()["level_0000_ascii-filepath"]
-        print "Moving ", self.source, " to ", self.destination
-        self.move_data()
-        
-        if os.path.isfile(self.binary_logger_file.get_filepath()) and \
-                          self.ascii_logger_file.get_file_exists():
-            # Move binary data
-            self.source = self.binary_logger_file.get_filepath()
-            self.destination = self.filenames.get_filename_dictionary()["level_000_bin-filepath"]
-            print "Moving ", self.source, " to ", self.destination
-            self.move_data()
-'''
+        gui = Tkinter.Tk()
+        gui.title("Isotope analysis")
+        gui.geometry('600x350+50+50')
+        intro = "\n Please prepare the " + str(self.final_isotope_bottle) + \
+                " ml probes for rainfall analysis."+ \
+                "\n Extract given ml and pour them in a " + \
+                str(self.final_isotope_bottle) + " ml bottle. \n" 
+        bucket_id = ["Rainfall"]
+        outro = None 
+        app = GUITFIsotopeData(master = gui, \
+                              header = header, intro=intro, \
+                              bucket_id=bucket_id, \
+                              bucket_amount = bucket_amount,\
+                              outro=outro,
+                              plot_id = self.tfplot_id, 
+                              plot_color = self.tfplot_color)
+        gui.mainloop()
+        gui.destroy()  
