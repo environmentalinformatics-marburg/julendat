@@ -30,8 +30,9 @@ class GUITFBucketData:
     """Instance for selecting plot by id/color for manual data submission.
     """
 
-    def __init__(self, master, intro, question, outro, \
-                  plot_id, plot_color, buckets_number, marked_buckets):
+    def __init__(self, master, intro=None, question=None, outro=None, \
+                  plot_id=None, plot_color=None, buckets_number=None, \
+                  marked_buckets=None):
         """GUITFPlotSelection.
         The instance is initialized by a Tkinter.Tk() object and some intro,
         question and outro text. In addition, two lists containing id and
@@ -50,6 +51,7 @@ class GUITFBucketData:
         
         self.plot_id_list = plot_id
         self.plot_color_list = plot_color
+        self.buckets_number = buckets_number
         self.text_input = None
        
         self.frame = Tkinter.Frame(master)
@@ -61,7 +63,7 @@ class GUITFBucketData:
         self.entry_label = []
         self.entry_widget = []
         
-        for i in range(0, buckets_number):
+        for i in range(0, self.buckets_number):
             base_row = 10 * (i // 10)
             base_column = 2 * (i // 10)
             if str(i+1) in marked_buckets:
@@ -84,11 +86,11 @@ class GUITFBucketData:
             
 
     def submit(self):
-        self.text_input = []
+        self.text_input = [-1.0] * self.buckets_number
         for i in range(0, len(self.entry_widget)):
-            self.text_input.append(self.entry_widget[i].get())
+            if self.entry_widget[i].get() != "":
+                self.text_input[i] = self.entry_widget[i].get()
         self.frame.quit()
-        print self.text_input
 
     def get_values(self):
         return self.text_input

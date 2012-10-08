@@ -71,20 +71,18 @@ def main():
     toplevel_processing_plots_path = \
         configure(config_file=config_file)
     
-    EITFStationToLevel0000(config_file=config_file)
-    '''
     print " "
     print "Processing throughfall dataset..."
     try:
         EITFStationToLevel0000(config_file=config_file)
-
     except Exception as inst:
         print "An error occured."
         print "Some details:"
         print "Exception type: " , type(inst)
         print "Exception args: " , inst.args
         print "Exception content: " , inst        
-    '''
+    
+    print "...finished"
         
 if __name__ == '__main__':
     main()

@@ -31,7 +31,7 @@ class GUIMiscBucketData:
     """
 
     def __init__(self, master, intro, question, outro, \
-                  plot_id, plot_color):
+                  entry_label, plot_id, plot_color):
         """GUITFPlotSelection.
         The instance is initialized by a Tkinter.Tk() object and some intro,
         question and outro text. In addition, two lists containing id and
@@ -57,13 +57,11 @@ class GUIMiscBucketData:
             font=("Helvetica", 16), \
             text=intro).grid(row=0, column=0, columnspan=8)
        
-        self.entry_label = ["Rainfall", "Fog"]
         self.entry_widget = []
-        entry_range = 2
-        for i in range(0, entry_range):
-            self.entry_label[i] = Tkinter.Label(self.frame,text="Bucket " + \
-                                                  self.entry_label[i])
-            self.entry_label[i].grid(row=1+i,column=0)
+        self.entry_range = len(entry_label)
+        for i in range(0, self.entry_range):
+            entry_label[i] = Tkinter.Label(self.frame,text=entry_label[i])
+            entry_label[i].grid(row=1+i,column=0)
             self.entry_widget.append(Tkinter.Entry(self.frame, width = 10))
             self.entry_widget[i].grid(row=1+i,column=1)        
         self.button_submit = Tkinter.Button(self.frame, text="Submit", \
@@ -72,11 +70,11 @@ class GUIMiscBucketData:
             
 
     def submit(self):
-        self.text_input = []
+        self.text_input = [-1.0] * self.entry_range
         for i in range(0, len(self.entry_widget)):
-            self.text_input.append(self.entry_widget[i].get())
+            if self.entry_widget[i].get() != "":
+                self.text_input[i] = self.entry_widget[i].get()
         self.frame.quit()
-        print self.text_input
 
     def get_values(self):
         return self.text_input
