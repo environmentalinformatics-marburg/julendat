@@ -126,7 +126,7 @@ class VISLevel0050:
         r_year = 'year = "2011"'
         
         loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt']
-        loggers = ['rug', 'pu1', 'rad', 'wxt']
+        loggers = ['rug']
         parameters_rug = ['Ta_200', 'rH_200']
         parameters_pu1 = ['P_RT_NRT']
         parameters_pu2 = ['P_RT_NRT', 'F_RT_NRT']
@@ -137,7 +137,7 @@ class VISLevel0050:
                           'swdr_13', 'swdr_14', 'swdr_15', 'swdr_16',
                           'swdr_17', 'swdr_18,', 'swdr_19', 'swdr_20', 
                           'swdr_21,', 'swdr_22', 'swdr_23', 'swdr_24']
-        parameters_wxt = ['Ta_200', 'rH_200', 'P_RT_NRT', 'SWDR_300', \
+        parameters_wxt = ['P_RT_NRT', 'SWDR_300', \
                       'SWUR_300', 'LWDR_300', 'LWUR_300', 'Ts_10']
         par_range = {'Ta_200': [0,40],'rH_200': [0,100], 'P_RT_NRT': [0,60], \
                      'P_RT_NRT': [0,60],
