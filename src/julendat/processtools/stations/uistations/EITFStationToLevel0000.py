@@ -172,6 +172,7 @@ class EITFStationToLevel0000:
         self.tfinventory_color = []
         self.tfinventory_buckets = []
         self.tfinventory_isotope_buckets = []
+        self.tfinventory_serial_number = []
         for entry in range(0,len(self.inventory.get_plot_tf_metadata_tupple())):
             if self.inventory.get_plot_tf_metadata_tupple()[entry][1] != "NaN":
                 self.tfinventory_plotid.append(\
@@ -182,6 +183,8 @@ class EITFStationToLevel0000:
                         self.inventory.get_plot_tf_metadata_tupple()[entry][2])
                 self.tfinventory_isotope_buckets.append(\
                         self.inventory.get_plot_tf_metadata_tupple()[entry][3])
+                self.tfinventory_serial_number.append(\
+                        self.inventory.get_plot_tf_metadata_tupple()[entry][4])
 
 
     def run(self):
@@ -255,10 +258,10 @@ class EITFStationToLevel0000:
                            ["level_0000_ascii-filepath"],"w")
         output_file.write("Plot: " + self.tfplot_id + "\n" + \
                           "Serial number: " + \
-                          self.inventory.get_serial_number() + "\n" + \
+                          self.tfinventory_serial_number[self.tfinventory_plotid.index(self.tfplot_id)] + "\n" + \
                           "Logging Methode: Manual \n" + \
-                          "Interval: Manual \n" + \
-                          "Isotope TF plots: ")
+                          "Interval: sub-weekly to monthly \n" + \
+                          "Isotope TF buckets: ")
         for i in range(0, len(self.tfplot_isotope_buckets) - 1):
             output_file.write(\
                         str(self.tfplot_isotope_buckets[i]).zfill(2) + ", ")
@@ -269,9 +272,9 @@ class EITFStationToLevel0000:
             output_file.write(str(self.isotope_share[i]).zfill(2) + ", ")
         output_file.write(str(self.isotope_share[-1]).zfill(2) + \
                           "\n" + \
-                          "Date    Time")
+                          "Date, Time")
         for i in range(0, self.tfplot_buckets):
-            output_file.write(", B_" + str(i).zfill(2))
+            output_file.write(", B_" + str(i+1).zfill(2))
         output_file.write(", Fog , Rainfall \n")
         output_file.write(self.start_datetime.strftime("%Y-%m-%d") + ", " + \
                           self.start_datetime.strftime("%H:%M:%S"))
@@ -485,7 +488,7 @@ class EITFStationToLevel0000:
         intro = "\n Please fill " + str(self.final_isotope_bottle) + " ml" + \
                 "\n of the just prepared " + str(self.temp_isotope_bottle) + \
                 " ml throughfall bottle" + \
-                "\n into the final isotope probe bottle. \n"
+                "\n into the final isotope probe glass bottle. \n"
         bucket_id = ["Througfall"]
         bucket_amount = [self.final_isotope_bottle]
         outro = None 
@@ -506,7 +509,7 @@ class EITFStationToLevel0000:
         intro = "\n Please prepare the " + str(self.final_isotope_bottle) + \
                 " ml probes for fog analysis."+ \
                 "\n Extract given ml and pour them in a " + \
-                str(self.final_isotope_bottle) + " ml bottle. \n" 
+                str(self.final_isotope_bottle) + " ml glass bottle. \n" 
         bucket_id = ["Fog"]
         bucket_amount = [self.final_isotope_bottle]
         outro = None 
@@ -526,7 +529,7 @@ class EITFStationToLevel0000:
         intro = "\n Please prepare the " + str(self.final_isotope_bottle) + \
                 " ml probes for rainfall analysis."+ \
                 "\n Extract given ml and pour them in a " + \
-                str(self.final_isotope_bottle) + " ml bottle. \n" 
+                str(self.final_isotope_bottle) + " ml glass bottle. \n" 
         bucket_id = ["Rainfall"]
         outro = None 
         app = GUITFIsotopeData(master = gui, \

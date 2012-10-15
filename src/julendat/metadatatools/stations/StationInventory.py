@@ -68,6 +68,7 @@ class StationInventory(StationInventoryFile):
         plot_color_list = []
         plot_tf_buckets = []
         plot_tf_isotope_buckets = []
+        plot_tf_serial_number = []
         counter = 0
         for line in inventory_data:
             counter = counter + 1
@@ -79,6 +80,7 @@ class StationInventory(StationInventoryFile):
                 #print act_line.rsplit(',')[28:]
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
+                plot_tf_serial_number.append(string.strip(line.rsplit(',')[7]))
                 plot_color_list.append(string.strip(line.rsplit(',')[28]).strip('"'))
                 plot_tf_buckets.append(string.strip(line.rsplit(',')[29]).strip('"'))
                 plot_tf_isotope_buckets.append(line.rsplit(',')[30:38])
@@ -111,7 +113,8 @@ class StationInventory(StationInventoryFile):
         inventory_data.close()
         self.plot_tf_metadata_tupple = zip(plot_id_list, plot_color_list, \
                                            plot_tf_buckets, \
-                                           plot_tf_isotope_buckets)
+                                           plot_tf_isotope_buckets, \
+                                           plot_tf_serial_number)
         plot_id_list = sorted(set(plot_id_list))
         plot_id_list.append("not sure")
         self.plot_id_list = plot_id_list 
@@ -128,6 +131,7 @@ class StationInventory(StationInventoryFile):
         plot_color_list = []
         plot_tf_buckets = []
         plot_tf_isotope_buckets = []
+        plot_tf_serial_number = []
         counter = 0
         for line in inventory_data:
             counter = counter + 1
@@ -141,6 +145,7 @@ class StationInventory(StationInventoryFile):
                 #print act_line.rsplit(',')[28:]
             else:
                 plot_id_list.append(string.strip(line.rsplit(',')[5]).strip('"'))
+                plot_tf_serial_number.append(string.strip(line.rsplit(',')[7]))
                 plot_color_list.append(string.strip(line.rsplit(',')[28]).strip('"'))
                 plot_tf_buckets.append(string.strip(line.rsplit(',')[29]).strip('"'))
                 plot_tf_isotope_buckets.append(line.rsplit(',')[30:38])
@@ -171,7 +176,8 @@ class StationInventory(StationInventoryFile):
         inventory_data.close()
         self.plot_tf_metadata_tupple = zip(plot_id_list, plot_color_list, \
                                            plot_tf_buckets, \
-                                           plot_tf_isotope_buckets)
+                                           plot_tf_isotope_buckets, \
+                                           plot_tf_serial_number)
         plot_id_list = sorted(set(plot_id_list))
         plot_id_list.append("not sure")
         self.plot_id_list = plot_id_list 
