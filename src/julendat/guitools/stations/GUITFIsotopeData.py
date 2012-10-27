@@ -53,12 +53,15 @@ class GUITFIsotopeData:
        
         self.frame = Tkinter.Frame(master)
         self.frame.pack()
-        self.intro = Tkinter.Label(self.frame, \
+        self.header = Tkinter.Label(self.frame, \
             font=("Helvetica", 12), \
             text=header).grid(row=0, column=0, columnspan=8)
-        self.question = Tkinter.Label(self.frame, \
+        self.intro = Tkinter.Label(self.frame, \
             font=("Helvetica", 16), \
             text=intro).grid(row=1, column=0, columnspan=8)
+        self.outro = Tkinter.Label(self.frame, \
+            font=("Helvetica", 16), \
+            text=outro).grid(row=2, column=0, columnspan=8)
        
         self.id = []
         self.amount = []
@@ -67,12 +70,12 @@ class GUITFIsotopeData:
         for i in range(0, len(bucket_id)/2):
             self.id.append(Tkinter.Label(self.frame, \
                                          font=("Helvetica", 14), \
-                                         text="Bucket " + str(bucket_id[i]) + ": "))
-            self.id[i].grid(row=2+i,column=0)
+                                         text="Canister " + str(bucket_id[i]) + ": "))
+            self.id[i].grid(row=3+i,column=0)
             self.amount.append(Tkinter.Label(self.frame, \
                                          font=("Helvetica", 14), \
                                          text=str(bucket_amount[i])))
-            self.amount[i].grid(row=2+i,column=1)
+            self.amount[i].grid(row=3+i,column=1)
             self.check.append(i)
             self.check[i] = Tkinter.Variable(0)
             self.checkbutton.append(Tkinter.Checkbutton(self.frame, \
@@ -80,16 +83,16 @@ class GUITFIsotopeData:
                                             command=self.enable_done, \
                                             offvalue=False))
             self.checkbutton[i].deselect()
-            self.checkbutton[i].grid(row=2+i,column=2)
+            self.checkbutton[i].grid(row=3+i,column=2)
         for i in range(len(bucket_id)/2, len(bucket_id)):
             self.id.append(Tkinter.Label(self.frame, \
                                          font=("Helvetica", 14), \
-                                         text="Bucket " + str(bucket_id[i]) + ": "))
-            self.id[i].grid(row=2+i-len(bucket_id)/2,column=4)
+                                         text="Canister " + str(bucket_id[i]) + ": "))
+            self.id[i].grid(row=3+i-len(bucket_id)/2,column=4)
             self.amount.append(Tkinter.Label(self.frame, \
                                          font=("Helvetica", 14), \
                                          text=str(bucket_amount[i])))
-            self.amount[i].grid(row=2+i-len(bucket_id)/2,column=5)
+            self.amount[i].grid(row=3+i-len(bucket_id)/2,column=5)
             self.check.append(i)
             self.check[i] = Tkinter.Variable(0)
             self.checkbutton.append(Tkinter.Checkbutton(self.frame, \
@@ -97,11 +100,11 @@ class GUITFIsotopeData:
                                             command=self.enable_done, \
                                             offvalue=False))
             self.checkbutton[i].deselect()
-            self.checkbutton[i].grid(row=2+i-len(bucket_id)/2,column=6)
+            self.checkbutton[i].grid(row=3+i-len(bucket_id)/2,column=6)
             self.button_done = Tkinter.Button(self.frame, text="Done", \
                                           fg="grey", font=("Helvetica", 12), \
                                           command=None)
-            self.button_done.grid(row=13, column=0, columnspan=8)
+            self.button_done.grid(row=14, column=0, columnspan=8)
 
             
     def enable_done(self):
@@ -113,7 +116,7 @@ class GUITFIsotopeData:
             self.button_done = Tkinter.Button(self.frame, text="Done", \
                                           fg="black", font=("Helvetica", 12), \
                                           command=self.done)
-            self.button_done.grid(row=13, column=0, columnspan=8)
+            self.button_done.grid(row=14, column=0, columnspan=8)
         
 
 

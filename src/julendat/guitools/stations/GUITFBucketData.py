@@ -68,11 +68,11 @@ class GUITFBucketData:
             base_column = 2 * (i // 10)
             if str(i+1) in marked_buckets:
                 self.entry_label.append(Tkinter.Label(self.frame, \
-                                                      text="Bucket " + \
+                                                      text="Canister " + \
                                                       str(i+1).zfill(2) + "*"))
             else:
                 self.entry_label.append(Tkinter.Label(self.frame, \
-                                                      text="Bucket " + \
+                                                      text="Canister " + \
                                                       str(i+1).zfill(2) + " "))
             self.entry_label[i].grid(row = 1 + i -base_row, column= base_column + 0)
             self.entry_widget.append(Tkinter.Entry(self.frame, width = 10))

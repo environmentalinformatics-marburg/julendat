@@ -46,6 +46,8 @@ from julendat.guitools.stations.GUITFIsotopeData import \
     GUITFIsotopeData
 from julendat.guitools.stations.GUIAutoPlotSelection import \
     GUIAutoPlotSelection
+from julendat.guitools.stations.GUIDone import \
+    GUIDone
 
 
 class EITFStationToLevel0000:   
@@ -211,8 +213,10 @@ class EITFStationToLevel0000:
                 self.report_misc_bucket_data_gui()
                 self.calculate_isotope_mix()
                 self.write_dataset()
-                self.isotope_tf_instructions_gui()
+                if self.prepare_tf_isotope_probe:
+                    self.isotope_tf_instructions_gui()
                 self.isotope_misc_instructions_gui()
+                self.done_gui()
             else:
                 self.run()
 
@@ -257,11 +261,12 @@ class EITFStationToLevel0000:
         output_file = open(self.filenames.get_filename_dictionary()\
                            ["level_0000_ascii-filepath"],"w")
         output_file.write("Plot: " + self.tfplot_id + "\n" + \
+                          "Color: " + self.tfplot_color + "\n" + \
                           "Serial number: " + \
                           self.tfinventory_serial_number[self.tfinventory_plotid.index(self.tfplot_id)] + "\n" + \
                           "Logging Methode: Manual \n" + \
                           "Interval: sub-weekly to monthly \n" + \
-                          "Isotope TF buckets: ")
+                          "Isotope TF canisters: ")
         for i in range(0, len(self.tfplot_isotope_buckets) - 1):
             output_file.write(\
                         str(self.tfplot_isotope_buckets[i]).zfill(2) + ", ")
@@ -292,33 +297,41 @@ class EITFStationToLevel0000:
             tfplot_id: Plot id of throughfall plot
             tfplot_color: Color code of throughfall plot      
         """
+        self.prepare_tf_isotope_probe = True
         self.isotope_values = []
+        
         for i in self.tfplot_isotope_buckets:
             self.isotope_values.append(float(self.bucket_values[int(i)-1]))
         self.isotope_sum = sum(self.isotope_values)
+
         self.isotope_share = []
-        for i in range(0, len(self.tfplot_isotope_buckets)):
-            self.isotope_share.append(round(\
-                self.isotope_values[i]/self.isotope_sum * \
-                self.temp_isotope_bottle, 0))
-        self.isotope_share[-1] = self.temp_isotope_bottle - \
-                                 sum(self.isotope_share) + \
-                                 self.isotope_share[-1]
-        
-        check = [x for x in self.isotope_share if x < 0.0]
-        if check:
-            check = False
-        else: 
-            check = True  
-        
-        if check == False:
+        if self.isotope_sum <= 0.01:
+            self.prepare_tf_isotope_probe = False
+            self.isotope_sum = 1.0
             for i in range(0, len(self.tfplot_isotope_buckets)):
-                self.isotope_share.append(
-                    self.isotope_values[i]//self.isotope_sum * \
-                    self.temp_isotope_bottle)
+                self.isotope_share.append(-2.0)
+        else:        
+            for i in range(0, len(self.tfplot_isotope_buckets)):
+                self.isotope_share.append(round(\
+                    self.isotope_values[i]/self.isotope_sum * \
+                    self.temp_isotope_bottle, 0))
             self.isotope_share[-1] = self.temp_isotope_bottle - \
-            sum(self.isotope_share) + \
+                                     sum(self.isotope_share) + \
                                      self.isotope_share[-1]
+            check = [x for x in self.isotope_share if x < 0.0]
+            if check:
+                check = False
+            else: 
+                check = True  
+            if check == False:
+                for i in range(0, len(self.tfplot_isotope_buckets)):
+                    self.isotope_share.append(
+                        self.isotope_values[i]//self.isotope_sum * \
+                        self.temp_isotope_bottle)
+                self.isotope_share[-1] = self.temp_isotope_bottle - \
+                sum(self.isotope_share) + \
+                                         self.isotope_share[-1]
+        
 
     def select_tfplot_gui(self):
         """GUI for the selection of the throughfall plot.
@@ -408,9 +421,9 @@ class EITFStationToLevel0000:
         gui = Tkinter.Tk()
         gui.title("Report data")
         gui.geometry('600x350+50+50')
-        intro = "\n Enter bucket volumes (and: you, be cool)! \n"
+        intro = "\n Enter canister volumes (and: you, be cool)! \n"
         question = None
-        outro = "Buckets marked with * are used for isotope analysis." 
+        outro = "Canisters marked with * are used for isotope analysis." 
         app = GUITFBucketData(master = gui, \
                               intro=intro, question=question, outro=outro, \
                               plot_id = self.tfplot_id, \
@@ -431,10 +444,10 @@ class EITFStationToLevel0000:
         gui = Tkinter.Tk()
         gui.title("Report data")
         gui.geometry('600x350+50+50')
-        intro = "\n Enter bucket volumes (and: you, be cool)! \n"
+        intro = "\n Enter canister volumes (and: you, be cool)! \n"
         question = None
         outro = None 
-        entry_label = ["Bucket Rainfall", "Bucket Fog"]
+        entry_label = ["Canister Fog", "Canister Rainfall"]
         app = GUIMiscBucketData(master = gui,
                               intro=intro, question=question, outro=outro,
                               entry_label = entry_label,
@@ -481,63 +494,86 @@ class EITFStationToLevel0000:
             tfplot_id: Plot id of throughfall plot
             tfplot_color: Color code of throughfall plot      
         """
-        gui = Tkinter.Tk()
-        gui.title("Isotope analysis")
-        gui.geometry('600x350+50+50')
         header = "YOU, BE COOL!"
-        intro = "\n Please fill " + str(self.final_isotope_bottle) + " ml" + \
-                "\n of the just prepared " + str(self.temp_isotope_bottle) + \
-                " ml throughfall bottle" + \
-                "\n into the final isotope probe glass bottle. \n"
-        bucket_id = ["Througfall"]
-        bucket_amount = [self.final_isotope_bottle]
-        outro = None 
-        app = GUITFIsotopeData(master = gui, \
-                              header = header, intro=intro, \
-                              bucket_id=bucket_id, \
-                              bucket_amount = bucket_amount,\
-                              outro=outro,
-                              plot_id = self.tfplot_id, 
-                              plot_color = self.tfplot_color)
-        gui.mainloop()
-        gui.destroy()  
+        if self.prepare_tf_isotope_probe:
+            gui = Tkinter.Tk()
+            gui.title("Isotope analysis")
+            gui.geometry('600x350+50+50')
+            intro = "\n Please fill " + str(self.final_isotope_bottle) + " ml" + \
+                    "\n of the just prepared " + str(self.temp_isotope_bottle) + \
+                    " ml mixing bottle" + \
+                    "\n into the final isotope glass bottle. \n"
+            bucket_id = ["Througfall"]
+            bucket_amount = [self.final_isotope_bottle]
+            outro = None 
+            app = GUITFIsotopeData(master = gui, \
+                                  header = header, intro=intro, \
+                                  bucket_id=bucket_id, \
+                                  bucket_amount = bucket_amount,\
+                                  outro=outro,
+                                  plot_id = self.tfplot_id, 
+                                  plot_color = self.tfplot_color)
+            gui.mainloop()
+            gui.destroy()  
 
-        gui = Tkinter.Tk()
-        gui.title("Isotope analysis")
-        gui.geometry('600x350+50+50')
-        header = "YOU, BE COOL!"
-        intro = "\n Please prepare the " + str(self.final_isotope_bottle) + \
-                " ml probes for fog analysis."+ \
-                "\n Extract given ml and pour them in a " + \
-                str(self.final_isotope_bottle) + " ml glass bottle. \n" 
-        bucket_id = ["Fog"]
-        bucket_amount = [self.final_isotope_bottle]
-        outro = None 
-        app = GUITFIsotopeData(master = gui, \
-                              header = header, intro=intro, \
-                              bucket_id=bucket_id, \
-                              bucket_amount = bucket_amount,\
-                              outro=outro,
-                              plot_id = self.tfplot_id, 
-                              plot_color = self.tfplot_color)
-        gui.mainloop()
-        gui.destroy()  
+        if int(self.misc_bucket_values[0]) > 0:
+            gui = Tkinter.Tk()
+            gui.title("Isotope analysis")
+            gui.geometry('600x350+50+50')
+            header = "YOU, BE COOL!"
+            intro = "\n Please prepare the " + str(self.final_isotope_bottle) + \
+                    " ml probes for fog analysis."+ \
+                    "\n Extract given ml and pour them in a " + \
+                    str(self.final_isotope_bottle) + " ml glass bottle. \n" 
+            bucket_id = ["Fog"]
+            bucket_amount = [self.final_isotope_bottle]
+            outro = "If you have less than 20 ml, just pour in everyhting. \n " 
+            app = GUITFIsotopeData(master = gui, \
+                                  header = header, intro=intro, \
+                                  bucket_id=bucket_id, \
+                                  bucket_amount = bucket_amount,\
+                                  outro=outro,
+                                  plot_id = self.tfplot_id, 
+                                  plot_color = self.tfplot_color)
+            gui.mainloop()
+            gui.destroy()  
 
+        if int(self.misc_bucket_values[1]) > 0:
+            gui = Tkinter.Tk()
+            gui.title("Isotope analysis")
+            gui.geometry('600x350+50+50')
+            intro = "\n Please prepare the " + str(self.final_isotope_bottle) + \
+                    " ml probes for rainfall analysis."+ \
+                    "\n Extract given ml and pour them in a " + \
+                    str(self.final_isotope_bottle) + " ml glass bottle. \n" 
+            bucket_id = ["Rainfall"]
+            bucket_amount = [self.final_isotope_bottle]
+            outro = "If you have less than 20 ml, just pour in everyhting. \n " 
+            app = GUITFIsotopeData(master = gui, \
+                                  header = header, intro=intro, \
+                                  bucket_id=bucket_id, \
+                                  bucket_amount = bucket_amount,\
+                                  outro=outro,
+                                  plot_id = self.tfplot_id, 
+                                  plot_color = self.tfplot_color)
+            gui.mainloop()
+            gui.destroy()
+            
+
+    def done_gui(self):
+        """GUI for the confirmation that everything has been done.
+        
+        """
         gui = Tkinter.Tk()
-        gui.title("Isotope analysis")
+        gui.title("Just to be sure...")
         gui.geometry('600x350+50+50')
-        intro = "\n Please prepare the " + str(self.final_isotope_bottle) + \
-                " ml probes for rainfall analysis."+ \
-                "\n Extract given ml and pour them in a " + \
-                str(self.final_isotope_bottle) + " ml glass bottle. \n" 
-        bucket_id = ["Rainfall"]
-        outro = None 
-        app = GUITFIsotopeData(master = gui, \
-                              header = header, intro=intro, \
-                              bucket_id=bucket_id, \
-                              bucket_amount = bucket_amount,\
-                              outro=outro,
-                              plot_id = self.tfplot_id, 
-                              plot_color = self.tfplot_color)
+        header = "YOU HAVE BEEN COOL!"
+        intro = "\n All right! \n"
+        comment = "You've done a great job!"
+        outro = "\n Press <Done> to exit the program."
+        app = GUIDone(master=gui, header = header, intro=intro, \
+                      comment=comment, outro=outro)
         gui.mainloop()
-        gui.destroy()  
+        self.correct_plot_id = app.get_correct_plot_id()
+        gui.destroy()        
+  

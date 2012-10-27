@@ -68,8 +68,9 @@ class GUITFPlotSelection:
         self.button_color = []
         for i in range(0, len(plot_id_list)):
             self.button_color.append(Tkinter.Button( \
-                self.frame, text=plot_id_list[i], bg=plot_color_list[i], \
-                fg="LightGrey", font=("Helvetica", 16), \
+                self.frame, text=self.plot_color_list[i], \
+                bg=self.plot_color_list[i], \
+                fg="LightGrey", font=("Helvetica", 12), \
                 command=lambda i=i:self.plot(plot_id_index=i)))
             self.button_color[i].grid(row=4, column=i)
         self.button_cancel = Tkinter.Button(self.frame, text="Cancel", \

@@ -72,7 +72,7 @@ def main():
     
     #Move ASCII logger files
     toplevel_incoming_path, toplevel_processing_plots_path, project_id = \
-        configure(config_file='ki_stations.cnf')
+        configure(config_file='ki_config.cnf')
     station_dataset=locate("*.asc", "*ra01_*", toplevel_incoming_path)
     for dataset in station_dataset:
         print "...moving " + dataset + " to"
