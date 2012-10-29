@@ -66,17 +66,24 @@ class GUITFPlotSelection:
             text=outro)
         self.outro.grid(row=2, column=0, columnspan=8)
         self.button_color = []
-        for i in range(0, len(plot_id_list)):
+        for i in range(0, len(plot_id_list)/2):
             self.button_color.append(Tkinter.Button( \
                 self.frame, text=self.plot_color_list[i], \
                 bg=self.plot_color_list[i], \
                 fg="LightGrey", font=("Helvetica", 12), \
                 command=lambda i=i:self.plot(plot_id_index=i)))
             self.button_color[i].grid(row=4, column=i)
+        for i in range(len(plot_id_list)/2, len(plot_id_list)):
+            self.button_color.append(Tkinter.Button( \
+                self.frame, text=self.plot_color_list[i], \
+                bg=self.plot_color_list[i], \
+                fg="LightGrey", font=("Helvetica", 12), \
+                command=lambda i=i:self.plot(plot_id_index=i)))
+            self.button_color[i].grid(row=5, column=i-len(plot_id_list)/2)
         self.button_cancel = Tkinter.Button(self.frame, text="Cancel", \
-            fg="black", font=("Helvetica", 16), \
+            fg="black", font=("Helvetica", 14), \
             command=self.cancel)
-        self.button_cancel.grid(row=5, column=0, columnspan=8)
+        self.button_cancel.grid(row=6, column=0, columnspan=8)
         self.finito = Tkinter.Label(self.frame, \
             font=("Helvetica", 16), \
             text="\n")
