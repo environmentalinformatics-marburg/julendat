@@ -67,11 +67,22 @@ def remedy_filenames(root=os.curdir):
     Args:
         root: Root directory for the recursive search
     '''
+    act_datetime = datetime.now().strftime('%Y%m%d-%H%M%S%f')
     for path, dirs, files in os.walk(os.path.abspath(root)):
         for filename in files:
             # Modified by Thomas Nauss
-            os.rename(os.path.join(path, filename), 
-                      os.path.join(path, filename.replace (" ", "_").lower()))
+            if len(filename) < 100:
+                temp_name = "new_" +  act_datetime + \
+                            "_" + filename
+            else:
+                temp_name = "new_" +  act_datetime + \
+                            "_" + filename[50:]
+            print path
+            print temp_name
+            os.rename(os.path.join(path, filename),
+                      os.path.join(path, temp_name))
+            os.rename(os.path.join(path, temp_name), 
+                      os.path.join(path, temp_name.replace (" ", "_").lower()))
 
 def configure(config_file):
     """Reads configuration settings and configure object.
