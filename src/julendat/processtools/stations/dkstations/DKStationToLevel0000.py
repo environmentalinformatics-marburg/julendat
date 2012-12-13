@@ -122,6 +122,7 @@ class DKStationToLevel0000:
 
             # Init ascii station logger file.
             if ascii_file_exsists == True:
+                self.convert_ascii_logger_file()
                 self.ascii_logger_file = DKStationDataFile(\
                                          filepath=self.ascii_logger_filepath)
                 self.ascii_logger_file.set_time_range_ascii()
@@ -159,6 +160,16 @@ class DKStationToLevel0000:
         if self.inventory.get_found_station_inventory():
             self.plot_id = self.inventory.get_plot_id()
             self.station_id = self.inventory.get_station_id()
+
+    def convert_ascii_logger_file(self):
+        """Convert ascii logger file to tab-deliminated
+        """
+        infile = open(self.ascii_logger_filepath, 'r')
+        infile_content = infile.read().replace("; ", "\t")
+        infile.close()
+        infile = open(self.ascii_logger_filepath, 'w')
+        infile.write(infile_content)
+        infile.close()
 
     def run(self):
         """Executes class functions according to run_mode settings. 
