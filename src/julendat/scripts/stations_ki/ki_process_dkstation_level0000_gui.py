@@ -55,7 +55,7 @@ def backup_files(toplevel_processing_logger_path, toplevel_temp_path):
         toplevel_temp_path: Path where backup will be stored
     '''
     bu_path = toplevel_temp_path + \
-                datetime.now().strftime('%Y%m%d-%H%M%S')
+                datetime.now().strftime('%Y%m%d-%H%M%S%f')
     shutil.copytree(toplevel_processing_logger_path,bu_path)
 
 def remedy_filenames(root=os.curdir):
