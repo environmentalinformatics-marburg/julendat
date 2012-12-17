@@ -101,7 +101,7 @@ class StationDataFilePath(StationDataFile):
         #if self.standard_name:
         #    self.build_filename_dictionary()
 
-    def build_filename_dictionary(self):
+    def build_filename_dictionary(self, aggregation_level=None):
         """Sets dictionary for data filenames of different levels.
         """
         self.filename_dictionary = {}
@@ -212,6 +212,30 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary['level_0100_ascii-filepath'] = \
             self.filename_dictionary['level_0100_ascii-path'] + \
             self.filename_dictionary['level_0100_ascii-filename']           
+
+        #Level 0200 (monthly processing aggregated files, standard format)
+        calibration_level="fa01"
+        processing = "0200"
+        extension="dat"
+        self.filename_dictionary['level_0200_calibration_level'] = calibration_level
+        self.filename_dictionary['level_0200_processing'] = processing
+        self.filename_dictionary['level_0200_ascii-filename'] = \
+            self.build_filename(\
+                start_datetime = start_datetime, \
+                end_datetime = end_datetime, \
+                time_zone = self.level_0005_time_zone, \
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing, \
+                extension=extension)
+        self.filename_dictionary['level_0200_ascii-path'] = \
+            self.build_path(\
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing)
+        self.filename_dictionary['level_0200_ascii-filepath'] = \
+            self.filename_dictionary['level_0200_ascii-path'] + \
+            self.filename_dictionary['level_0200_ascii-filename']           
 
     def get_filename_dictionary(self):
         """Gets dictionary for data filenames of different levels.

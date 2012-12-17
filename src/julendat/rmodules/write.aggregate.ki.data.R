@@ -10,6 +10,9 @@ write.aggregate.ki.data <- function(inputfilepath,
                            level = level,
                            ...)
   
+  print(str(out))
+  print(tail(out))
+  print(outputfilepath)
   write.table(out, outputfilepath, sep = ",", col.names = T, row.names = F)
   
 }

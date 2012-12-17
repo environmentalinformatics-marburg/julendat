@@ -165,7 +165,7 @@ class DKStationToLevel0000:
         """Convert ascii logger file to tab-deliminated
         """
         infile = open(self.ascii_logger_filepath, 'r')
-        infile_content = infile.read().replace("; ", "\t")
+        infile_content = infile.read().replace(";", "\t")
         infile.close()
         infile = open(self.ascii_logger_filepath, 'w')
         infile.write(infile_content)
