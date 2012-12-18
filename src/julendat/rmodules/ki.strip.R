@@ -101,9 +101,9 @@ ki.strip <- function(inputpath,
   df2 <- split(df, df$year, drop = T)
   df2 <- as.data.frame(df2[[year]])
 
-  minx <- if (missing(range)) min(na.exclude(df2$x)) else range[1]
-  maxx <- if (missing(range)) max(na.exclude(df2$x)) else range[2]
- 
+  minx <- if (missing(range)) min(as.numeric(df2$x), na.rm = TRUE) else range[1]
+  maxx <- if (missing(range)) max(as.numeric(df2$x), na.rm = TRUE) else range[2]
+
   condims <- as.character(unique(na.exclude(df2$plotid)))
 
   xlist <- split(df2, df2$plotid, drop = T)
@@ -127,7 +127,7 @@ ki.strip <- function(inputpath,
     deltat <- 60 * 60
     tseries <- seq(from = datetime_from, to = datetime_to, 
                    by = deltat)
-  
+
     strip_z <- matrix(NA, nrow = 25, ncol = length(unique(as.Date(tseries))))
   
     datetime_x <- as.Date(datetime)
@@ -143,7 +143,7 @@ ki.strip <- function(inputpath,
     mat_x <- cbind((as.integer(index_hour) + 1), 
                    julian(index_date + 1, origin = as.Date(origin)))
     
-    strip_z[mat_x] <- z_x$x
+    strip_z[mat_x] <- x#z_x$x
     
     xblockx <- sort(julian(tseries, origin = as.Date(origin)))
     xbar <- format(tseries, "%b")
@@ -174,7 +174,7 @@ ki.strip <- function(inputpath,
                 },  
               ...)
     })
-  
+
   out <- ls[[1]]
   out2 <- out
   #print(out)
@@ -196,3 +196,5 @@ ki.strip <- function(inputpath,
   
   
 }
+
+#ki.strip("/home/ede/software/testing/julendat/processing/plots/ki/", year = "2012")
