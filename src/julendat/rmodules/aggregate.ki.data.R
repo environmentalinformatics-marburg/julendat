@@ -49,9 +49,9 @@ aggregate.ki.data <- function(input,
   timezone <- rep(ki.data@Timezone, length.out = length(unique(agglevel)))
   aggregationtime <- paste("fa", aggunit, aggint, sep = "")
   aggregationtime <- rep(aggregationtime, length.out = length(unique(agglevel)))
-  plotid <- rep(ki.data@PlotId$Longname, length.out = length(unique(agglevel)))
+  plotid <- rep(ki.data@PlotId$Unique, length.out = length(unique(agglevel)))
   epplotid <- rep(ki.data@EpPlotId, length.out = length(unique(agglevel)))
-  stationid <- rep(ki.data@StationId$Longname, 
+  stationid <- rep(ki.data@StationId$Unique, 
                    length.out = length(unique(agglevel)))
   processlevel <- rep(ki.data@Processlevel, 
                       length.out = length(unique(agglevel)))
@@ -155,7 +155,7 @@ aggregate.ki.data <- function(input,
                       StationId = stationid,
                       Processlevel = processlevel,
                       Qualityflag = qualityflag,
-                      aggdf)
+                      aggdf, stringsAsFactors = FALSE)
   
   aggdf
   
