@@ -12,7 +12,7 @@ print.ki.strip <- function(inputpath,
   
   source("ki.strip.R")
   
-  plotname <- paste("overview", prm, logger, year, arrange, Sys.Date(), sep = "_")
+  plotname <- paste("Overview", prm, logger, year, arrange, Sys.Date(), sep = "_")
   plotname <- paste(plotname, ".png", sep = "")
   
   png(paste(outputpath, plotname, sep = "/"), 
@@ -31,12 +31,12 @@ print.ki.strip <- function(inputpath,
   dev.off()
 }
 
-# system.time(print.kili.strip("e:/ki",
+# system.time(print.ki.strip("/home/ede/software/testing/julendat/processing/plots/ki/",
 #                  logger = "rug",
 #                  prm = "Ta_200",
 #                  fun = mean,
 #                  arrange = "long",
 #                  #range = c(0, 40),
-#                  pattern  = "*cti05_0050.dat",
-#                  colour = VColList$P_RT_NRT,
+#                  pattern  = "*fah01_0050.dat",
+#                  colour = VColList$Ta_200,
 #                  year = "2011"))

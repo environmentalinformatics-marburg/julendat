@@ -71,7 +71,7 @@ gfImputeMissingValue <- function(data.dep,
   ## Reject independent data sets with a too high amount of NA values
   
   # Load function 'gfValidNaThreshold'
-  source("gfValidNaThreshold.r")
+  source("gfValidNaThreshold.R")
   # Reject plots with too much NA values
   data.indep <- gfValidNaThreshold(data.indep = data.indep, 
                                     na.limit = na.limit)
@@ -80,7 +80,7 @@ gfImputeMissingValue <- function(data.dep,
   ## Get plots with valid measurements at the given NA position
   
   # Load function 'gfNonNaStations'
-  source("gfNonNaStations.r")
+  source("gfNonNaStations.R")
   # Identify plots
   data.indep.avl <- gfNonNaStations(data.indep = data.indep, pos.na = pos.na)
   
@@ -100,7 +100,7 @@ gfImputeMissingValue <- function(data.dep,
   ## Merge monthly data sets to obtain complete cases of dependent and independent plots
   
   # Load function 'gfCompleteMonthlyCases'
-  source("gfCompleteMonthlyCases.r")
+  source("gfCompleteMonthlyCases.R")
   # Get complete cases
   data.prm.cc <- gfCompleteMonthlyCases(data.dep = data.dep, 
                                       data.indep = data.indep, 
@@ -113,7 +113,7 @@ gfImputeMissingValue <- function(data.dep,
   ## Fit generalized linear model 
   
   # Load function 'gfComputeLinearModel'
-  source("gfComputeLinearModel.r")
+  source("gfComputeLinearModel.R")
   # Fit linear Model
   data.prm.cc.lm <- gfComputeLinearModel(data = data.prm.cc[[1]], 
                                        data.cc = data.prm.cc[[2]], 
