@@ -122,7 +122,7 @@ class VISLevel0050:
         r_inputpath = 'inputpath = "' + self.input_path + '",'
         r_outputpath = 'outputpath = "' + self.output_path + '",'
         r_arrange = 'arrange = "long",'
-        r_pattern = 'pattern  = "*cti05_0050.dat",'
+        r_pattern = 'pattern  = "*fah01_0050.dat",'
         r_year = 'year = "2011"'
         
         loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt']
@@ -139,7 +139,7 @@ class VISLevel0050:
                           'swdr_21,', 'swdr_22', 'swdr_23', 'swdr_24']
         parameters_wxt = ['P_RT_NRT', 'SWDR_300', \
                       'SWUR_300', 'LWDR_300', 'LWUR_300', 'Ts_10']
-        par_range = {'Ta_200': [0,40],'rH_200': [0,100], 'P_RT_NRT': [0,60], \
+        par_range = {'Ta_200': [-10,50],'rH_200': [0,100], 'P_RT_NRT': [0,60], \
                      'P_RT_NRT': [0,60],
                      'SWDR_300': [0,1400], 'SWUR_300': [0,500], \
                      'LWDR_300': [200,500], 'LWUR_300': [200,500], \

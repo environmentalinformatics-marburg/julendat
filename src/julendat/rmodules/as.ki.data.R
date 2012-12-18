@@ -14,7 +14,7 @@ setClass("ki.data",
            StationId = "list",
            Processlevel = "character",
            Qualityflag = "character",
-           ValidN = "numeric",
+           Valid = "list",
            Parameter = "list",
            PrmHisto = "list"
            )
@@ -22,25 +22,31 @@ setClass("ki.data",
 
 as.ki.data <- function(input_filepath) {
   
-  stopifnot(require(ggplot2, quietly = T))
+  stopifnot(require(ggplot2, quietly = TRUE))
+  stopifnot(require(reshape, quietly = TRUE))
   
   df <- read.table(input_filepath, header = T, sep = ",", fill = T,
                    stringsAsFactors = F, na.strings = "")
-  
   year <- substr(df$Datetime, 1, 4)
+  len <- length(year)
+  origin <- paste(year[1], "01-01", sep = "-")
+  
+  if (len < 1000) df$Datetime <- as.POSIXct(strptime(df$Datetime, 
+                                                     format = "%Y%m%d%H"), 
+                                            origin = origin)
+
   month <- substr(df$Datetime, 6, 7)
   day <- substr(df$Datetime, 9,10)
   hour <- substr(df$Datetime, 12, 13)
-  minute <- substr(df$Datetime, 15, 16)
-  origin <- paste(year[1], "01-01", sep = "-")
+  minute <- try(substr(df$Datetime, 15, 16))
   
   agghour <- paste(year, month, day, hour, sep = "")
   aggday <- paste(year, month, day, sep = "")
   aggmonth <- paste(year, month, sep = "")
-  aggqh <- as.numeric(minute)
-  aggqh <- aggqh %/% 15
-  aggqh <- factor(aggqh, labels = c("00", "15", "30", "45"))
-  aggqh <- paste(year, month, day, hour, aggqh, sep = "")
+#   aggqh <- as.numeric(minute)
+#   aggqh <- aggqh %/% 15
+#   aggqh <- factor(aggqh, labels = c("00", "15", "30", "45"))
+#   aggqh <- paste(year, month, day, hour, aggqh, sep = "")
   
   agg3h <- as.numeric(hour)
   agg3h <- agg3h %/% 3
@@ -81,6 +87,7 @@ as.ki.data <- function(input_filepath) {
   
   df2 <- data.frame(df[9:length(df)])
   ok <- complete.cases(df)
+  nok <- which(!complete.cases(df))
   validn <- sum(ok)
   nna <- NROW(df) - validn
 #  print(nna)
@@ -99,7 +106,7 @@ as.ki.data <- function(input_filepath) {
                             Day = day),
                 Time = list(Hour = hour,
                             Minute = minute),
-                AggregationLevels = list(AggQh = aggqh,
+                AggregationLevels = list(#AggQh = aggqh,
                                          Agg1h = agghour,
                                          Agg3h = agg3h,
                                          Agg6h = agg6h,
@@ -119,7 +126,7 @@ as.ki.data <- function(input_filepath) {
                                  Shortname = station_short),
                 Processlevel = unique(na.exclude(df$Processlevel)),
                 Qualityflag = as.character(df$Qualityflag),
-                ValidN = validn,
+                Valid = list(N = validn, NAIndex = nok),
                 Parameter = as.list(df[9:length(df)]),
                 PrmHisto = list(graph)
                 )
@@ -128,7 +135,7 @@ as.ki.data <- function(input_filepath) {
 }
 
 # 
-# input_filepath <- "c:/tappelhans/uni/marburg/kili/testing/kili_data/ki_0000cof3_000wxt_201112010000_201112312355_eat_ca05_cti05_0005.dat"
+# input_filepath <- "/home/ede/software/testing/julendat/processing/plots/ki/0000flm1/ca05_fah01_0050/ki_0000flm1_000rug_201103010000_201103312355_eat_ca05_fah01_0050.dat"
 # input_filepath <- "c:/tappelhans/uni/marburg/kili/testing/kili_data/ki_0000cof3_000pu1_201104010000_201104302355_eat_ca05_cti05_0005.dat"
 # input_filepath <- "c:/tappelhans/uni/marburg/kili/testing/kili_data/ki_0000foc3_000rug_201110010000_201110312355_eat_ca05_cti05_0005.dat"
 # 

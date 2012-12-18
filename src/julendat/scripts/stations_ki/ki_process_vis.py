@@ -70,8 +70,8 @@ def main():
     r_prm = 'prm = "Ta_200",'
     r_fun = 'fun = mean,'
     r_arrange = 'arrange = "long",'
-    r_range = 'range = c(0, 40),'
-    r_pattern = 'pattern  = "*cti05_0050.dat",'
+    r_range = 'range = c(-10, 50),'
+    r_pattern = 'pattern  = "*fah01_0050.dat",'
     r_colour = 'colour = VColList$Ta_200,'
     r_year = 'year = "2011"'
     
