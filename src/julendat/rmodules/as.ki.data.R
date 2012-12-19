@@ -35,14 +35,14 @@ as.ki.data <- function(input_filepath) {
                                                      format = "%Y%m%d%H"), 
                                             origin = origin)
 
-  month <- substr(df$Datetime, 6, 7)
-  day <- substr(df$Datetime, 9,10)
-  hour <- substr(df$Datetime, 12, 13)
+  month <- try(substr(df$Datetime, 6, 7))
+  day <- try(substr(df$Datetime, 9,10))
+  hour <- try(substr(df$Datetime, 12, 13))
   minute <- try(substr(df$Datetime, 15, 16))
   
-  agghour <- paste(year, month, day, hour, sep = "")
-  aggday <- paste(year, month, day, sep = "")
-  aggmonth <- paste(year, month, sep = "")
+  agghour <- try(paste(year, month, day, hour, sep = ""))
+  aggday <- try(paste(year, month, day, sep = ""))
+  aggmonth <- try(paste(year, month, sep = ""))
 #   aggqh <- as.numeric(minute)
 #   aggqh <- aggqh %/% 15
 #   aggqh <- factor(aggqh, labels = c("00", "15", "30", "45"))
@@ -80,8 +80,8 @@ as.ki.data <- function(input_filepath) {
          
   season <- rep(season, length(month))
   
-  plot_long <- df$PlotId
-  plot_short <- substr(df$PlotId, 5, 8)
+  plot <- df$PlotId
+  #plot_short <- substr(df$PlotId, 5, 8)
   station_long <- df$StationId
   station_short <- substr(df$StationId, 4, 7)  
   
@@ -117,9 +117,9 @@ as.ki.data <- function(input_filepath) {
                 Season = season,
                 Timezone = unique(na.exclude(df$Timezone)),
                 Aggregationtime = unique(na.exclude(df$Aggregationtime)),
-                PlotId = list(Unique = unique(na.exclude(plot_short)),
-                              Longname = plot_long,
-                              Shortname = plot_short),
+                PlotId = list(Unique = unique(na.exclude(plot)),
+                              #Longname = plot_long,
+                              Shortname = plot),
                 EpPlotId = df$EpPlotId,
                 StationId = list(Unique = unique(na.exclude(station_short)),
                                  Longname = station_long,
@@ -135,7 +135,7 @@ as.ki.data <- function(input_filepath) {
 }
 
 # 
-# input_filepath <- "/home/ede/software/testing/julendat/processing/plots/ki/0000flm1/ca05_fah01_0050/ki_0000flm1_000rug_201103010000_201103312355_eat_ca05_fah01_0050.dat"
+# input_filepath <- "/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0050/ki_0000cof1_000rug_201102010000_201102282355_eat_ca05_cti05_0050.dat"
 # input_filepath <- "c:/tappelhans/uni/marburg/kili/testing/kili_data/ki_0000cof3_000pu1_201104010000_201104302355_eat_ca05_cti05_0005.dat"
 # input_filepath <- "c:/tappelhans/uni/marburg/kili/testing/kili_data/ki_0000foc3_000rug_201110010000_201110312355_eat_ca05_cti05_0005.dat"
 # 

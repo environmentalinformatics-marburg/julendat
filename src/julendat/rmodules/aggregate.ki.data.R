@@ -147,7 +147,11 @@ aggregate.ki.data <- function(input,
   #aggdf[, c(wdmin, wdmax, wdq25, wdq75)] <- NA
 #   aggdf <- aggdf[, -c(wdmin, wdmax, wdq25, wdq75)]
   
-  aggdf <- data.frame(Datetime = rownames(aggdf), 
+  datetime <- rownames(aggdf)
+  datetime <- as.POSIXct(strptime(datetime, format = "%Y%m%d%H"), 
+                         origin = ki.data@Origin)  
+  
+  aggdf <- data.frame(Datetime = datetime, 
                       Timezone = timezone,
                       Aggregationtime = aggregationtime,
                       PlotId = plotid,
@@ -160,3 +164,6 @@ aggregate.ki.data <- function(input,
   aggdf
   
 }
+
+test <- aggregate.ki.data(input_filepath, "1h")
+str(test)
