@@ -5,7 +5,7 @@ ki.strip <- function(inputpath,
                        arrange = "long",
                        year,
                        range,
-                       pattern = "*fah01_0050.dat",
+                       pattern = "*fah01_0200.dat",
                        colour = colorRampPalette(c("darkblue", "aquamarine", 
                                                    "gold", "red2"),
                                                  interpolate = "linear"),
@@ -86,7 +86,7 @@ ki.strip <- function(inputpath,
   sub <- sapply(seq(ki.data.list), 
                          function(i) ki.data.list[[i]]@StationId$Unique
                          )
-  
+
   sub <- which(sub == logger)
   ki.data.list <- ki.data.list[sub]
 
@@ -112,6 +112,7 @@ ki.strip <- function(inputpath,
 
     datetime <- as.character(xlist[[i]]$datetime)
     x <- xlist[[i]]$x
+
     origin <- paste(substr(datetime[1], 1, 4), "01-01", sep = "-")
     unldatetime <- lapply(as.POSIXlt(datetime), "unlist")
     hour <- unldatetime$hour   
@@ -142,8 +143,8 @@ ki.strip <- function(inputpath,
   
     mat_x <- cbind((as.integer(index_hour) + 1), 
                    julian(index_date + 1, origin = as.Date(origin)))
-    
-    strip_z[mat_x] <- x#z_x$x
+
+    strip_z[mat_x] <- z_x$x
     
     xblockx <- sort(julian(tseries, origin = as.Date(origin)))
     xbar <- format(tseries, "%b")
@@ -197,4 +198,4 @@ ki.strip <- function(inputpath,
   
 }
 
-#ki.strip("/home/ede/software/testing/julendat/processing/plots/ki/", year = "2012")
+#ki.strip("/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/fa01_fah01_0200/", year = "2012")

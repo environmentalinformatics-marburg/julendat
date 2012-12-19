@@ -31,12 +31,12 @@ print.ki.strip <- function(inputpath,
   dev.off()
 }
 
-# system.time(print.ki.strip("/home/ede/software/testing/julendat/processing/plots/ki/",
+# system.time(print.ki.strip("/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/",
 #                  logger = "rug",
 #                  prm = "Ta_200",
 #                  fun = mean,
 #                  arrange = "long",
 #                  #range = c(0, 40),
-#                  pattern  = "*fah01_0050.dat",
+#                  pattern  = "*fah01_0200.dat",
 #                  colour = VColList$Ta_200,
-#                  year = "2011"))
+#                  year = "2012"))

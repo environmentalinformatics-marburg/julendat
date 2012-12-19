@@ -1,7 +1,7 @@
 aggregate.ki.data <- function(input,
                               level = "1h",
                               ...) {
-  
+  print(input)
   options(warn = -1)
   
   source("as.ki.data.R")
@@ -51,9 +51,9 @@ aggregate.ki.data <- function(input,
   aggregationtime <- rep(aggregationtime, length.out = length(unique(agglevel)))
   plotid <- rep(ki.data@PlotId$Unique, length.out = length(unique(agglevel)))
   epplotid <- rep(ki.data@EpPlotId, length.out = length(unique(agglevel)))
-  stationid <- rep(ki.data@StationId$Unique, 
+  stationid <- rep(ki.data@StationId$Longname, 
                    length.out = length(unique(agglevel)))
-  processlevel <- rep(ki.data@Processlevel, 
+  processlevel <- rep(sprintf("%04.f", ki.data@Processlevel), 
                       length.out = length(unique(agglevel)))
   qualityflag <- rep(ki.data@Qualityflag, length.out = length(unique(agglevel)))
   
@@ -143,13 +143,13 @@ aggregate.ki.data <- function(input,
 #   wdq75 <- grep(glob2rx("WD_75"), names(aggdf))
   
   aggdf <- round(aggdf, 2)
-    
+
   #aggdf[, c(wdmin, wdmax, wdq25, wdq75)] <- NA
 #   aggdf <- aggdf[, -c(wdmin, wdmax, wdq25, wdq75)]
   
   datetime <- rownames(aggdf)
   datetime <- as.POSIXct(strptime(datetime, format = "%Y%m%d%H"), 
-                         origin = ki.data@Origin)  
+                         origin = ki.data@Origin) 
   
   aggdf <- data.frame(Datetime = datetime, 
                       Timezone = timezone,
@@ -161,9 +161,9 @@ aggregate.ki.data <- function(input,
                       Qualityflag = qualityflag,
                       aggdf, stringsAsFactors = FALSE)
   
-  aggdf
-  
+  return(aggdf)
+
 }
 
-test <- aggregate.ki.data(input_filepath, "1h")
-str(test)
+#  test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0050/ki_0000cof1_000rug_201102010000_201102282355_eat_ca05_cti05_0050.dat", "1h")
+#  str(test)

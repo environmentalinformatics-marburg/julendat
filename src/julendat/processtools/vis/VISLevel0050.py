@@ -122,7 +122,7 @@ class VISLevel0050:
         r_inputpath = 'inputpath = "' + self.input_path + '",'
         r_outputpath = 'outputpath = "' + self.output_path + '",'
         r_arrange = 'arrange = "long",'
-        r_pattern = 'pattern  = "*fah01_0050.dat",'
+        r_pattern = 'pattern  = "*fah01_0200.dat",'
         r_year = 'year = "2011"'
         
         loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt']
