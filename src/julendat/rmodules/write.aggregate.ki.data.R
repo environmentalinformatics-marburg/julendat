@@ -3,7 +3,7 @@ write.aggregate.ki.data <- function(inputfilepath,
                                     level = "1h",
                                     ...) 
 {
-  
+
   source("aggregate.ki.data.R")
   
   out <- aggregate.ki.data(inputfilepath,

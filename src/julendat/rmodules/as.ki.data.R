@@ -12,7 +12,7 @@ setClass("ki.data",
            PlotId = "list",
            EpPlotId = "character",
            StationId = "list",
-           Processlevel = "character",
+           Processlevel = "integer",
            Qualityflag = "character",
            Valid = "list",
            Parameter = "list",
@@ -21,28 +21,27 @@ setClass("ki.data",
          )
 
 as.ki.data <- function(input_filepath) {
-  
+
   stopifnot(require(ggplot2, quietly = TRUE))
   stopifnot(require(reshape, quietly = TRUE))
   
   df <- read.table(input_filepath, header = T, sep = ",", fill = T,
-                   stringsAsFactors = F, na.strings = "")
+                   stringsAsFactors = F, na.strings = c("", "NA", "NaN"))
   year <- substr(df$Datetime, 1, 4)
   len <- length(year)
   origin <- paste(year[1], "01-01", sep = "-")
-  
-  if (len < 1000) df$Datetime <- as.POSIXct(strptime(df$Datetime, 
-                                                     format = "%Y%m%d%H"), 
-                                            origin = origin)
 
-  month <- try(substr(df$Datetime, 6, 7))
-  day <- try(substr(df$Datetime, 9,10))
-  hour <- try(substr(df$Datetime, 12, 13))
+#   if (len < 1000) df$Datetime <- as.POSIXct(strptime(df$Datetime, 
+#                                                      format = "%Y%m%d%H"), 
+#                                             origin = origin)
+
+  month <- substr(df$Datetime, 6, 7)
+  day <- substr(df$Datetime, 9,10)
+  hour <- substr(df$Datetime, 12, 13)
   minute <- try(substr(df$Datetime, 15, 16))
-  
-  agghour <- try(paste(year, month, day, hour, sep = ""))
-  aggday <- try(paste(year, month, day, sep = ""))
-  aggmonth <- try(paste(year, month, sep = ""))
+  agghour <- paste(year, month, day, hour, sep = "")
+  aggday <- paste(year, month, day, sep = "")
+  aggmonth <- paste(year, month, sep = "")
 #   aggqh <- as.numeric(minute)
 #   aggqh <- aggqh %/% 15
 #   aggqh <- factor(aggqh, labels = c("00", "15", "30", "45"))
@@ -135,7 +134,7 @@ as.ki.data <- function(input_filepath) {
 }
 
 # 
-# input_filepath <- "/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0050/ki_0000cof1_000rug_201102010000_201102282355_eat_ca05_cti05_0050.dat"
+# input_filepath <- "/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/fa01_fah01_0200/ki_0000cof1_000rug_201102010000_201102282355_eat_fa01_fah01_0200.dat"
 # input_filepath <- "c:/tappelhans/uni/marburg/kili/testing/kili_data/ki_0000cof3_000pu1_201104010000_201104302355_eat_ca05_cti05_0005.dat"
 # input_filepath <- "c:/tappelhans/uni/marburg/kili/testing/kili_data/ki_0000foc3_000rug_201110010000_201110312355_eat_ca05_cti05_0005.dat"
 # 
