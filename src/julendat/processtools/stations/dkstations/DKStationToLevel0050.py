@@ -265,6 +265,10 @@ class DKStationToLevel0050:
                 ascii_headers[10] = 'SWDR_300_U'
                 ascii_headers[11] = 'SWUR_300_U'
         
+        if self.filenames.get_station_id().find("pu2") != -1:
+            ascii_headers[2] = 'P_RT_NRT_I'
+            ascii_headers[3] = 'F_RT_NRT_I'
+
         self.level_0000_ascii_file.set_column_headers(ascii_headers)
 
         if self.filenames.get_station_id().find("rad") != -1:
@@ -301,6 +305,7 @@ class DKStationToLevel0050:
 
         self.level_0000_ascii_file.set_column_headers(level_0000_column_headers)
 
+
     def calibrate_level_0005(self):
         """Calibrate level 0000 datasets
         """
@@ -333,6 +338,26 @@ class DKStationToLevel0050:
 
         elif self.filenames.get_station_id().find("pu1") != -1:
             parameters = ["P_RT_NRT"]
+            self.level_0000_data = []
+            for row in self.level_0000_ascii_file.get_data():
+                act_row = row
+                for parameter in parameters:
+                    try:
+                        raw_value_index = self.level_0000_ascii_file.get_column_headers().index(parameter + "_I")
+                        raw_value = float(row[raw_value_index])
+                        calib_coefficient_index = self.calibration_coefficients_headers.index(self.filenames.get_station_id()[-3:] + "_" + parameter)
+                        calib_coefficient = float(self.calibration_coefficients[calib_coefficient_index])
+                        param_value = raw_value * calib_coefficient
+                        act_row = act_row + [param_value]
+                    except:
+                        continue
+                self.level_0000_data.append(act_row)
+
+            new_header = self.level_0000_ascii_file.get_column_headers() + parameters
+            self.level_0000_ascii_file.set_column_headers(new_header)
+
+        elif self.filenames.get_station_id().find("pu2") != -1:
+            parameters = ["P_RT_NRT", "F_RT_NRT"]
             self.level_0000_data = []
             for row in self.level_0000_ascii_file.get_data():
                 act_row = row
@@ -405,7 +430,7 @@ class DKStationToLevel0050:
                 act_out=      [act_time, \
                                self.level_0005_timezone, \
                                self.filenames.get_aggregation(), \
-                               self.filenames.get_plot_id(), \
+                               self.filenames.get_plot_id()[4:], \
                                'xxx', \
                                self.filenames.get_station_id(), \
                                #self.filenames.get_filename_dictionary()['level_0005_calibration_level'], \
@@ -553,8 +578,8 @@ class DKStationToLevel0050:
                 if level_10_input[level_10_counter][0] == station_input[station_counter][0]:
                     
                     act_out = station_input[station_counter][0:8]
-                    act_out[calibration_level_index] = self.filenames.get_filename_dictionary()['level_0050_calibration_level']
-                    #act_out[qualtiy_flag_index] = self.filenames.get_filename_dictionary()['level_0050_processing']
+                    #act_out[calibration_level_index] = self.filenames.get_filename_dictionary()['level_0050_calibration_level']
+                    act_out[calibration_level_index] = self.filenames.get_filename_dictionary()['level_0050_processing']
                     act_out[qualtiy_flag_index] = "q" + "000" * (len(self.level0050_column_headers)-8)
                     for i in range(9, max(self.reorder)+1):
                         try:
@@ -570,7 +595,17 @@ class DKStationToLevel0050:
                     break
                 station_counter = station_counter + 1
             if found != True:
-                out.append(level_10_input[level_10_counter])
+                act_out = [level_10_input[level_10_counter][0], \
+                          self.level_0005_timezone, \
+                          self.filenames.get_aggregation(), \
+                               self.filenames.get_plot_id()[4:], \
+                               'xxx', \
+                               self.filenames.get_station_id(), \
+                               self.filenames.get_filename_dictionary()['level_0050_processing'], \
+                               'q' + '000' * (len(self.level0005_column_headers)-8)]
+                if len(act_out) < len(self.level0050_column_headers):
+                    act_out = act_out + [float('nan')]*(len(self.level0050_column_headers)-len(act_out))    
+                out.append(act_out)
             level_10_counter = level_10_counter + 1
 
 
