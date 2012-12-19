@@ -98,6 +98,40 @@ header_0050 = Datetime,
               Qualityflag,
               P_RT_NRT
 
+[000pu2_header_0000]
+Date=Date
+Time=Time
+Impulses=P_RT_NRT_I_x
+Datum=Date
+Zeit=Time
+Impulse=P_RT_NRT_I_x
+
+[000pu2_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              P_RT_NRT_01,
+              P_RT_NRT_I_01,
+              P_RT_NRT_02,
+              P_RT_NRT_I_02
+
+[000pu2_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              P_RT_NRT_01,
+              P_RT_NRT_02
+
 [000wxt_header_0000]
 Date = Date
 Time = Time
