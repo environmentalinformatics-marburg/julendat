@@ -115,10 +115,10 @@ header_0005 = Datetime,
               StationId,
               Processlevel,
               Qualityflag,
-              P_RT_NRT_01,
-              P_RT_NRT_I_01,
-              P_RT_NRT_02,
-              P_RT_NRT_I_02
+              P_RT_NRT,
+              P_RT_NRT_I,
+              F_RT_NRT,
+              F_RT_NRT_I
 
 [000pu2_header_0050]
 header_0050 = Datetime, 
@@ -129,8 +129,8 @@ header_0050 = Datetime,
               StationId,
               Processlevel,
               Qualityflag,
-              P_RT_NRT_01,
-              P_RT_NRT_02
+              P_RT_NRT,
+              F_RT_NRT
 
 [000wxt_header_0000]
 Date = Date

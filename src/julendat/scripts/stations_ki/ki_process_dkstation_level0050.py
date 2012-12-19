@@ -59,7 +59,7 @@ def configure(config_file):
                                           'toplevel_processing_plots_path')
     project_id = config.get('project','project_id')
     return toplevel_processing_plots_path, project_id
-
+    
     
 def main():
     """Main program function
