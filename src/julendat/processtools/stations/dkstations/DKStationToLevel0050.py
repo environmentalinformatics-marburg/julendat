@@ -595,7 +595,10 @@ class DKStationToLevel0050:
                     break
                 station_counter = station_counter + 1
             if found != True:
-                act_out = [level_10_input[level_10_counter][0], \
+                if len(level_10_input[level_10_counter]) > 1:
+                    out.append(level_10_input[level_10_counter])
+                else:
+                    act_out = [level_10_input[level_10_counter][0], \
                           self.level_0005_timezone, \
                           self.filenames.get_aggregation(), \
                                self.filenames.get_plot_id()[4:], \
@@ -603,9 +606,9 @@ class DKStationToLevel0050:
                                self.filenames.get_station_id(), \
                                self.filenames.get_filename_dictionary()['level_0050_processing'], \
                                'q' + '000' * (len(self.level0005_column_headers)-8)]
-                if len(act_out) < len(self.level0050_column_headers):
-                    act_out = act_out + [float('nan')]*(len(self.level0050_column_headers)-len(act_out))    
-                out.append(act_out)
+                    if len(act_out) < len(self.level0050_column_headers):
+                        act_out = act_out + [float('nan')]*(len(self.level0050_column_headers)-len(act_out))    
+                    out.append(act_out)
             level_10_counter = level_10_counter + 1
 
 

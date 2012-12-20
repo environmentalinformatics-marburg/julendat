@@ -26,6 +26,7 @@ import ConfigParser
 import datetime
 import fnmatch
 import os
+import shutil
 from julendat.processtools.aggregation.StationToLevel0200 import \
     StationToLevel0200
 
@@ -46,6 +47,19 @@ def locate(pattern, patternpath, root=os.curdir):
             if fnmatch.fnmatch(path, patternpath):
                 yield os.path.join(path, filename)
 
+def locate_path(patternpath, root=os.curdir):
+    '''Locate files matching filename pattern recursively
+    
+    This routine is based on the one from Simon Brunning at
+    http://code.activestate.com/recipes/499305/ and extended by the patternpath.
+     
+    Args:
+        patternpath: Pattern of the filepath
+        root: Root directory for the recursive search
+    '''
+    for path, dirs, files in os.walk(os.path.abspath(root)):
+        for dir_name in fnmatch.filter(dirs, patternpath):
+                yield os.path.join(path, dir_name)
 
 def configure(config_file):
     """Reads configuration settings and configure object.
@@ -77,15 +91,36 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_dataset=locate("*.dat", "*ca05_*", input_path)
+    station_folders=locate_path("fc01_*", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
 
+    station_dataset=locate("*.dat", "*ca05_*", input_path)
     for dataset in station_dataset:
         try:
             print " "
-            print "Processing dataset ", dataset
+            print "Concatenating dataset ", dataset
             systemdate = datetime.datetime.now()
             filepath=dataset
-            StationToLevel0200(filepath=filepath, config_file=config_file)
+            StationToLevel0200(filepath=filepath, config_file=config_file, \
+                               run_mode="concatenate")
+        except Exception as inst:
+            print "An error occured with the following dataset."
+            print "Some details:"
+            print "Filename: " + dataset
+            print "Exception type: " , type(inst)
+            print "Exception args: " , inst.args
+            print "Exception content: " , inst        
+
+    station_dataset=locate("*.dat", "*fc01_*", input_path)
+    for dataset in station_dataset:
+        try:
+            print " "
+            print "Aggregating dataset ", dataset
+            systemdate = datetime.datetime.now()
+            filepath=dataset
+            StationToLevel0200(filepath=filepath, config_file=config_file, \
+                               run_mode="aggregate")
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"
