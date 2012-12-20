@@ -32,6 +32,25 @@ header_0050 = Datetime,
               Ta_200,
               rH_200
 
+[000rug_quality_settings]
+quality_parameter = Ta_200,
+                    rH_200
+qfpos = 2,
+        5
+rthv_min = -30.0,
+            0.0
+rthv_max =  55.0,
+          100.0                                
+rqfvalues = 1,
+            2
+slmts_min = 0.0,
+            0.0 
+slmts_max = 0.8,
+            1.0
+spercentil = 5
+sqfvalues = 10,
+            20
+
 
 [001rug_header_0000]
 Date = Date
