@@ -1,7 +1,7 @@
 aggregate.ki.data <- function(input,
                               level = "1h",
                               ...) {
-  print(input)
+
   options(warn = -1)
   
   source("as.ki.data.R")
@@ -10,7 +10,7 @@ aggregate.ki.data <- function(input,
   stopifnot(require(reshape))
 
   ki.data <- as.ki.data(input)
-
+print(length(ki.data@Datetime))
   switch(level,
          "qh" = agglevel <- ki.data@AggregationLevels$AggQh,
          "1h" = agglevel <- ki.data@AggregationLevels$Agg1h,
@@ -44,6 +44,20 @@ aggregate.ki.data <- function(input,
          "seasonal" = aggint <- "01"
   )
   
+
+  qsplit <- lapply(seq(ki.data@Qualityflag), function(i) {
+    substring(ki.data@Qualityflag[i], 
+              first = c(seq(2, nchar(ki.data@Qualityflag[i]), 3)),
+              last = c(seq(4, nchar(ki.data@Qualityflag[i]), 3)))
+  })
+  
+  qsplit <- do.call("rbind", qsplit)
+  qsplitind <- lapply(seq(NCOL(qsplit)), function(i) {
+    which(qsplit[, i] == "012" | qsplit[, i] == "022")
+  })
+  
+  for (i in seq(qsplitind)) ki.data@Parameter[[i]][qsplitind[[i]]] <- NA
+  
   agglevel <- as.character(agglevel)
   
   timezone <- rep(ki.data@Timezone, length.out = length(unique(agglevel)))
@@ -55,7 +69,9 @@ aggregate.ki.data <- function(input,
                    length.out = length(unique(agglevel)))
   processlevel <- rep(sprintf("%04.f", ki.data@Processlevel), 
                       length.out = length(unique(agglevel)))
-  qualityflag <- rep(ki.data@Qualityflag, length.out = length(unique(agglevel)))
+  qualityflag <- rep(paste("q", sprintf(paste("%0", length(ki.data@Parameter) * 3, 
+                                              ".f", sep = ""), 0), sep = ""), 
+                     length.out = length(unique(agglevel)))
   
   prm.df <- as.data.frame(ki.data@Parameter, stringsAsFactors = F)
   
@@ -165,5 +181,5 @@ aggregate.ki.data <- function(input,
 
 }
 
-#  test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0050/ki_0000cof1_000rug_201102010000_201102282355_eat_ca05_cti05_0050.dat", "1h")
-#  str(test)
+  test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0050/ki_0000cof1_000rug_201102010000_201102282355_eat_ca05_cti05_0050.dat", "1h")
+  str(test)
