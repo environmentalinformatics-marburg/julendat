@@ -84,6 +84,41 @@ class Level01Standards():
         temp = temp.rsplit(',\n')
         self.level0050_column_headers = temp
 
+    def set_level0100_quality_settings(self):
+        """Sets quality settings for level 0100 files
+        """
+        self.level0100_quality_settings = {}
+        config = ConfigParser.ConfigParser()
+        config.read(self.filepath)
+        temp = config.get(self.station_id +  '_quality_settings', \
+                          'quality_parameter')
+        self.level0100_quality_settings['quality_parameter'] = \
+            temp.rsplit(',\n')
+        temp = config.get(self.station_id +  '_quality_settings', \
+                          'qfpos')
+        self.level0100_quality_settings['qfpos'] = temp.rsplit(',\n')
+        temp = config.get(self.station_id +  '_quality_settings', \
+                          'rthv_min')
+        self.level0100_quality_settings['rthv_min'] = temp.rsplit(',\n')
+        temp = config.get(self.station_id +  '_quality_settings', \
+                          'rthv_max')
+        self.level0100_quality_settings['rthv_max'] = temp.rsplit(',\n')
+        temp = config.get(self.station_id +  '_quality_settings', \
+                          'rqfvalues')
+        self.level0100_quality_settings['rqfvalues'] = temp.rsplit(',\n')
+        temp = config.get(self.station_id +  '_quality_settings', \
+                          'spercentil')
+        self.level0100_quality_settings['spercentil'] = temp.rsplit(',\n')
+        temp = config.get(self.station_id +  '_quality_settings', \
+                          'slmts_min')
+        self.level0100_quality_settings['slmts_min'] = temp.rsplit(',\n')
+        temp = config.get(self.station_id +  '_quality_settings', \
+                          'slmts_max')
+        self.level0100_quality_settings['slmts_max'] = temp.rsplit(',\n')
+        temp = config.get(self.station_id +  '_quality_settings', \
+                          'sqfvalues')
+        self.level0100_quality_settings['sqfvalues'] = temp.rsplit(',\n')
+        
     def get_level0000_column_headers(self):
         """Gets column headers of level 0000 file
         
@@ -125,3 +160,14 @@ class Level01Standards():
         except:
             self.set_level0050_standards()
         return self.level0050_column_headers
+
+    def get_level0100_quality_settings(self):
+        """Gets settings for level 0100 quality checks
+        
+        Returns:
+            Settings for level 0100 qualilty checks
+        """
+        try: self.level0100_quality_settings
+        except:
+            self.set_level0100_quality_settings()
+        return self.level0100_quality_settings
