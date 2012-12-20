@@ -63,10 +63,10 @@ def configure(config_file):
     
 def main():
     """Main program function
-    Process data from level 0000 to level 0050.
+    Process data from level 0050 to level 0100.
     """
     print
-    print 'Module: calibration_level0100'
+    print 'Module: ki_process_level0100'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__

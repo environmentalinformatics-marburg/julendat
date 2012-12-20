@@ -124,47 +124,26 @@ class StationToLevel0100:
         """
         self.main()
 
-    def move_data(self):
-        """Moves files.
-        """
-        shutil.move(self.source,self.destination)
-
     def main(self):
-        """Processes level 0000 station files to level 0050.
+        """Processes level 0050 station files to level 0100.
         """
-        self.get_level0050_standards()
-        
-        for pindex in range(8, len(self.level0050_column_headers)):
-            print self.level0050_column_headers[pindex]
-            if self.level0050_column_headers[pindex] == "Ta_200":
-                thv = 15.0
-            elif self.level0050_column_headers[pindex] == "rH_200":
-                thv = 80.0
-            if pindex == 8:
-                input_filepath = self.filenames.get_filepath()
-            else:
-                input_filepath = self.filenames.get_filename_dictionary()\
-                    ["level_0100_ascii-filepath"]
-            self.process_range_test(input_filepath, self.level0050_column_headers[pindex], \
-                                    thv, pindex-8)
-        print "...finished."
+        self.get_level0100_quality_settings()
+        self.process_range_test()
+        self.process_step_test()
 
-    def get_level0050_standards(self):
-        """Sets format standards for level 1 station data files
+
+    def get_level0100_quality_settings(self):
+        """Sets quality settings for level 0100 station data files
         """
-        level0050_standard = Level01Standards(\
+        level0100_standard = Level01Standards(\
             filepath=self.level0050_standards, \
             station_id=self.filenames.get_station_id())
-        self.level0050_column_headers = \
-            level0050_standard.get_level0050_column_headers()
+        self.level0100_quality_settings = \
+            level0100_standard.get_level0100_quality_settings()
 
-    def process_range_test(self, input_filepath, parameter, thv, qindex):
+    def process_range_test(self):
         """Process range test on level 0050 file.
         
-        Args:
-            input_filepath: Path of the input file
-            parameter: Meteorological parameter for processing control
-            qindex: Index position of processing control flag
         """
         if not os.path.isdir(self.filenames.get_filename_dictionary()\
             ["level_0100_ascii-path"]):
@@ -175,26 +154,95 @@ class StationToLevel0100:
             ["level_0100_ascii-filepath"]
         
         r_source = 'source("' + self.r_filepath + os.sep + \
-                'QControlDemo.R")'
-        r_keyword = "qcontroldemo"
-        r_ifp = 'inpath="' + input_filepath + '"'
-        r_ofp = 'outpath="' + output_filepath + '"'
-        r_prm = 'para="' + str(parameter) + '"'
-        r_thv = 'maxlimit=' + str(thv)
-        r_qindex = 'digit=' + str(2*qindex+1)
-        print r_qindex
-        print r_ifp
+                'run_QCRange.R")'
+        r_keyword = "run_QCRange"
+        r_ifp = 'input_filepath="' + self.filenames.get_filepath() + '"'
+        r_ofp = 'output_filepath="' + output_filepath + '"'
+        r_prm = 'parameter=c("' + \
+            '", "'.join(self.level0100_quality_settings['quality_parameter']) \
+             + '")'
+        r_thvi = 'thv_min=c(' + \
+            ', '.join(self.level0100_quality_settings['rthv_min']) + ')'
+        r_thva = 'thv_max=c(' + \
+            ', '.join(self.level0100_quality_settings['rthv_max']) + ')'
+        r_qfpos = 'qfpos=c(' + \
+            ', '.join(self.level0100_quality_settings['qfpos']) + ')'
+        r_qvalues = 'qfvalues=c(' + \
+            ', '.join(self.level0100_quality_settings['rqfvalues']) + ')'
+        r_flag_col = 'flag_col="Qualityflag"'
         
+        act_wd = os.getcwd()
+        os.chdir(self.r_filepath)
         r_cmd = r_source + '\n' + \
                 r_keyword + '(\n' + \
                 r_ifp + ',\n' + \
                 r_ofp + ',\n' + \
                 r_prm + ',\n' + \
-                r_thv + ',\n' + \
-                r_qindex + ')\n'
-        r_script = "qcontroldemo.rscript" 
+                r_thvi + ',\n' + \
+                r_thva + ',\n' + \
+                r_qfpos + ',\n' + \
+                r_qvalues + ',\n' + \
+                r_flag_col + ')\n'
+        r_script = "qcrange.rscript" 
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
         r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
         os.system(r_cmd)
+        os.chdir(act_wd)
+
+    def process_step_test(self):
+        """Process step test on level 0050 file.
+        
+        """
+        if not os.path.isdir(self.filenames.get_filename_dictionary()\
+            ["level_0100_ascii-path"]):
+            os.makedirs(self.filenames.get_filename_dictionary()\
+                ["level_0100_ascii-path"])
+        
+        output_filepath = self.filenames.get_filename_dictionary()\
+            ["level_0100_ascii-filepath"]
+        
+        r_source = 'source("' + self.r_filepath + os.sep + \
+                'run_QCSteps.R")'
+        r_keyword = "run_QCSteps"
+        r_ifp = 'input_filepath="' + output_filepath + '"'
+        r_ofp = 'output_filepath="' + output_filepath + '"'
+        r_prm = 'parameter=c("' + \
+            '", "'.join(self.level0100_quality_settings['quality_parameter']) \
+             + '")'
+        r_perc = 'percentil=c(' + \
+            ', '.join(self.level0100_quality_settings['spercentil']) + ')'
+        r_qfpos = 'qfpos=c(' + \
+            ', '.join(self.level0100_quality_settings['qfpos']) + ')'
+        r_qvalues = 'qfvalues=c(' + \
+            ', '.join(self.level0100_quality_settings['sqfvalues']) + ')'
+        r_limit_output = 'limit_output = NULL'
+        r_pos_date = 'pos_date = 1'
+        r_flag_col = 'flag_col="Qualityflag"'
+        r_lmts = 'lmts=data.frame(min=c(' + \
+            ', '.join(self.level0100_quality_settings['slmts_min']) + \
+            '), max=c(' + \
+            ', '.join(self.level0100_quality_settings['slmts_max']) + '))'
+        
+        act_wd = os.getcwd()
+        os.chdir(self.r_filepath)
+        r_cmd = r_source + '\n' + \
+                r_keyword + '(\n' + \
+                r_ifp + ',\n' + \
+                r_ofp + ',\n' + \
+                r_prm + ',\n' + \
+                r_perc + ',\n' + \
+                r_qfpos + ',\n' + \
+                r_qvalues + ',\n' + \
+                r_limit_output + ',\n' + \
+                r_pos_date + ',\n' + \
+                r_flag_col + ',\n' + \
+                r_lmts + ')\n'
+        r_script = "qcstep.rscript" 
+        f = open(r_script,"w")
+        f.write(r_cmd)
+        f.close()
+        r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
+        os.system(r_cmd)
+        os.chdir(act_wd)
