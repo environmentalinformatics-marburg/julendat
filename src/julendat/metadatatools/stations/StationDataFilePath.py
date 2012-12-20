@@ -213,10 +213,38 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_0100_ascii-path'] + \
             self.filename_dictionary['level_0100_ascii-filename']           
 
+        #Level 0190 (monthly processing aggregated files, standard format)
+        calibration_level="fc01"
+        processing = "0190"
+        extension="dat"
+        start_datetime = start_datetime[0:8]+"0000"
+        end_datetime = end_datetime[0:8]+"0000"
+        self.filename_dictionary['level_0190_calibration_level'] = calibration_level
+        self.filename_dictionary['level_0190_processing'] = processing
+        self.filename_dictionary['level_0190_ascii-filename'] = \
+            self.build_filename(\
+                start_datetime = start_datetime, \
+                end_datetime = end_datetime, \
+                time_zone = self.level_0005_time_zone, \
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing, \
+                extension=extension)
+        self.filename_dictionary['level_0190_ascii-path'] = \
+            self.build_path(\
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing)
+        self.filename_dictionary['level_0190_ascii-filepath'] = \
+            self.filename_dictionary['level_0190_ascii-path'] + \
+            self.filename_dictionary['level_0190_ascii-filename']           
+
         #Level 0200 (monthly processing aggregated files, standard format)
         calibration_level="fa01"
         processing = "0200"
         extension="dat"
+        start_datetime = start_datetime[0:8]+"0000"
+        end_datetime = end_datetime[0:8]+"0000"
         self.filename_dictionary['level_0200_calibration_level'] = calibration_level
         self.filename_dictionary['level_0200_processing'] = processing
         self.filename_dictionary['level_0200_ascii-filename'] = \

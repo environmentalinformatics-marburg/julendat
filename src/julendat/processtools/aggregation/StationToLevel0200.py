@@ -113,23 +113,40 @@ class StationToLevel0200:
     def run(self):
         """Executes class functions according to run_mode settings. 
         """
-        if self.get_run_mode() == "manual":
+        if self.get_run_mode() == "concatenate":
+            self.concatenate()
+        elif self.get_run_mode() == "aggregate":
+            self.aggregate()
+        else:
             pass
-        elif self.get_run_mode() == "auto":
-            self.auto()
-
-    def auto(self):
-        """Executes class functions in default auto mode.
-        """
-        self.main()
 
     def move_data(self):
         """Moves files.
         """
         shutil.move(self.source,self.destination)
 
-    def main(self):
-        """Processes level 0000 station files to level 0050.
+    def concatenate(self):
+        """Concatenate level 0100 station files prior to aggregation.
+        """
+        aggregation_level = "fah01"
+        self.filenames.build_filename_dictionary(aggregation_level)
+        output_path = self.filenames.get_filename_dictionary()\
+                      ["level_0190_ascii-path"]
+        if not os.path.isdir(output_path):
+            os.makedirs(output_path)
+        infile = open(self.filenames.get_filepath(), "r")
+        if os.path.isfile(self.filenames.get_filename_dictionary()\
+                      ["level_0190_ascii-filepath"]):
+            infile.readline()
+        infile_content = infile.read()
+        infile.close()
+        outfile = open(self.filenames.get_filename_dictionary()\
+                      ["level_0190_ascii-filepath"], "a")
+        outfile.write(infile_content)
+        outfile.close()
+
+    def aggregate(self):
+        """Aggregate level 0100 station files to level 0200.
         """
         aggregation_level = "fah01"
         self.filenames.build_filename_dictionary(aggregation_level)
