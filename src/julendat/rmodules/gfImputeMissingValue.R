@@ -5,7 +5,7 @@ gfImputeMissingValue <- function(data.dep,
                                data.coords,
                                n.plot = 10, 
                                prm.dep = "Ta_200",
-                               prm.indep = NULL,
+                               prm.indep = NA,
                                family = gaussian,
                                ...) {
   
@@ -73,8 +73,9 @@ gfImputeMissingValue <- function(data.dep,
   # Load function 'gfValidNaThreshold'
   source("gfValidNaThreshold.R")
   # Reject plots with too much NA values
-  data.indep <- gfValidNaThreshold(data.indep = data.indep, 
-                                    na.limit = na.limit)
+  data.indep <- gfValidNaThreshold(data.indep = data.indep,
+                                   prm.dep = prm.dep, 
+                                   na.limit = na.limit)
   
   
   ## Get plots with valid measurements at the given NA position
@@ -82,7 +83,9 @@ gfImputeMissingValue <- function(data.dep,
   # Load function 'gfNonNaStations'
   source("gfNonNaStations.R")
   # Identify plots
-  data.indep.avl <- gfNonNaStations(data.indep = data.indep, pos.na = pos.na)
+  data.indep.avl <- gfNonNaStations(data.indep = data.indep, 
+                                    pos.na = pos.na, 
+                                    prm.dep = prm.dep)
   
   
   ## Calculate distance between independent plots and dependent plot
@@ -93,21 +96,23 @@ gfImputeMissingValue <- function(data.dep,
             Nto=data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lat"], 
             Eto=data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lon"])
   }))
+  
   # Order independent stations by distance from the dependent plot
   data.indep.avl <- data.indep.avl[order(data.indep.avl[,3]),]
+  data.indep <- data.indep[as.numeric(row.names(data.indep.avl))]  
   
-    
+  
   ## Merge monthly data sets to obtain complete cases of dependent and independent plots
   
   # Load function 'gfCompleteMonthlyCases'
   source("gfCompleteMonthlyCases.R")
   # Get complete cases
   data.prm.cc <- gfCompleteMonthlyCases(data.dep = data.dep, 
-                                      data.indep = data.indep, 
-                                      data.indep.avl = data.indep.avl[,2], 
-                                      n.plot = n.plot, 
-                                      prm.dep = prm.dep, 
-                                      prm.indep = prm.indep)
+                                        data.indep = data.indep, 
+                                        data.indep.avl = data.indep.avl, 
+                                        n.plot = n.plot, 
+                                        prm.dep = prm.dep, 
+                                        prm.indep = prm.indep)
   
   
   ## Fit generalized linear model 
@@ -116,14 +121,27 @@ gfImputeMissingValue <- function(data.dep,
   source("gfComputeLinearModel.R")
   # Fit linear Model
   data.prm.cc.lm <- gfComputeLinearModel(data = data.prm.cc[[1]], 
-                                       data.cc = data.prm.cc[[2]], 
-                                       data.dep = data.dep, 
-                                       family = family, 
-                                       pos.na = pos.na, 
-                                       plots = data.indep.avl,
-                                       n.plot = n.plot, 
-                                       prm.dep = prm.dep, 
-                                       prm.indep = prm.indep)
-  # Return output list
+                                         data.cc = data.prm.cc[[2]], 
+                                         data.dep = data.dep, 
+                                         family = family, 
+                                         pos.na = pos.na, 
+                                         plots = data.indep.avl,
+                                         n.plot = n.plot, 
+                                         prm.dep = prm.dep, 
+                                         prm.indep = prm.indep)
+  
+  
+#   ## Set up output data frame
+#   
+#   # Load function 'gfOutputData
+#   source("gfOutputData.R")
+#   
+#   # Output data frame without imputed values
+#   data.out <- gfOutputData(data.dep = data.dep, 
+#                            prm.dep = prm.dep)
+  
+  
+  ## Return output list
+  
   return(data.prm.cc.lm)
 }  

@@ -1,6 +1,7 @@
 gfNonNaStations <- function(data.indep, 
-                          pos.na, 
-                          ...) {
+                            pos.na, 
+                            prm.dep = "Ta_200", 
+                            ...) {
   
 ################################################################################
 ##  
@@ -13,6 +14,7 @@ gfNonNaStations <- function(data.indep,
 ##  data.indep (list):    List of monthly data sets of independent plots.
 ##                        Must be composed of ki.data objects.
 ##  pos.na (numeric):     NA position in monthly data set of dependent plot.
+##  prm.dep (character):  Parameter under investigation.
 ##  ...                   Further arguments to be passed
 ##
 ################################################################################
@@ -40,7 +42,7 @@ gfNonNaStations <- function(data.indep,
 cat("\n",
     "Module   :  gfNonNaStations", "\n",
     "Author   :  Florian Detsch <florian.detsch@geo.uni-marburg.de>, Tim Appelhans <tim.appelhans@gmail.com>",
-    "Version  :  2012-12-17", "\n",
+    "Version  :  2012-12-20", "\n",
     "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n",
     "\n")
 
@@ -49,7 +51,7 @@ cat("\n",
     
   # Identify plots with available records at pos.na
   data.avl <- lapply(seq(data.indep), function(i) {
-    !pos.na %in% data.indep[[i]]@Valid$NAIndex
+    !pos.na %in% which(is.na(data.indep[[i]]@Parameter[[prm.dep]]))
   })
 
   # Plot names

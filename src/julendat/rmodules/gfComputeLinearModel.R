@@ -6,7 +6,7 @@ gfComputeLinearModel <- function(data = NULL,
                                plots = NULL,
                                n.plot = 10,
                                prm.dep = "Ta_200",
-                               prm.indep = NULL,
+                               prm.indep = NA,
                                ...) {
   
   ################################################################################
@@ -61,7 +61,7 @@ gfComputeLinearModel <- function(data = NULL,
   cat("\n",
       "Module   :  gfComputeLinearModel", "\n",
       "Author   :  Florian Detsch <florian.detsch@geo.uni-marburg.de>, Tim Appelhans <tim.appelhans@gmail.com>",
-      "Version  :  2012-12-18", "\n",
+      "Version  :  2012-12-20", "\n",
       "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n",
       "\n")
   
@@ -90,6 +90,8 @@ gfComputeLinearModel <- function(data = NULL,
   
   # Linear model
   model <- glm(formula, data = data.cc, family = family)
+  # Calculate r-squared
+  r.squ <- cor(data.cc[,prm.dep], predict(model))^2 
   
   # Formula for imputation of missing value
   lm.formula <- sapply(list(2:length(model$coefficients)), function(i) {
@@ -112,7 +114,8 @@ gfComputeLinearModel <- function(data = NULL,
               prm.dep,
               lm.fitted, 
               lm.formula, 
-              ifelse(!is.null(prm.indep), prm.indep, NA),
+              r.squ,
+              prm.indep,
               ifelse(!is.null(plots) && n.plot != 0, paste(plots[which(plots[,2])[1:n.plot],1], collapse=", "), NA)))
   
   }

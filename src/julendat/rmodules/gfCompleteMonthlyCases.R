@@ -1,10 +1,10 @@
 gfCompleteMonthlyCases <- function(data.dep, 
-                                 data.indep,
-                                 data.indep.avl,
-                                 n.plot = 10,
-                                 prm.dep = "Ta_200",
-                                 prm.indep = NULL,
-                                 ...) {
+                                   data.indep,
+                                   data.indep.avl,
+                                   n.plot = 10,
+                                   prm.dep = "Ta_200",
+                                   prm.indep = NA,
+                                   ...) {
   
 ################################################################################
 ##  
@@ -16,16 +16,17 @@ gfCompleteMonthlyCases <- function(data.dep,
 ##  
 ##  parameters are as follows:
 ##  
-##  data.dep (ki.data):       Monthly data set of dependent plot.
-##  data.indep (list):        List of monthly data sets of independent plots.
-##                            Must be composed of ki.data objects.
-##  data.indep.avl (logical): Logical vector indicating whether a plot provides 
-##                            a valid record for a given NA position.
-##  n.plot (numeric):         Number of independent plots for linear regression.
-##  prm.dep (character):      Parameter under investigation.
-##  prm.indep (character):    Single character object or Character vector with 
-##                            independent parameters.
-##  ...                       Further arguments to be passed
+##  data.dep (ki.data):           Monthly data set of dependent plot.
+##  data.indep (list):            List of monthly data sets of independent plots.
+##                                Must be composed of ki.data objects.
+##  data.indep.avl (data.frame):  Data frame indicating whether a certain plot 
+##                                provides a valid record at the investigated NA
+##                                position.
+##  n.plot (numeric):             Number of independent plots for linear regression.
+##  prm.dep (character):          Parameter under investigation.
+##  prm.indep (character):        Single character object or Character vector with 
+##                                independent parameters.
+##  ...                           Further arguments to be passed
 ##
 ################################################################################
 ##
@@ -52,7 +53,7 @@ gfCompleteMonthlyCases <- function(data.dep,
 cat("\n",
     "Module   :  gfCompleteMonthlyCases", "\n",
     "Author   :  Florian Detsch <florian.detsch@geo.uni-marburg.de>, Tim Appelhans <tim.appelhans@gmail.com>",
-    "Version  :  2012-12-17", "\n",
+    "Version  :  2012-12-20", "\n",
     "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n",
     "\n")
 
@@ -61,20 +62,16 @@ cat("\n",
   # Merge lists containing ki.data objects
   data <- append(data.dep, data.indep)
 
-#   # Reject plots due to difference in altitude
-#   if (!is.null(height.limit))
-#     data.indep.avl[which(abs(data.indep.avl[,2]) > height.limit),1] <- FALSE
-
   # Convert data.indep.avl to list
-  data.indep.avl <- lapply(seq(data.indep.avl), function(i) {
-    data.indep.avl[i]
+  data.indep.avl <- lapply(seq(data.indep.avl[,2]), function(i) {
+    data.indep.avl[i,2]
   })
   # Merge logical lists indicating which stations should be considered
   data.avl <- append(list(TRUE), data.indep.avl)
 
   # Reassign n.plot in case number of valid plots < n.plot
-  if (sum(unlist(data.avl)) < n.plot)
-    n.plot <- sum(unlist(data.avl))
+  if (sum(unlist(data.avl)) < n.plot + 1)
+    n.plot <- sum(unlist(data.avl)) - 1
 
   # List measured values for each valid station
   data.avl.prm <- lapply(which(unlist(data.avl))[1:(n.plot+1)], function(i) {
@@ -85,7 +82,7 @@ cat("\n",
   data.avl.date <- list(data[[1]]@Datetime)
 
   # Measured values of independent parameters
-  if (!is.null(prm.indep)) {
+  if (!is.na(prm.indep)) {
     data.prm.indep <- list(data[[1]]@Parameter[prm.indep])
   } else {
     data.prm.indep <- list()

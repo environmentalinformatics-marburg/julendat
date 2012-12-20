@@ -1,6 +1,7 @@
-gfValidNaThreshold <- function(data.indep, 
-                          na.limit = 0.2, 
-                          ...) {
+gfValidNaThreshold <- function(data.indep,
+                               prm.dep = "Ta_200",
+                               na.limit = 0.2, 
+                               ...) {
   
   ################################################################################
   ##  
@@ -11,6 +12,7 @@ gfValidNaThreshold <- function(data.indep,
   ##  
   ##  data.indep (list):    List of monthly data sets of independent plots.
   ##                        Must be composed of ki.data objects.
+  ##  prm.dep (character):  Parameter under investigation.
   ##  na.limit (numeric):   Accepted threshold percentage of NA values in monthly 
   ##                        data set of independent plots.
   ##  ...                   Further arguments to be passed
@@ -40,7 +42,7 @@ gfValidNaThreshold <- function(data.indep,
   cat("\n",
       "Module   :  gfValidNaThreshold", "\n",
       "Author   :  Florian Detsch <florian.detsch@geo.uni-marburg.de>, Tim Appelhans <tim.appelhans@gmail.com>",
-      "Version  :  2012-12-14", "\n",
+      "Version  :  2012-12-20", "\n",
       "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n",
       "\n")
   
@@ -49,7 +51,7 @@ gfValidNaThreshold <- function(data.indep,
   
   # Proportion of NA values in monthly data set
   na.ratio <- lapply(seq(data.indep), function(h) {
-    1 - data.indep[[h]]@Valid$N / length(data.indep[[h]]@Datetime)
+    sum(is.na(data.indep[[h]]@Parameter[[prm.dep]])) / length(data.indep[[h]]@Datetime)
   })
   
   # Reject plots with too high number of NA values
