@@ -84,8 +84,6 @@ def main():
         print "Processing dataset ", dataset
         systemdate = datetime.datetime.now()
         filepath=dataset
-        StationToLevel0100(filepath=filepath, config_file=config_file)
-        '''
         try:
             StationToLevel0100(filepath=filepath, config_file=config_file)
         except Exception as inst:
@@ -95,7 +93,7 @@ def main():
             print "Exception type: " , type(inst)
             print "Exception args: " , inst.args
             print "Exception content: " , inst        
-         '''
+
 if __name__ == '__main__':
     main()
 
