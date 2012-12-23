@@ -41,15 +41,14 @@ rthv_min = -30.0,
             0.0
 rthv_max =  55.0,
           100.0                                
-rqfvalues = 1,
-            2
+rqfvalues = 1, 2
 slmts_min = 0.0,
             0.0 
 slmts_max = 0.8,
             1.0
 spercentil = 5
-sqfvalues = 10,
-            20
+sqfvalues = 10, 20
+
 
 
 [001rug_header_0000]
@@ -86,6 +85,25 @@ header_0050 = Datetime,
               Ta_200,
               rH_200
 
+[001rug_quality_settings]
+quality_parameter = Ta_200,
+                    rH_200
+qfpos = 2,
+        5
+rthv_min = -30.0,
+            0.0
+rthv_max =  55.0,
+          100.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0,
+            0.0 
+slmts_max = 0.8,
+            1.0
+spercentil = 5
+sqfvalues = 10, 20
+              
+
+
 [000pu1_header_0000]
 Date=Date
 Time=Time
@@ -116,6 +134,19 @@ header_0050 = Datetime,
               Processlevel,
               Qualityflag,
               P_RT_NRT
+
+[000pu1_quality_settings]
+quality_parameter = P_RT_NRT
+qfpos = 2
+rthv_min = 0.0
+rthv_max = 2.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0 
+slmts_max = 2.0
+spercentil = 5
+sqfvalues = 10, 20
+
+
 
 [000pu2_header_0000]
 Date=Date
@@ -151,6 +182,19 @@ header_0050 = Datetime,
               P_RT_NRT,
               F_RT_NRT
 
+[000pu2_quality_settings]
+quality_parameter = P_RT_NRT
+qfpos = 2
+rthv_min = 0.0
+rthv_max = 2.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0 
+slmts_max = 2.0
+spercentil = 5
+sqfvalues = 10, 20
+
+
+
 [000wxt_header_0000]
 Date = Date
 Time = Time
@@ -181,14 +225,6 @@ Spannung DVM  [mV] = LWUR_300_U
 Temp. PT100   [°C] = T_CNR
 Temp. PT1000  [°C] = Ts_10
 
-
-
-
-
-
-
-
-
 [000wxt_header_0005]
 header_0005 = Datetime, 
               Timezone,
@@ -216,12 +252,12 @@ header_0005 = Datetime,
               LWUR_300_U,
               T_CNR
               
-
 [000wxt_header_0050]
 header_0050 = Datetime, 
               Timezone,
               Aggregationtime,
-              PlotId,
+              Pl
+            2otId,
               EpPlotId,
               StationId,
               Processlevel,
@@ -237,6 +273,31 @@ header_0050 = Datetime,
               WV,
               p_200,
               P_RT_NRT
+
+[000wxt_quality_settings]
+quality_parameter = Ta_200,
+                    rH_200,
+                    Ts_10
+qfpos = 2,
+        5,
+        8
+rthv_min = -30.0,
+            0.0,
+            -30.0
+rthv_max =  55.0,
+            100.0,
+            55.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0,
+            0.0,
+            0.0 
+slmts_max = 0.8,
+            1.0,
+            0.8
+spercentil = 5
+sqfvalues = 10, 20
+
+
 
 [000rad_header_0000]
 Date = Date
@@ -320,3 +381,23 @@ header_0050 = Datetime,
               swdr_22,
               swdr_23,
               swdr_24
+
+[000rad_quality_settings]
+quality_parameter = Ta_200,
+                    rH_200,
+                    Ts_10
+qfpos = 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38,
+        41, 44, 47, 50, 53, 56, 59, 62, 65, 68, 71, 74, 77
+rthv_min = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+           0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+rthv_max =  500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 
+            500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0,
+            500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0
+rqfvalues = 1, 2
+slmts_min = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 
+slmts_max = 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0,
+            100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0,
+             100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0
+spercentil = 5
+sqfvalues = 10, 20
