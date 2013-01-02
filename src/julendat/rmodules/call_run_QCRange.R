@@ -7,4 +7,6 @@ run_QCRange(
   thv_max=c(40.0, 100.0),
   qfpos=c(2,5),
   qfvalues=c(1,2),
-  flag_col = "Qualityflag")
+  flag_col = "Qualityflag",
+  plevel = 0000
+  )

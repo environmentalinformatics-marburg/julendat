@@ -1,7 +1,7 @@
 run_QCExtremes <- function(input_filepath, parameter, percentil, qfpos,
 												qfvalues, output_filepath = input_filepath, 
                         limit_output = getwd(), pos_date = 1,
-												flag_col = "Qualityflag") {
+												flag_col = "Qualityflag", plevel = 0000) {
 
 ################################################################################
 ##
@@ -138,7 +138,7 @@ datlist <- lapply(1:length(datalist), function(j) {
 ################################################################################
 ## output ######################################################################
 
-qc_output(datlist,output_filepath)
+qc_output(datlist,output_filepath, plevel)
 
 ################################################################################
 }
