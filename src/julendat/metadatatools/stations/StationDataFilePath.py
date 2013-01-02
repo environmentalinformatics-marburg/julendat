@@ -265,6 +265,32 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_0200_ascii-path'] + \
             self.filename_dictionary['level_0200_ascii-filename']           
 
+        #Level 0300 (monthly gap-filled files, standard format)
+        calibration_level="ag01"
+        processing = "0300"
+        extension="dat"
+        start_datetime = start_datetime[0:8]+"0000"
+        end_datetime = end_datetime[0:8]+"0000"
+        self.filename_dictionary['level_0300_calibration_level'] = calibration_level
+        self.filename_dictionary['level_0300_processing'] = processing
+        self.filename_dictionary['level_0300_ascii-filename'] = \
+            self.build_filename(\
+                start_datetime = start_datetime, \
+                end_datetime = end_datetime, \
+                time_zone = self.level_0005_time_zone, \
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing, \
+                extension=extension)
+        self.filename_dictionary['level_0300_ascii-path'] = \
+            self.build_path(\
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing)
+        self.filename_dictionary['level_0300_ascii-filepath'] = \
+            self.filename_dictionary['level_0300_ascii-path'] + \
+            self.filename_dictionary['level_0300_ascii-filename']           
+
     def get_filename_dictionary(self):
         """Gets dictionary for data filenames of different levels.
         
