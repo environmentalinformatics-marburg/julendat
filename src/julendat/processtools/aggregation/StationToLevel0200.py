@@ -42,7 +42,7 @@ class StationToLevel0200:
     """
 
     def __init__(self, filepath, config_file,run_mode="auto"):
-        """Inits StationToLevel0100. 
+        """Inits StationToLevel0200. 
         
         Args:
             filepath: Full path and name of the level 0100 file
