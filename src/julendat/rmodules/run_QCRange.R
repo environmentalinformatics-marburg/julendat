@@ -1,6 +1,6 @@
 run_QCRange <- function(input_filepath, parameter, thv_min, thv_max, qfpos,
   											qfvalues, output_filepath = input_filepath,
-												flag_col = "Qualityflag") {
+												flag_col = "Qualityflag", plevel = 0000) {
 	
 
 ################################################################################
@@ -94,7 +94,7 @@ datlist <- lapply(1:length(datalist), function(j) {
 ################################################################################
 ## output ######################################################################
 
-qc_output(datlist,output_filepath)
+qc_output(datlist,output_filepath, plevel)
 
 ################################################################################
 

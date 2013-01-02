@@ -1,7 +1,7 @@
 run_QCSteps <- function(input_filepath,parameter,percentil,qfpos,qfvalues,
                         output_filepath = input_filepath, 
                         limit_output = getwd(), pos_date = 1,
-												flag_col = "Qualityflag", lmts) {
+												flag_col = "Qualityflag", lmts, plevel = 0000) {
 
 ################################################################################
 ##  
@@ -163,7 +163,7 @@ datlist[[i]][["Qualityflag"]][1] <- datalist[[i]][["Qualityflag"]][1]
 ################################################################################
 ## output ######################################################################
 
-qc_output(datlist,output_filepath)
+qc_output(datlist,output_filepath, plevel)
 
 ################################################################################
 }

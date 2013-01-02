@@ -1,5 +1,6 @@
 aggregate.ki.data <- function(input,
                               level = "1h",
+                              plevel = 0000,
                               ...) {
 
   options(warn = -1)
@@ -50,13 +51,16 @@ print(length(ki.data@Datetime))
               first = c(seq(2, nchar(ki.data@Qualityflag[i]), 3)),
               last = c(seq(4, nchar(ki.data@Qualityflag[i]), 3)))
   })
-  
+
   qsplit <- do.call("rbind", qsplit)
   qsplitind <- lapply(seq(NCOL(qsplit)), function(i) {
     which(qsplit[, i] == "012" | qsplit[, i] == "022")
   })
-  
-  for (i in seq(qsplitind)) ki.data@Parameter[[i]][qsplitind[[i]]] <- NA
+  print(qsplitind)
+
+  try(
+    for (i in seq(qsplitind)) ki.data@Parameter[[i]][qsplitind[[i]]] <- NA
+  )
   
   agglevel <- as.character(agglevel)
   
@@ -67,7 +71,7 @@ print(length(ki.data@Datetime))
   epplotid <- rep(ki.data@EpPlotId, length.out = length(unique(agglevel)))
   stationid <- rep(ki.data@StationId$Longname, 
                    length.out = length(unique(agglevel)))
-  processlevel <- rep(sprintf("%04.f", ki.data@Processlevel), 
+  processlevel <- rep(sprintf("%04.f", plevel), 
                       length.out = length(unique(agglevel)))
   qualityflag <- rep(paste("q", sprintf(paste("%0", length(ki.data@Parameter) * 3, 
                                               ".f", sep = ""), 0), sep = ""), 
@@ -181,5 +185,5 @@ print(length(ki.data@Datetime))
 
 }
 
-  #test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0050/ki_0000cof1_000rug_201102010000_201102282355_eat_ca05_cti05_0050.dat", "1h")
-  #str(test)
+  test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/ki_0000cof3_000pu1_201110010000_201110310000_eat_fc01_fah01_0190.dat", "1h")
+  str(test)
