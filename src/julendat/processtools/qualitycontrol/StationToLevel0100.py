@@ -119,11 +119,13 @@ class StationToLevel0100:
                                   ["level_0100_ascii-path"]
             self.ascii_filepath = self.filenames.get_filename_dictionary()\
                                       ["level_0100_ascii-filepath"]
+            self.target_level = "0100"
         elif self.get_run_mode() == "0250":
             self.ascii_path = self.filenames.get_filename_dictionary()\
                                   ["level_0250_ascii-path"]
             self.ascii_filepath = self.filenames.get_filename_dictionary()\
                                       ["level_0250_ascii-filepath"]
+            self.target_level = "0250"
         self.auto()
 
     def auto(self):
@@ -178,7 +180,8 @@ class StationToLevel0100:
         r_qvalues = 'qfvalues=c(' + \
             ', '.join(self.level0100_quality_settings['rqfvalues']) + ')'
         r_flag_col = 'flag_col="Qualityflag"'
-        
+        r_plevel = 'plevel = ' + self.target_level
+
         act_wd = os.getcwd()
         os.chdir(self.r_filepath)
         r_cmd = r_source + '\n' + \
@@ -190,7 +193,9 @@ class StationToLevel0100:
                 r_thva + ',\n' + \
                 r_qfpos + ',\n' + \
                 r_qvalues + ',\n' + \
-                r_flag_col + ')\n'
+                r_flag_col + ',\n' + \
+                r_plevel + ')\n'
+        
         r_script = "qcrange.rscript" 
         f = open(r_script,"w")
         f.write(r_cmd)
@@ -229,7 +234,8 @@ class StationToLevel0100:
             ', '.join(self.level0100_quality_settings['slmts_min']) + \
             '), max=c(' + \
             ', '.join(self.level0100_quality_settings['slmts_max']) + '))'
-        
+        r_plevel = 'plevel = ' + self.target_level
+
         act_wd = os.getcwd()
         os.chdir(self.r_filepath)
         r_cmd = r_source + '\n' + \
@@ -243,7 +249,8 @@ class StationToLevel0100:
                 r_limit_output + ',\n' + \
                 r_pos_date + ',\n' + \
                 r_flag_col + ',\n' + \
-                r_lmts + ')\n'
+                r_lmts + ',\n' + \
+                r_plevel + ')\n'
         r_script = "qcstep.rscript" 
         f = open(r_script,"w")
         f.write(r_cmd)

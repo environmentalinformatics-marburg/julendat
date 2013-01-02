@@ -115,7 +115,8 @@ class StationToLevel0200:
         """
         if self.get_run_mode() == "concatenate":
             self.concatenate()
-        elif self.get_run_mode() == "aggregate":
+        elif self.get_run_mode() == "aggregate_0200":
+            self.target_level = "0200"
             self.aggregate()
         else:
             pass
@@ -160,7 +161,7 @@ class StationToLevel0200:
         print "...finished."
 
     def process_aggregation(self, aggregation_level):
-        """Process range test on level 0050 file.
+        """Process aggragation.
         
         Args:
             aggregation_level: Aggregation level
@@ -175,12 +176,14 @@ class StationToLevel0200:
             self.filenames.get_filename_dictionary()[\
                 'level_0200_ascii-filepath'] + '"'
         r_level = 'level="' + aggregation_level  + '"'
+        r_plevel = 'plevel =' + self.target_level
         
         r_cmd = r_source + '\n' + \
                 r_keyword + '(\n' + \
                 r_ifp + ',\n' + \
                 r_ofp + ',\n' + \
-                r_level + ')\n'
+                r_level + ',\n' + \
+                r_plevel + ')\n'
         r_script = "aggregation.rscript" 
         f = open(r_script,"w")
         f.write(r_cmd)
