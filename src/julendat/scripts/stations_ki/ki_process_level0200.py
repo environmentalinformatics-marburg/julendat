@@ -120,7 +120,7 @@ def main():
             systemdate = datetime.datetime.now()
             filepath=dataset
             StationToLevel0200(filepath=filepath, config_file=config_file, \
-                               run_mode="aggregate")
+                               run_mode="aggregate_0200")
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"
