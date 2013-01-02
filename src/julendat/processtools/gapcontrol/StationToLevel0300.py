@@ -37,7 +37,7 @@ from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.metadatatools.stations.Level01Standards import Level01Standards
 
 
-class StationToLevel0100:   
+class StationToLevel0300:   
     """Instance for processing station level 0200 to level 0300 data.
     """
 
@@ -124,19 +124,13 @@ class StationToLevel0100:
     def auto(self):
         """Executes class functions in default auto mode.
         """
-        
-        if not os.path.isfile(self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-filepath"]):
-            self.main()
-        else:
-            pass
+        self.main()
 
     def main(self):
         """Processes level 0050 station files to level 0100.
         """
         self.get_level0100_quality_settings()
-        self.process_range_test()
-        self.process_step_test()
+        self.process_gap_filling()
 
 
     def get_level0100_quality_settings(self):
@@ -164,13 +158,15 @@ class StationToLevel0100:
                 'gfWrite.R")'
         r_keyword = "gfWrite"
         r_fd = 'files.dep = list.files("' + self.tl_processing_path + \
-               '", pattern = glob2rx("*' + \
-               self.filenames.get_start_datetime_eifc() + \
-               '*ca05_cti05_0050.dat"), recursive = TRUE, full.names = TRUE)[1]'
+            '", pattern = glob2rx("*' + \
+            self.filenames.get_start_datetime_eifc() + \
+            self.filenames.get_filename_dictionary()['level_0200_wildcard'] + \
+            '"), recursive = TRUE, full.names = TRUE)[1]'
         r_fid = 'files.indep = c(list.files("' + self.tl_processing_path + \
-                '", pattern = glob2rx("*' + \
-                self.filenames.get_start_datetime_eifc() + \
-                '*ca05_cti05_0050.dat"), recursive = TRUE, full.names = TRUE)[-1])'
+            '", pattern = glob2rx("*' + \
+            self.filenames.get_start_datetime_eifc() + \
+            self.filenames.get_filename_dictionary()['level_0200_wildcard'] + \
+            '"), recursive = TRUE, full.names = TRUE)[-1])'
         r_fop = 'filepath.output = "' + output_filepath + '"'
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
         r_ql = 'quality.levels = c(12, 21)'
@@ -199,5 +195,6 @@ class StationToLevel0100:
         f.write(r_cmd)
         f.close()
         r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
-        os.system(r_cmd)
+        #os.system(r_cmd)
+        sys.exit()
         os.chdir(act_wd)

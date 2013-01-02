@@ -114,17 +114,23 @@ class StationToLevel0100:
     def run(self):
         """Executes class functions according to run_mode settings. 
         """
-        if self.get_run_mode() == "manual":
-            pass
-        elif self.get_run_mode() == "auto":
-            self.auto()
+        if self.get_run_mode() == "0100":
+            self.ascii_path = self.filenames.get_filename_dictionary()\
+                                  ["level_0100_ascii-path"]
+            self.ascii_filepath = self.filenames.get_filename_dictionary()\
+                                      ["level_0100_ascii-filepath"]
+        elif self.get_run_mode() == "0250":
+            self.ascii_path = self.filenames.get_filename_dictionary()\
+                                  ["level_0250_ascii-path"]
+            self.ascii_filepath = self.filenames.get_filename_dictionary()\
+                                      ["level_0250_ascii-filepath"]
+        self.auto()
 
     def auto(self):
         """Executes class functions in default auto mode.
         """
         
-        if not os.path.isfile(self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-filepath"]):
+        if not os.path.isfile(self.ascii_filepath):
             self.main()
         else:
             pass
@@ -150,13 +156,10 @@ class StationToLevel0100:
         """Process range test on level 0050 file.
         
         """
-        if not os.path.isdir(self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-path"]):
-            os.makedirs(self.filenames.get_filename_dictionary()\
-                ["level_0100_ascii-path"])
+        if not os.path.isdir(self.ascii_path):
+            os.makedirs(self.ascii_path)
         
-        output_filepath = self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-filepath"]
+        output_filepath = self.ascii_filepath
         
         r_source = 'source("' + self.r_filepath + os.sep + \
                 'run_QCRange.R")'
@@ -200,13 +203,10 @@ class StationToLevel0100:
         """Process step test on level 0050 file.
         
         """
-        if not os.path.isdir(self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-path"]):
-            os.makedirs(self.filenames.get_filename_dictionary()\
-                ["level_0100_ascii-path"])
+        if not os.path.isdir(self.ascii_path):
+            os.makedirs(self.ascii_path)
         
-        output_filepath = self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-filepath"]
+        output_filepath = self.ascii_filepath
         
         r_source = 'source("' + self.r_filepath + os.sep + \
                 'run_QCSteps.R")'
