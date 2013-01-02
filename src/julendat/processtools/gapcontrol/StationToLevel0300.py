@@ -195,6 +195,6 @@ class StationToLevel0300:
         f.write(r_cmd)
         f.close()
         r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
-        #os.system(r_cmd)
+        os.system(r_cmd)
         sys.exit()
         os.chdir(act_wd)
