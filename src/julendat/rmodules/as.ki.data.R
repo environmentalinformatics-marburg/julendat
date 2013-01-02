@@ -25,6 +25,7 @@ as.ki.data <- function(input_filepath) {
   stopifnot(require(ggplot2, quietly = TRUE))
   stopifnot(require(reshape, quietly = TRUE))
   
+  print (input_filepath)
   df <- read.table(input_filepath, header = T, sep = ",", fill = T,
                    stringsAsFactors = F, na.strings = c("", "NA", "NaN"))
   year <- substr(df$Datetime, 1, 4)

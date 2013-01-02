@@ -181,5 +181,5 @@ print(length(ki.data@Datetime))
 
 }
 
-  test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0050/ki_0000cof1_000rug_201102010000_201102282355_eat_ca05_cti05_0050.dat", "1h")
-  str(test)
+  #test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0050/ki_0000cof1_000rug_201102010000_201102282355_eat_ca05_cti05_0050.dat", "1h")
+  #str(test)
