@@ -154,6 +154,10 @@ class StationToLevel0200:
                       ["level_0200_ascii-path"]
         if not os.path.isdir(output_path):
             os.makedirs(output_path)
+        if not os.path.exists(self.filenames.get_filename_dictionary()[\
+                'level_0200_ascii-filepath']): 
+            open(self.filenames.get_filename_dictionary()[\
+                'level_0200_ascii-filepath'], 'w').close()             
         aggregation_level = "1h"
         self.process_aggregation(aggregation_level)
         
