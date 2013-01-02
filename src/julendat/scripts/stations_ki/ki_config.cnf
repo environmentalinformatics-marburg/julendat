@@ -13,6 +13,7 @@ toplevel_temp_path = /media/permanent/development/test/julendat/temp/
 
 [inventory]
 station_inventory = ki_config_station_inventory.cnf
+station_master = station_master.csv
 
 [project]
 project_id = ki

@@ -1,4 +1,4 @@
-"""Process level 0050 station data to quality controlled level 0100.
+"""Process level 0200 station data to gap-filled level 0300.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ from julendat.metadatatools.stations.Level01Standards import Level01Standards
 
 
 class StationToLevel0100:   
-    """Instance for processing station level 0050 to level 0100 data.
+    """Instance for processing station level 0200 to level 0300 data.
     """
 
     def __init__(self, filepath, config_file,run_mode="auto"):
@@ -84,9 +84,11 @@ class StationToLevel0100:
         config.read(self.config_file)
         self.tl_data_path = config.get('repository', 'toplevel_processing_plots_path')
         self.station_inventory = config.get('inventory','station_inventory')
+        self.station_master = config.get('inventory', 'station_master')
         self.project_id = config.get('project','project_id')
         self.level0050_standards = config.get('general','level0050_standards')
         self.r_filepath = config.get('general','r_filepath')
+        self.tl_processing_path = self.tl_data_path +  self.project_id
 
     def init_filenames(self, filepath):
         """Initializes D&K station data file.
@@ -146,105 +148,53 @@ class StationToLevel0100:
         self.level0100_quality_settings = \
             level0100_standard.get_level0100_quality_settings()
 
-    def process_range_test(self):
-        """Process range test on level 0050 file.
+    def process_gap_filling(self):
+        """Process gap filling on level 0200 file.
         
         """
         if not os.path.isdir(self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-path"]):
+            ["level_0300_ascii-path"]):
             os.makedirs(self.filenames.get_filename_dictionary()\
-                ["level_0100_ascii-path"])
+                ["level_0300_ascii-path"])
         
         output_filepath = self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-filepath"]
+            ["level_0300_ascii-filepath"]
         
         r_source = 'source("' + self.r_filepath + os.sep + \
-                'run_QCRange.R")'
-        r_keyword = "run_QCRange"
-        r_ifp = 'input_filepath="' + self.filenames.get_filepath() + '"'
-        r_ofp = 'output_filepath="' + output_filepath + '"'
-        r_prm = 'parameter=c("' + \
-            '", "'.join(self.level0100_quality_settings['quality_parameter']) \
-             + '")'
-        r_thvi = 'thv_min=c(' + \
-            ', '.join(self.level0100_quality_settings['rthv_min']) + ')'
-        r_thva = 'thv_max=c(' + \
-            ', '.join(self.level0100_quality_settings['rthv_max']) + ')'
-        r_qfpos = 'qfpos=c(' + \
-            ', '.join(self.level0100_quality_settings['qfpos']) + ')'
-        r_qvalues = 'qfvalues=c(' + \
-            ', '.join(self.level0100_quality_settings['rqfvalues']) + ')'
-        r_flag_col = 'flag_col="Qualityflag"'
-        
-        act_wd = os.getcwd()
-        os.chdir(self.r_filepath)
-        r_cmd = r_source + '\n' + \
-                r_keyword + '(\n' + \
-                r_ifp + ',\n' + \
-                r_ofp + ',\n' + \
-                r_prm + ',\n' + \
-                r_thvi + ',\n' + \
-                r_thva + ',\n' + \
-                r_qfpos + ',\n' + \
-                r_qvalues + ',\n' + \
-                r_flag_col + ')\n'
-        r_script = "qcrange.rscript" 
-        f = open(r_script,"w")
-        f.write(r_cmd)
-        f.close()
-        r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
-        os.system(r_cmd)
-        os.chdir(act_wd)
+                'gfWrite.R")'
+        r_keyword = "gfWrite"
+        r_fd = 'files.dep = list.files("' + self.tl_processing_path + \
+               '", pattern = glob2rx("*' + \
+               self.filenames.get_start_datetime_eifc() + \
+               '*ca05_cti05_0050.dat"), recursive = TRUE, full.names = TRUE)[1]'
+        r_fid = 'files.indep = c(list.files("' + self.tl_processing_path + \
+                '", pattern = glob2rx("*' + \
+                self.filenames.get_start_datetime_eifc() + \
+                '*ca05_cti05_0050.dat"), recursive = TRUE, full.names = TRUE)[-1])'
+        r_fop = 'filepath.output = "' + output_filepath + '"'
+        r_fcp = 'filepath.coords = "' + self.station_master + '"'
+        r_ql = 'quality.levels = c(12, 21)'
+        r_nal = 'na.limit = 0.1'
+        r_nplot = 'n.plot = 10'
+        r_pdp = 'prm.dep = c("Ta_200", "rH_200")' 
+        r_pid = 'prm.indep = c(NA, "Ta_200")'
 
-    def process_step_test(self):
-        """Process step test on level 0050 file.
-        
-        """
-        if not os.path.isdir(self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-path"]):
-            os.makedirs(self.filenames.get_filename_dictionary()\
-                ["level_0100_ascii-path"])
-        
-        output_filepath = self.filenames.get_filename_dictionary()\
-            ["level_0100_ascii-filepath"]
-        
-        r_source = 'source("' + self.r_filepath + os.sep + \
-                'run_QCSteps.R")'
-        r_keyword = "run_QCSteps"
-        r_ifp = 'input_filepath="' + output_filepath + '"'
-        r_ofp = 'output_filepath="' + output_filepath + '"'
-        r_prm = 'parameter=c("' + \
-            '", "'.join(self.level0100_quality_settings['quality_parameter']) \
-             + '")'
-        r_perc = 'percentil=c(' + \
-            ', '.join(self.level0100_quality_settings['spercentil']) + ')'
-        r_qfpos = 'qfpos=c(' + \
-            ', '.join(self.level0100_quality_settings['qfpos']) + ')'
-        r_qvalues = 'qfvalues=c(' + \
-            ', '.join(self.level0100_quality_settings['sqfvalues']) + ')'
-        r_limit_output = 'limit_output = NULL'
-        r_pos_date = 'pos_date = 1'
-        r_flag_col = 'flag_col="Qualityflag"'
-        r_lmts = 'lmts=data.frame(min=c(' + \
-            ', '.join(self.level0100_quality_settings['slmts_min']) + \
-            '), max=c(' + \
-            ', '.join(self.level0100_quality_settings['slmts_max']) + '))'
+
         
         act_wd = os.getcwd()
         os.chdir(self.r_filepath)
         r_cmd = r_source + '\n' + \
                 r_keyword + '(\n' + \
-                r_ifp + ',\n' + \
-                r_ofp + ',\n' + \
-                r_prm + ',\n' + \
-                r_perc + ',\n' + \
-                r_qfpos + ',\n' + \
-                r_qvalues + ',\n' + \
-                r_limit_output + ',\n' + \
-                r_pos_date + ',\n' + \
-                r_flag_col + ',\n' + \
-                r_lmts + ')\n'
-        r_script = "qcstep.rscript" 
+                r_fd + ',\n' + \
+                r_fid + ',\n' + \
+                r_fop + ',\n' + \
+                r_fcp + ',\n' + \
+                r_ql + ',\n' + \
+                r_nal + ',\n' + \
+                r_nplot + ',\n' + \
+                r_pdp + ',\n' + \
+                r_pid + ')\n'
+        r_script = "gfcall.rscript" 
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()

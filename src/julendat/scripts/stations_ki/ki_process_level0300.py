@@ -1,4 +1,4 @@
-"""Process data from level 0100 to aggregated level 0200.
+"""Process data from level 0200 to gap-filled level 0300.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -27,8 +27,8 @@ import datetime
 import fnmatch
 import os
 import shutil
-from julendat.processtools.aggregation.StationToLevel0200 import \
-    StationToLevel0200
+from julendat.processtools.gapcontrol.StationToLevel0300 import \
+    StationToLevel0300
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -95,7 +95,7 @@ def main():
     for folders in station_folders:
         shutil.rmtree(folders)
 
-    station_dataset=locate("*.dat", "*qc01_*", input_path)
+    station_dataset=locate("*.dat", "*ca05_*", input_path)
     for dataset in station_dataset:
         try:
             print " "
