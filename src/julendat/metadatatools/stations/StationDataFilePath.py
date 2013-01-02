@@ -247,6 +247,9 @@ class StationDataFilePath(StationDataFile):
         end_datetime = end_datetime[0:8]+"0000"
         self.filename_dictionary['level_0200_calibration_level'] = calibration_level
         self.filename_dictionary['level_0200_processing'] = processing
+        self.filename_dictionary['level_0200_wildcard'] =  "*" + \
+            calibration_level + "_" + self.get_aggregation() + "_" + \
+            processing + "." + extension
         self.filename_dictionary['level_0200_ascii-filename'] = \
             self.build_filename(\
                 start_datetime = start_datetime, \
@@ -265,8 +268,30 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_0200_ascii-path'] + \
             self.filename_dictionary['level_0200_ascii-filename']           
 
+        #Level 0250 (monthly processing controled files, standard format)
+        calibration_level="qc25"
+        processing = "0250"
+        extension="dat"
+        self.filename_dictionary['level_0250_calibration_level'] = calibration_level
+        self.filename_dictionary['level_0250_processing'] = processing
+        self.filename_dictionary['level_0250_ascii-filename'] = \
+            self.build_filename(\
+                start_datetime = start_datetime, \
+                end_datetime = end_datetime, \
+                time_zone = self.level_0005_time_zone, \
+                calibration_level=calibration_level, \
+                processing=processing, \
+                extension=extension)
+        self.filename_dictionary['level_0250_ascii-path'] = \
+            self.build_path(\
+                calibration_level=calibration_level, \
+                processing=processing)
+        self.filename_dictionary['level_0250_ascii-filepath'] = \
+            self.filename_dictionary['level_0250_ascii-path'] + \
+            self.filename_dictionary['level_0250_ascii-filename']           
+
         #Level 0300 (monthly gap-filled files, standard format)
-        calibration_level="ag01"
+        calibration_level="gc01"
         processing = "0300"
         extension="dat"
         start_datetime = start_datetime[0:8]+"0000"

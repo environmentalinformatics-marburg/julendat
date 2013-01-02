@@ -1,4 +1,4 @@
-"""Process data from level 0050 to qualitiy controled level 0100.
+"""Process data from level 0200 to qualitiy controled level 0250.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-01-18"
+__version__ = "2013-01-02"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
@@ -63,10 +63,10 @@ def configure(config_file):
     
 def main():
     """Main program function
-    Process data from level 0050 to level 0100.
+    Process data from level 0100 to level 0250.
     """
     print
-    print 'Module: ki_process_level0100'
+    print 'Module: ki_process_level0250'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
@@ -77,7 +77,7 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_dataset=locate("*.dat", "*ca05_*", input_path)
+    station_dataset=locate("*.dat", "*fa01_*", input_path)
 
     for dataset in station_dataset:
         print " "
@@ -86,7 +86,7 @@ def main():
         filepath=dataset
         try:
             StationToLevel0100(filepath=filepath, config_file=config_file, 
-                               run_mode="0100")
+                               run_mode="0250")
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"

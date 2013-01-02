@@ -91,36 +91,19 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_folders=locate_path("fc01_*", input_path)
-    for folders in station_folders:
-        shutil.rmtree(folders)
-
-    station_dataset=locate("*.dat", "*ca05_*", input_path)
+    station_dataset=locate("*.dat", "*fa01_*", input_path)
     for dataset in station_dataset:
+        print " "
+        print "Filling gaps in ", dataset
+        systemdate = datetime.datetime.now()
+        filepath=dataset
+        StationToLevel0300(filepath=filepath, config_file=config_file)
         try:
             print " "
-            print "Concatenating dataset ", dataset
+            print "Filling gaps in ", dataset
             systemdate = datetime.datetime.now()
             filepath=dataset
-            StationToLevel0200(filepath=filepath, config_file=config_file, \
-                               run_mode="concatenate")
-        except Exception as inst:
-            print "An error occured with the following dataset."
-            print "Some details:"
-            print "Filename: " + dataset
-            print "Exception type: " , type(inst)
-            print "Exception args: " , inst.args
-            print "Exception content: " , inst        
-
-    station_dataset=locate("*.dat", "*fc01_*", input_path)
-    for dataset in station_dataset:
-        try:
-            print " "
-            print "Aggregating dataset ", dataset
-            systemdate = datetime.datetime.now()
-            filepath=dataset
-            StationToLevel0200(filepath=filepath, config_file=config_file, \
-                               run_mode="aggregate")
+            StationToLevel0300(filepath=filepath, config_file=config_file)
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"
