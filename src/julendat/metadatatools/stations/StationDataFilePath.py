@@ -247,10 +247,6 @@ class StationDataFilePath(StationDataFile):
         end_datetime = end_datetime[0:8]+"0000"
         self.filename_dictionary['level_0200_calibration_level'] = calibration_level
         self.filename_dictionary['level_0200_processing'] = processing
-        self.filename_dictionary['level_0200_wildcard'] =  "*" + \
-            self.get_station_id() + "*" + start_datetime + "*" + \
-            calibration_level + "_" + self.get_aggregation() + "_" + \
-            processing + "." + extension
         self.filename_dictionary['level_0200_ascii-filename'] = \
             self.build_filename(\
                 start_datetime = start_datetime, \
@@ -275,6 +271,10 @@ class StationDataFilePath(StationDataFile):
         extension="dat"
         self.filename_dictionary['level_0250_calibration_level'] = calibration_level
         self.filename_dictionary['level_0250_processing'] = processing
+        self.filename_dictionary['level_0250_wildcard'] =  "*" + \
+            self.get_station_id() + "*" + start_datetime + "*" + \
+            calibration_level + "_" + self.get_aggregation() + "_" + \
+            processing + "." + extension
         self.filename_dictionary['level_0250_ascii-filename'] = \
             self.build_filename(\
                 start_datetime = start_datetime, \
