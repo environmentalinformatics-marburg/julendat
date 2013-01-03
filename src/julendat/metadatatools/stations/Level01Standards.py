@@ -44,6 +44,10 @@ class Level01Standards():
         self.filepath = filepath
         if station_id.find("rad") != -1:
             self.station_id = '000rad'
+        elif station_id.find("pu1") != -1:
+            self.station_id = '000pu1'
+        elif station_id.find("pu2") != -1:
+            self.station_id = '000pu2'
         else:
             self.station_id = station_id
 

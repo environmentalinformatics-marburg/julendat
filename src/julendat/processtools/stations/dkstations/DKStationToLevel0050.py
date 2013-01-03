@@ -179,6 +179,7 @@ class DKStationToLevel0050:
         self.module_serial_numbers_headers = \
             inventory.get_module_serial_numbers_headers()
         self.module_serial_numbers = inventory.get_module_serial_numbers()
+        self.module_pu2_metadata = inventory.get_module_pu2_metadata()
         if self.filenames.get_raw_plot_id() != inventory.get_plot_id():
             print "Error: plot-id does not match"
             print "File:       ", self.filenames.get_raw_plot_id()
@@ -266,8 +267,7 @@ class DKStationToLevel0050:
                 ascii_headers[11] = 'SWUR_300_U'
         
         if self.filenames.get_station_id().find("pu2") != -1:
-            ascii_headers[2] = 'P_RT_NRT_I'
-            ascii_headers[3] = 'F_RT_NRT_I'
+            self.rename_pu2_sensor_headers()
 
         self.level_0000_ascii_file.set_column_headers(ascii_headers)
 
@@ -278,6 +278,15 @@ class DKStationToLevel0050:
         print "New level 0000 headers:      ", \
             self.level_0000_ascii_file.get_column_headers()
 
+    def rename_pu2_sensor_headers(self):
+        """Rename headers of pu2 sensors (multiple "Impulse" entries)
+        """
+        level_0000_column_headers = \
+            self.level_0000_ascii_file.get_column_headers()
+        level_0000_column_headers[2] = self.module_pu2_metadata [2]
+        level_0000_column_headers[3] = self.module_pu2_metadata [3]
+        self.level_0000_ascii_file.set_column_headers(level_0000_column_headers)
+                
     def rename_rad_sensor_headers(self):
         """Rename headers of rad sensors (multiple "Voltage" entries)
         """
@@ -357,15 +366,18 @@ class DKStationToLevel0050:
             self.level_0000_ascii_file.set_column_headers(new_header)
 
         elif self.filenames.get_station_id().find("pu2") != -1:
-            parameters = ["P_RT_NRT", "F_RT_NRT"]
+            parameters = [self.module_pu2_metadata [2][:-2], \
+                          self.module_pu2_metadata [3][:-2]]
             self.level_0000_data = []
             for row in self.level_0000_ascii_file.get_data():
                 act_row = row
+                counter = 0
                 for parameter in parameters:
+                    counter = counter + 1
                     try:
                         raw_value_index = self.level_0000_ascii_file.get_column_headers().index(parameter + "_I")
                         raw_value = float(row[raw_value_index])
-                        calib_coefficient_index = self.calibration_coefficients_headers.index(self.filenames.get_station_id()[-3:] + "_" + parameter)
+                        calib_coefficient_index = self.calibration_coefficients_headers.index(self.filenames.get_station_id()[-3:] + "_" + str(counter))
                         calib_coefficient = float(self.calibration_coefficients[calib_coefficient_index])
                         param_value = raw_value * calib_coefficient
                         act_row = act_row + [param_value]

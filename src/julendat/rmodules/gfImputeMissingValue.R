@@ -89,7 +89,6 @@ gfImputeMissingValue <- function(data.dep,
   
   
   ## Calculate distance between independent plots and dependent plot
-
   data.indep.avl[,3] <- unlist(lapply(seq(data.indep.avl[,1]), function(k) {
     geodist(Nfrom=data.coords[which(data.coords[,1] == data.dep@PlotId$Unique),"Lat"], 
             Efrom=data.coords[which(data.coords[,1] == data.dep@PlotId$Unique),"Lon"], 
