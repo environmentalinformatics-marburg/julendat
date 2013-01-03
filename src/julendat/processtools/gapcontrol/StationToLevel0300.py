@@ -170,7 +170,7 @@ class StationToLevel0300:
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
         r_ql = 'quality.levels = c(12, 21)'
         r_nal = 'na.limit = 0.1'
-        r_nplot = 'n.plot = 10'
+        r_nplot = 'n.plot = 5'
         r_pdp = 'prm.dep = c("Ta_200", "rH_200")' 
         r_pid = 'prm.indep = c(NA, "Ta_200")'
 

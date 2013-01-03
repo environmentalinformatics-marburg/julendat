@@ -98,6 +98,7 @@ def main():
         systemdate = datetime.datetime.now()
         filepath=dataset
         StationToLevel0300(filepath=filepath, config_file=config_file)
+        os.sys.exit()
         try:
             print " "
             print "Filling gaps in ", dataset
