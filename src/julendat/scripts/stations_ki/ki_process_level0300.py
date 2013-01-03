@@ -91,7 +91,7 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_dataset=locate("*.dat", "*fa01_*", input_path)
+    station_dataset=locate("*rug*.dat", "*fa01_*", input_path)
     for dataset in station_dataset:
         print " "
         print "Filling gaps in ", dataset
