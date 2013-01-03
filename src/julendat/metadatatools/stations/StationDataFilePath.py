@@ -248,6 +248,7 @@ class StationDataFilePath(StationDataFile):
         self.filename_dictionary['level_0200_calibration_level'] = calibration_level
         self.filename_dictionary['level_0200_processing'] = processing
         self.filename_dictionary['level_0200_wildcard'] =  "*" + \
+            self.get_station_id() + "*" + start_datetime + "*" + \
             calibration_level + "_" + self.get_aggregation() + "_" + \
             processing + "." + extension
         self.filename_dictionary['level_0200_ascii-filename'] = \

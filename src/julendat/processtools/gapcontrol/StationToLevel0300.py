@@ -99,6 +99,7 @@ class StationToLevel0300:
         try:
             self.filenames = StationDataFilePath(filepath=filepath, \
                 toplevel_path=self.tl_data_path)
+            self.start_datetime = self.filenames.get_start_datetime_eifc()
             self.filenames.build_filename_dictionary()
             self.run_flag = True
         except:
@@ -159,12 +160,10 @@ class StationToLevel0300:
         r_keyword = "gfWrite"
         r_fd = 'files.dep = list.files("' + self.tl_processing_path + \
             '", pattern = glob2rx("*' + \
-            self.filenames.get_start_datetime_eifc() + \
             self.filenames.get_filename_dictionary()['level_0200_wildcard'] + \
             '"), recursive = TRUE, full.names = TRUE)[1]'
         r_fid = 'files.indep = c(list.files("' + self.tl_processing_path + \
             '", pattern = glob2rx("*' + \
-            self.filenames.get_start_datetime_eifc() + \
             self.filenames.get_filename_dictionary()['level_0200_wildcard'] + \
             '"), recursive = TRUE, full.names = TRUE)[-1])'
         r_fop = 'filepath.output = "' + output_filepath + '"'
