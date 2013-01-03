@@ -166,13 +166,13 @@ header_0005 = Datetime,
               Processlevel,
               Qualityflag,
               P_RT_NRT_1,
-              P_RT_NRT_I_1,
+              P_RT_NRT_1_I,
               P_RT_NRT_2,
-              P_RT_NRT_I_2,
+              P_RT_NRT_2_I,
               F_RT_NRT_1,
-              F_RT_NRT_I_1,
+              F_RT_NRT_1_I,
               F_RT_NRT_2,
-              F_RT_NRT_I_2
+              F_RT_NRT_2_I
 
 [000pu2_header_0050]
 header_0050 = Datetime, 

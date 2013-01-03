@@ -366,8 +366,8 @@ class DKStationToLevel0050:
             self.level_0000_ascii_file.set_column_headers(new_header)
 
         elif self.filenames.get_station_id().find("pu2") != -1:
-            parameters = [self.module_pu2_metadata [2], \
-                          self.module_pu2_metadata [3]]
+            parameters = [self.module_pu2_metadata [2][:-2], \
+                          self.module_pu2_metadata [3][:-2]]
             self.level_0000_data = []
             for row in self.level_0000_ascii_file.get_data():
                 act_row = row
