@@ -335,6 +335,19 @@ class StationDataFile(DataFile):
         """
         return self.module_plot_colors_headers    
     
+    def set_module_pu2_metadata(self, module_pu2_metadata):
+        """Sets pu2 logger metadata
+        """
+        self.module_pu2_metadata = module_pu2_metadata  
+        
+    def get_module_pu2_metadata(self):
+        """Gets pu2 logger metadata
+        
+        Returns:
+            Metadata of the pu2 loggers
+        """
+        return self.module_pu2_metadata    
+
     def check_filetype(self):
         """Sets filetype of the logger file (binary/ascii).
         """
