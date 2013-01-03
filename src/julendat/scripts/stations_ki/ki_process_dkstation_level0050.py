@@ -84,6 +84,8 @@ def main():
         print "Processing dataset ", dataset
         systemdate = datetime.datetime.now()
         filepath=dataset
+        DKStationToLevel0050(filepath=filepath, config_file=config_file)
+        os.sys.exit()
         try:
             DKStationToLevel0050(filepath=filepath, config_file=config_file)
             move_file = "mv " + dataset + " " + \

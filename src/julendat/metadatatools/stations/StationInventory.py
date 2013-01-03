@@ -108,7 +108,8 @@ class StationInventory(StationInventoryFile):
                             self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
                             self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
                             self.set_module_serial_numbers(act_line.rsplit(',')[22:28])
-                            self.set_module_tf_metadata(act_line.rsplit(',')[28:])
+                            self.set_module_tf_metadata(act_line.rsplit(',')[28:39])
+                            self.set_module_pu2_metadata(act_line.rsplit(',')[39:43])
                             foundID = True
         inventory_data.close()
         self.plot_tf_metadata_tupple = zip(plot_id_list, plot_color_list, \
@@ -171,7 +172,8 @@ class StationInventory(StationInventoryFile):
                             self.set_first_data_line(int(string.strip(line.rsplit(',')[11])))
                             self.set_calibration_coefficients(act_line.rsplit(',')[12:21])
                             self.set_module_serial_numbers(act_line.rsplit(',')[22:28])
-                            self.set_module_tf_metadata(act_line.rsplit(',')[28:])
+                            self.set_module_tf_metadata(act_line.rsplit(',')[28:39])
+                            self.set_module_pu2_metadata(act_line.rsplit(',')[39:43])
                             foundID = True
         inventory_data.close()
         self.plot_tf_metadata_tupple = zip(plot_id_list, plot_color_list, \
