@@ -82,12 +82,12 @@ ki.strip <- function(inputfilepath,
   ki.data.list <- lapply(seq(flist), 
                          function(i) as.ki.data(flist[i]))
 
-  sub <- sapply(seq(ki.data.list), 
-                         function(i) ki.data.list[[i]]@StationId$Unique
-                         )
-
-  sub <- which(sub == logger)
-  ki.data.list <- ki.data.list[sub]
+#   sub <- sapply(seq(ki.data.list), 
+#                          function(i) ki.data.list[[i]]@StationId$Unique
+#                          )
+# 
+#   sub <- which(sub == logger)
+#   ki.data.list <- ki.data.list[sub]
 
   df <- lapply(seq(ki.data.list),
                function(i) data.frame(x = ki.data.list[[i]]@Parameter[[prm]], 
@@ -162,7 +162,7 @@ ki.strip <- function(inputfilepath,
                             y = list(at = c(18, 12, 6))),
               colorkey = list(space = "top", width = 1, height = 0.7,
                               at = seq(minx, maxx, 0.1)), 
-              main = paste("overview", prm, logger, year, sep = " "),
+              main = paste("overview", prm, year, sep = " "),
               panel = function(x, ...) {
                 grid.rect(gp=gpar(col=NA, fill="grey50"))
                 panel.levelplot(x, ...)
