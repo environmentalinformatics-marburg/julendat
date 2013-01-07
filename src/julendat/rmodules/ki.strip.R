@@ -1,5 +1,4 @@
 ki.strip <- function(inputfilepath,
-                       logger = "rug",
                        prm = "Ta_200",                       
                        fun = mean,
                        arrange = "long",

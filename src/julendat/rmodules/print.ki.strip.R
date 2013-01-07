@@ -1,6 +1,5 @@
 print.ki.strip <- function(inputpath,
                              outputpath = inputpath,
-                             logger = "rug",
                              prm = "Ta_200",                       
                              fun = mean,
                              arrange = "long",
@@ -12,7 +11,7 @@ print.ki.strip <- function(inputpath,
   
   source("ki.strip.R")
   
-  plotname <- paste(Sys.Date(), "Overview", prm, logger, year, arrange, sep = "_")
+  plotname <- paste(Sys.Date(), "Overview", prm, year, arrange, sep = "_")
   plotname <- paste(plotname, ".png", sep = "")
   
   png(paste(outputpath, plotname, sep = "/"), 
@@ -21,7 +20,6 @@ print.ki.strip <- function(inputpath,
       res = 600)
   ki.strip(inputpath = inputpath,
              prm = prm,
-             logger = logger,
              arrange = arrange,
              fun = fun,
              year = year,
