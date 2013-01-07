@@ -32,26 +32,32 @@ from julendat.filetools.stations.dkstations.DKStationDataFile import DKStationDa
 import shutil
 import time
 import datetime
+import fnmatch
 from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
 from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.metadatatools.stations.Level01Standards import Level01Standards
 
 
 class VISLevel0050:   
-    """Instance for visualizing level 0050 datasets.
+    """Instance for visualizing datasets.
     """
 
-    def __init__(self, config_file, pattern="*fah01_0250.dat", run_mode="auto"):
+    def __init__(self, config_file, pattern="*fah01_0250.dat", \
+                 loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt'], \
+                 run_mode="auto"):
         """Inits VISLevel0050. 
         
         Args:
-            Toplevel directory of the datasets
             config_file: Configuration file.
+            pattern: Pattern of files to be visualized
+            loggers: Loggers to be visualized
             run_mode: Running mode (auto, manual)
         """
+        self.loggers = loggers
         self.pattern = pattern
         self.set_run_mode(run_mode)
         self.configure(config_file)
+        self.get_level0050_settings()
         self.input_path = self.tl_data_path + self.project_id
         self.output_path = self.toplevel_vis_path + self.project_id
         if not os.path.isdir(self.output_path):
@@ -98,7 +104,32 @@ class VISLevel0050:
         self.tl_data_path = config.get('repository', 'toplevel_processing_plots_path')
         self.toplevel_vis_path = config.get('repository', 'toplevel_vis_path')
         self.project_id = config.get('project','project_id')
+        self.level0050_standards = config.get('general','level0050_standards')
         self.r_filepath = config.get('general','r_filepath')
+        self.tl_processing_path = self.tl_data_path +  self.project_id
+
+
+    def get_level0050_settings(self):
+        """Gets settings for station data files
+        """
+        self.level0100_quality_parameters = []
+        self.level0050_column_headers = []
+        for logger in self.loggers:
+            temp = Level01Standards(filepath=self.level0050_standards, \
+                                    station_id= "000" + logger)
+            self.level0050_column_headers.append(\
+                temp.get_level0050_column_headers())
+            for item in temp.get_level0100_quality_settings()\
+                ['quality_parameter']:
+                if not "," in item:
+                    self.level0100_quality_parameters.append(item.strip())
+                else:
+                    subitem =  item.split(",")
+                    for subsubitem in subitem:
+                        self.level0100_quality_parameters.\
+                            append(subsubitem.strip())
+        self.level0100_quality_parameters = \
+            set(self.level0100_quality_parameters)
 
     def run(self):
         """Executes class functions according to run_mode settings. 
@@ -120,14 +151,11 @@ class VISLevel0050:
         os.chdir(self.r_filepath)
         r_source = 'source("print.ki.strip.R")'
         r_script = 'print.ki.strip('
-        r_inputpath = 'inputpath = "' + self.input_path + '",'
         r_outputpath = 'outputpath = "' + self.output_path + '",'
         r_arrange = 'arrange = "long",'
         r_pattern = 'pattern  = "' + self.pattern + '",'
         r_year = 'year = "2011"'
-        
         loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt']
-        #loggers = ['rug']
         parameters_rug = ['Ta_200', 'rH_200']
         parameters_pu1 = ['P_RT_NRT']
         parameters_pu2 = ['P_RT_NRT_1', 'P_RT_NRT_2', \
@@ -141,11 +169,15 @@ class VISLevel0050:
                           'swdr_21,', 'swdr_22', 'swdr_23', 'swdr_24']
         parameters_wxt = ['P_RT_NRT', 'SWDR_300', \
                       'SWUR_300', 'LWDR_300', 'LWUR_300', 'Ts_10']
-        par_range = {'Ta_200': [-10,50],'rH_200': [0,100], 'P_RT_NRT': [0,60], \
-                     'P_RT_NRT': [0,60],
+        par_range = {'Ta_200': [-10,50],'rH_200': [0,100], \
+                     'P_RT_NRT': [0,60], \
+                     'P_RT_NRT_1': [0,60], 'P_RT_NRT_2': [0,60],
+                     'F_RT_NRT_1': [0,60], 'F_RT_NRT_2': [0,60],
                      'SWDR_300': [0,1400], 'SWUR_300': [0,500], \
                      'LWDR_300': [200,500], 'LWUR_300': [200,500], \
+                     'WD': [0,360], 'WV': [0,10], \
                      'Ts_10': [10, 50], \
+                     'p_200': [750, 1100], \
                      'par_01': [0, 5000], 'par_02': [0, 5000], \
                      'par_03': [0, 5000], 'par_04': [0, 5000], \
                      'par_05': [0, 5000], 'par_06': [0, 5000], \
@@ -159,6 +191,58 @@ class VISLevel0050:
                      'swdr_21,': [0, 5000], 'swdr_22': [0, 5000], \
                      'swdr_23': [0, 5000], 'swdr_24': [0, 5000]}
         
+        print self.level0100_quality_parameters
+        for parameter in self.level0100_quality_parameters:
+           for year in range(2011, 2013):
+                print parameter
+                self.inputfilepath = []
+                for i in range(0, len(self.loggers)):
+                    if parameter in self.level0050_column_headers[i]:
+                        for path, dirs, files in os.walk(os.path.abspath(\
+                                             self.tl_processing_path)):
+                            for filename in fnmatch.filter(files, \
+                                                    "*" + self.loggers[i] + \
+                                                    "*" + str(year) + "*" + \
+                                                    self.pattern):
+                                self.inputfilepath.append(\
+                                                os.path.join(path, filename))
+                self.inputfilepath = sorted(self.inputfilepath)
+                inputfilepath = 'c('
+                for station in self.inputfilepath:
+                    inputfilepath = inputfilepath + '"' + \
+                                           station + '", \n' 
+                inputfilepath = inputfilepath[:-3]
+            
+                r_inputfilepath = 'inputfilepath = ' + inputfilepath + '),'
+                r_prm = 'prm = "' + parameter + '",'
+                r_range = 'range = c(' + str(par_range[parameter][0]) + ', ' + \
+                          str(par_range[parameter][1]) + '),'
+                r_colour = 'colour = VColList$' + str(parameter) + ', '
+                r_fun = 'fun = mean,'
+                if 'RT_NRT' in parameter:
+                    r_fun = 'fun = sum,'
+                r_year = 'year = "' + str(year) + '"'
+                r_cmd = r_source + "\n" + \
+                r_script + "\n" + \
+                r_inputfilepath + "\n" + \
+                r_outputpath + "\n" + \
+                r_prm + " \n" + \
+                r_fun + " \n" + \
+                r_arrange + " \n" + \
+                r_range + " \n" + \
+                r_pattern + " \n" + \
+                r_colour + " \n" + \
+                r_year + ")\n"
+    
+                script = "vis0050.rscript" 
+                f = open(script,"w")
+                f.write(r_cmd)
+                f.close()
+                r_cmd = "R CMD BATCH " + script + " " + script + ".log"
+                os.system(r_cmd)
+        
+
+    '''        
         for logger in loggers:
             r_logger = 'logger = "' + logger + '",'
             if logger == 'rug':
@@ -183,7 +267,7 @@ class VISLevel0050:
                     r_year = 'year = "' + str(year) + '"'
                     r_cmd = r_source + "\n" + \
                         r_script + "\n" + \
-                        r_inputpath + "\n" + \
+                        r_inputfilepath + "\n" + \
                         r_outputpath + "\n" + \
                         r_logger + " \n" + \
                         r_prm + " \n" + \
@@ -201,7 +285,7 @@ class VISLevel0050:
                     r_cmd = "R CMD BATCH " + script + " " + script + ".log"
                     print r_cmd
                     os.system(r_cmd)
-
+    '''
     def get_level0005_standards(self):
         """Sets format standards for level 1 station data files
         """
