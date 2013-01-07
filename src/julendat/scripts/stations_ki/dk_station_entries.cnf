@@ -1,0 +1,6 @@
+"LOGGER","LSKIP","COL01",","COL02","COL03","COL04","COL05","COL06","COL07","COL08","COL09","COL14"
+"000wxt", 7, "date","time","wd_wxt","ws_wxt","t_wxt","rh_wxt","p_wxt","precip_wxt","u_kd_wxt","u_ku_wxt","u_ld_wxt","u_lu_wxt","t_cnr_wxt","st_wxt"
+"000rug", 5, "date", "time", "t_rug", "rh_rug"
+"000pu2", 5, "date", "time", "p_precip_pu2" 
+"000pu1", 5, "date", "time", "p_precip_pu1"
+
