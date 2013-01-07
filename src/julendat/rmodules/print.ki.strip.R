@@ -12,7 +12,7 @@ print.ki.strip <- function(inputpath,
   
   source("ki.strip.R")
   
-  plotname <- paste("Overview", prm, logger, year, arrange, Sys.Date(), sep = "_")
+  plotname <- paste(Sys.Date(), "Overview", prm, logger, year, arrange, sep = "_")
   plotname <- paste(plotname, ".png", sep = "")
   
   png(paste(outputpath, plotname, sep = "/"), 

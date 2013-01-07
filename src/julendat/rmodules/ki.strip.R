@@ -1,4 +1,4 @@
-ki.strip <- function(inputpath,
+ki.strip <- function(inputfilepath,
                        logger = "rug",
                        prm = "Ta_200",                       
                        fun = mean,
@@ -76,12 +76,11 @@ ki.strip <- function(inputpath,
   Old.TZ <- Sys.timezone()
   Sys.setenv(TZ = "UTC")
   
-  flist <- list.files(inputpath, recursive = T, pattern = glob2rx(pattern))
+  flist <- inputfilepath
+  #list.files(inputpath, recursive = T, pattern = glob2rx(pattern))
   
   ki.data.list <- lapply(seq(flist), 
-                         function(i) as.ki.data(paste(inputpath,
-                                                        flist[i],
-                                                        sep="/")))
+                         function(i) as.ki.data(flist[i]))
 
   sub <- sapply(seq(ki.data.list), 
                          function(i) ki.data.list[[i]]@StationId$Unique
