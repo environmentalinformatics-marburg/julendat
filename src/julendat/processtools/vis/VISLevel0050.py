@@ -41,7 +41,7 @@ class VISLevel0050:
     """Instance for visualizing level 0050 datasets.
     """
 
-    def __init__(self, config_file, run_mode="auto"):
+    def __init__(self, config_file, pattern="*fah01_0250.dat", run_mode="auto"):
         """Inits VISLevel0050. 
         
         Args:
@@ -49,6 +49,7 @@ class VISLevel0050:
             config_file: Configuration file.
             run_mode: Running mode (auto, manual)
         """
+        self.pattern = pattern
         self.set_run_mode(run_mode)
         self.configure(config_file)
         self.input_path = self.tl_data_path + self.project_id
@@ -122,11 +123,11 @@ class VISLevel0050:
         r_inputpath = 'inputpath = "' + self.input_path + '",'
         r_outputpath = 'outputpath = "' + self.output_path + '",'
         r_arrange = 'arrange = "long",'
-        r_pattern = 'pattern  = "*fah01_0200.dat",'
+        r_pattern = 'pattern  = "' + self.pattern + '",'
         r_year = 'year = "2011"'
         
         loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt']
-        loggers = ['rug']
+        #loggers = ['rug']
         parameters_rug = ['Ta_200', 'rH_200']
         parameters_pu1 = ['P_RT_NRT']
         parameters_pu2 = ['P_RT_NRT', 'F_RT_NRT']

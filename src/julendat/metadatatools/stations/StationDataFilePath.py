@@ -291,6 +291,32 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_0250_ascii-path'] + \
             self.filename_dictionary['level_0250_ascii-filename']           
 
+        #Level 0290 (monthly processing controled files, standard format)
+        calibration_level="qc25"
+        processing = "0290"
+        extension="dat"
+        self.filename_dictionary['level_0290_calibration_level'] = calibration_level
+        self.filename_dictionary['level_0290_processing'] = processing
+        self.filename_dictionary['level_0290_wildcard'] =  "*" + \
+            self.get_station_id() + "*" + start_datetime + "*" + \
+            calibration_level + "_" + self.get_aggregation() + "_" + \
+            processing + "." + extension
+        self.filename_dictionary['level_0290_ascii-filename'] = \
+            self.build_filename(\
+                start_datetime = start_datetime[0:4] + '01010000', \
+                end_datetime = end_datetime[0:4] + '12310000', \
+                time_zone = self.level_0005_time_zone, \
+                calibration_level=calibration_level, \
+                processing=processing, \
+                extension=extension)
+        self.filename_dictionary['level_0290_ascii-path'] = \
+            self.build_path(\
+                calibration_level=calibration_level, \
+                processing=processing)
+        self.filename_dictionary['level_0290_ascii-filepath'] = \
+            self.filename_dictionary['level_0290_ascii-path'] + \
+            self.filename_dictionary['level_0290_ascii-filename']  
+
         #Level 0300 (monthly gap-filled files, standard format)
         calibration_level="gc01"
         processing = "0300"
