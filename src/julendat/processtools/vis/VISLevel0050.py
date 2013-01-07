@@ -130,7 +130,8 @@ class VISLevel0050:
         #loggers = ['rug']
         parameters_rug = ['Ta_200', 'rH_200']
         parameters_pu1 = ['P_RT_NRT']
-        parameters_pu2 = ['P_RT_NRT', 'F_RT_NRT']
+        parameters_pu2 = ['P_RT_NRT_1', 'P_RT_NRT_2', \
+                          'F_RT_NRT_1', 'F_RT_NRT_2']
         parameters_rad = ['Ta_200', 'rH_200',
                           'par_01', 'par_02', 'par_03', 'par_04', 
                           'par_05', 'par_06', 'par_07', 'par_08', 
