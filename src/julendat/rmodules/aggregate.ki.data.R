@@ -106,7 +106,7 @@ print(length(ki.data@Datetime))
            sd(prm.ls[[i]][[j]], na.rm = T),
            quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.25, names = F),
            quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.75, names = F),
-           sum(prm.ls[[i]][[j]], na.rm = T),
+           sum(prm.ls[[i]][[j]]),
            sum(complete.cases(prm.ls[[i]][[j]])),
            length(prm.ls[[i]][[j]]) - sum(complete.cases(prm.ls[[i]][[j]]))
            )
