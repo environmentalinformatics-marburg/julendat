@@ -15,9 +15,9 @@ print.ki.strip <- function(inputfilepath,
   plotname <- paste(plotname, ".png", sep = "")
   
   png(paste(outputpath, plotname, sep = "/"), 
-      width = ifelse(arrange == "wide", 1024*6, 768*6), 
-      height = ifelse(arrange == "wide", 768*6, 1024*6),
-      res = 600)
+      width = ifelse(arrange == "wide", 1024*8, 768*8), 
+      height = ifelse(arrange == "wide", 768*8, 1024*8),
+      res = 300)
   ki.strip(inputfilepath = inputfilepath,
              prm = prm,
              arrange = arrange,
