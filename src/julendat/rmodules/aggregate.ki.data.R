@@ -2,6 +2,9 @@ aggregate.ki.data <- function(input,
                               level = "1h",
                               plevel = 0000,
                               ...) {
+  
+  Old.TZ <- Sys.timezone()
+  Sys.setenv(TZ = "UTC")
 
   options(warn = -1)
   
@@ -182,6 +185,8 @@ print(length(ki.data@Datetime))
                       aggdf, stringsAsFactors = FALSE)
   
   return(aggdf)
+  
+  Sys.setenv(TZ = Old.TZ)
 
 }
 
