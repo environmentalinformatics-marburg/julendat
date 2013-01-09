@@ -3,6 +3,9 @@ gfCompleteMonthlyCases <- function(data.dep,
                                    data.indep.avl,
                                    n.plot = 10,
                                    prm.dep = "Ta_200",
+                                   time.window.pre, 
+                                   time.window.post, 
+                                   pos.na, 
                                    prm.indep = NA,
                                    ...) {
   
@@ -24,6 +27,10 @@ gfCompleteMonthlyCases <- function(data.dep,
 ##                                position.
 ##  n.plot (numeric):             Number of independent plots for linear regression.
 ##  prm.dep (character):          Parameter under investigation.
+##  time.window (numeric):        Values to consider for fitting the model before and 
+##                                after the gap.
+##  pos.na (numeric):             Gap in data set of dependent plot including
+##                                starting point, endpoint, and length of the gap.
 ##  prm.indep (character):        Single character object or Character vector with 
 ##                                independent parameters.
 ##  ...                           Further arguments to be passed
@@ -73,17 +80,17 @@ cat("\n",
   if (sum(unlist(data.avl)) < n.plot + 1)
     n.plot <- sum(unlist(data.avl)) - 1
 
-  # List measured values for each valid station
+  # List measured values that lie within the given timespan for each valid station
   data.avl.prm <- lapply(which(unlist(data.avl))[1:(n.plot+1)], function(i) {
-      data[[i]]@Parameter[prm.dep]
+      data[[i]]@Parameter[[prm.dep]][seq(time.window.pre, time.window.post)]
   })
 
   # Retrieve dates
-  data.avl.date <- list(data[[1]]@Datetime)
+  data.avl.date <- list(data[[1]]@Datetime[seq(time.window.pre, time.window.post)])
 
   # Measured values of independent parameters
   if (!is.na(prm.indep)) {
-    data.prm.indep <- list(data[[1]]@Parameter[prm.indep])
+    data.prm.indep <- list(data[[1]]@Parameter[[prm.indep]][seq(time.window.pre, time.window.post)])
   } else {
     data.prm.indep <- list()
   }
@@ -92,8 +99,16 @@ cat("\n",
   data.temp <- append(data.avl.date, data.prm.indep)
   data.avl.comp <- append(data.temp, data.avl.prm)
 
+  # Rename list elements
+  if (!is.na(prm.indep)) {
+    names(data.avl.comp) <- c("Datetime", prm.indep, rep(prm.dep, length(data.avl.prm)))
+  } else {
+    names(data.avl.comp) <- c("Datetime", rep(prm.dep, length(data.avl.prm)))
+  }
+
   # Merge time series into data.frame
   data.avl.prm.merge <- do.call("data.frame", data.avl.comp)
+
   # Select complete cases only
   data.avl.prm.merge.cc <- data.avl.prm.merge[complete.cases(data.avl.prm.merge),]
 
