@@ -1,6 +1,9 @@
 gfValidNaThreshold <- function(data.indep,
                                prm.dep = "Ta_200",
                                na.limit = 0.2, 
+                               time.window.pre,
+                               time.window.post,
+                               pos.na,
                                ...) {
   
   ################################################################################
@@ -10,16 +13,20 @@ gfValidNaThreshold <- function(data.indep,
   ##  
   ##  parameters are as follows:
   ##  
-  ##  data.indep (list):    List of monthly data sets of independent plots.
-  ##                        Must be composed of ki.data objects.
-  ##  prm.dep (character):  Parameter under investigation.
-  ##  na.limit (numeric):   Accepted threshold percentage of NA values in monthly 
-  ##                        data set of independent plots.
-  ##  ...                   Further arguments to be passed
+  ##  data.indep (list):      List of monthly data sets of independent plots.
+  ##                          Must be composed of ki.data objects.
+  ##  prm.dep (character):    Parameter under investigation.
+  ##  na.limit (numeric):     Accepted threshold percentage of NA values in monthly 
+  ##                          data set of independent plots.
+  ##  time.window (numeric):  Values to consider for fitting the model before and 
+  ##                          after the gap.
+  ##  pos.na (numeric):       Gap in data set of dependent plot including
+  ##                          starting point, endpoint, and length of the gap.
+  ##  ...                     Further arguments to be passed
   ##
   ################################################################################
   ##
-  ##  Copyright (C) 2012 Florian Detsch, Tim Appelhans
+  ##  Copyright (C) 2013 Florian Detsch, Tim Appelhans
   ##
   ##  This program is free software: you can redistribute it and/or modify
   ##  it under the terms of the GNU General Public License as published by
@@ -42,16 +49,20 @@ gfValidNaThreshold <- function(data.indep,
   cat("\n",
       "Module   :  gfValidNaThreshold", "\n",
       "Author   :  Florian Detsch <florian.detsch@geo.uni-marburg.de>, Tim Appelhans <tim.appelhans@gmail.com>",
-      "Version  :  2012-12-20", "\n",
+      "Version  :  2013-01-08", "\n",
       "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n",
       "\n")
   
   ########## FUNCTION BODY #######################################################
   
+
+  # Time sequences before and after gap
+  time.window.pre.seq <- seq(time.window.pre, pos.na[1] - 1)
+  time.window.post.seq <- seq(pos.na[2] + 1, time.window.post)
   
-  # Proportion of NA values in monthly data set
+  # Proportion of NA values in given time window
   na.ratio <- lapply(seq(data.indep), function(h) {
-    sum(is.na(data.indep[[h]]@Parameter[[prm.dep]])) / length(data.indep[[h]]@Datetime)
+    sum(is.na(data.indep[[h]]@Parameter[[prm.dep]][c(time.window.pre.seq, time.window.post.seq)])) / length(c(time.window.pre.seq, time.window.post.seq))
   })
   
   # Reject plots with too high number of NA values
