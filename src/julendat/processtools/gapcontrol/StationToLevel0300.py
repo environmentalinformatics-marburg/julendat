@@ -162,6 +162,11 @@ class StationToLevel0300:
         """Process gap filling on level 0200 file.
         
         """
+        if not os.path.isdir(self.filenames.get_filename_dictionary()\
+                                 ["level_0300_ascii-path"]):
+                os.makedirs(self.filenames.get_filename_dictionary()\
+                            ["level_0300_ascii-path"])
+        
         r_source = 'source("' + self.r_filepath + os.sep + \
                 'gfWrite.R")'
         r_keyword = "gfWrite"
@@ -182,12 +187,12 @@ class StationToLevel0300:
                                   ["level_0300_ascii-filepath"] + '"'
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
         r_ql = 'quality.levels = c(12,22)'
+        r_gl = 'gap.limit = 1500' 
         r_nal = 'na.limit = 0.1'
+        r_tw = 'time.window = 1000'
         r_nplot = 'n.plot = 10'
         r_pdp = 'prm.dep = c("Ta_200", "rH_200")' 
         r_pid = 'prm.indep = c(NA, "Ta_200")'
-        r_pdp = 'prm.dep = c("Ta_200")' 
-        r_pid = 'prm.indep = c(NA)'
         r_plevel = 'plevel = 0300'
         r_family = 'family = gaussian'
 
@@ -200,7 +205,9 @@ class StationToLevel0300:
                 r_fop + ',\n' + \
                 r_fcp + ',\n' + \
                 r_ql + ',\n' + \
+                r_gl + ',\n' + \
                 r_nal + ',\n' + \
+                r_tw + ',\n' + \
                 r_nplot + ',\n' + \
                 r_pdp + ',\n' + \
                 r_pid + ',\n' + \
@@ -211,8 +218,6 @@ class StationToLevel0300:
         f.write(r_cmd)
         f.close()
         r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
-
-        os.sys.exit()
         os.system(r_cmd)
         sys.exit()
         os.chdir(act_wd)
