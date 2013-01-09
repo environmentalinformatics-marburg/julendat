@@ -5,7 +5,7 @@ qc_select_data <- function(datalist,para_list) {
 ##  several datasets.
 ##  
 ################################################################################  
-  
+
 datlist <- lapply(1:length(datalist), function(i) {
 
 ## select dataset create data.frame
@@ -23,7 +23,7 @@ datlist <- lapply(1:length(datalist), function(i) {
     
 ## delete first row
     
-  dat <- dat[,-1]
+  if (length(para_list) > 1) dat <- dat[,-1] else dat
 
 ################################################################################    
   })
