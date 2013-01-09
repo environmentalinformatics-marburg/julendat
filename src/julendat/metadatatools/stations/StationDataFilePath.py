@@ -303,6 +303,10 @@ class StationDataFilePath(StationDataFile):
             level_0290_startdatetime[0:4] + "-01-01 00:00:00"
         self.filename_dictionary['level_0290_enddatetime'] =  \
             level_0290_enddatetime[0:4] + "-12-31 23:00:00"
+        self.filename_dictionary['level_0290_wildcard'] =  "*" + \
+            self.get_station_id() + "*" + level_0290_startdatetime + "*" + \
+            calibration_level + "_" + self.get_aggregation() + "_" + \
+            processing + "." + extension
         self.filename_dictionary['level_0290_ascii-filename'] = \
             self.build_filename(\
                 start_datetime = level_0290_startdatetime, \

@@ -96,6 +96,9 @@ def main():
         print " "
         systemdate = datetime.datetime.now()
         filepath=dataset
+        StationToLevel0300(filepath=filepath, config_file=config_file)
+
+        '''
         try:
             print " "
             print "Filling gaps in ", dataset
@@ -109,7 +112,7 @@ def main():
             print "Exception type: " , type(inst)
             print "Exception args: " , inst.args
             print "Exception content: " , inst        
-
+         '''
 if __name__ == '__main__':
     main()
 
