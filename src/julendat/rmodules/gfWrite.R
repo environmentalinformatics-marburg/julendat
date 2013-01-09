@@ -3,10 +3,14 @@ gfWrite <- function(files.dep,
                     filepath.output, 
                     filepath.coords, 
                     quality.levels, 
-                    na.limit, 
+                    gap.limit,
+                    na.limit,
+                    time.window,
                     n.plot,
                     prm.dep, 
-                    prm.indep,  
+                    prm.indep, 
+                    family,
+                    plevel,
                     ...) {
   
   # Load function 'gfRun'
@@ -17,10 +21,14 @@ gfWrite <- function(files.dep,
                            files.indep = files.indep,
                            filepath.coords = filepath.coords, 
                            quality.levels = quality.levels,
+                           gap.limit = gap.limit,
                            na.limit = na.limit,
+                           time.window = time.window,
                            n.plot = n.plot,
                            prm.dep = prm.dep, 
-                           prm.indep = prm.indep)
+                           prm.indep = prm.indep, 
+                           family = family, 
+                           plevel = plevel)
   
   # Write output table
   write.table(imputation.data[[2]], 

@@ -2,35 +2,24 @@ gfRun <- function(files.dep,
                   files.indep,
                   filepath.coords, 
                   quality.levels, 
+                  gap.limit,
                   na.limit,
-                  data.coords,
+                  time.window,
                   n.plot,
                   prm.dep, 
-                  prm.indep) {
-
-  # Required libraries for parallelization
-  library(foreach)
-  library(doSNOW)
-  library(parallel)
+                  prm.indep, 
+                  family, 
+                  plevel,
+                  ...) {
   
   # Required functions
   source("as.ki.data.R")
   source("gfRejectLowQuality.R")
+  source("gfGapLength.R")
   source("gfImputeMissingValue.R")
   source("gfOutputData.R")
   
-#   ### Parallelization
-#   # Number of cores
-#   n.cores <- detectCores() 
-#   
-#   # Initialize and register SNOW parallel backend
-#   clstr <- makeCluster(n.cores, type="SOCK")
-#   registerDoSNOW(clstr)
-#   
-#   # Export function 'as.kili.data' to cluster
-#   temp <- clusterEvalQ(clstr, c(source("as.ki.data.R")))
-#   
-#   
+  
   
   ### Data import
   
@@ -39,30 +28,24 @@ gfRun <- function(files.dep,
   data.coords <- read.csv(filepath.coords, header=TRUE)
   data.coords <- data.coords[,c("PlotID", "Lon", "Lat")]
   
-  
-  # Import dependent data set
+
+  # Import data set of dependent plot
   ki.data.dep <- as.ki.data(files.dep)
 
-  # Paralellized import of independent data sets
-#   clusterExport(clstr, "files.indep")
-#   ki.data.indep <- foreach(i = seq(files.indep), .packages = "reshape") %dopar% {
-#     as.ki.data(files.indep[i])
-#   }
-  
+  # Import data sets of independent plots
   ki.data.indep <- lapply(seq(files.indep), function(i) {
     as.ki.data(files.indep[i])
   })
   
-  # Stop cluster
-#  stopCluster(clstr)
-  
+
   
   ### Rejection of records with bad quality flags
   
   
-  # Dependent plot
-
+  # Loop through dependent parameters
   for (i in seq(prm.dep)) {
+    
+    # Dependent plot
     ki.data.dep <- gfRejectLowQuality(data = ki.data.dep, 
                                       prm.dep = prm.dep[i], 
                                       quality.levels = quality.levels)
@@ -84,25 +67,40 @@ gfRun <- function(files.dep,
     # Missing value(s) to be imputed
     pos.na <- which(is.na(ki.data.dep@Parameter[[prm.dep[i]]]))
     
+    # Calculate gap lengths and reject too large gaps
+    pos.na <- gfGapLength(data.dep = ki.data.dep, 
+                          pos.na = pos.na, 
+                          gap.limit = gap.limit)
+    
+    
     # Impute missing value(s)
     if (length(pos.na) > 0) {
       model.output <- lapply(seq(pos.na), function(j) {
-        print(paste(prm.dep[i], prm.indep[i], pos.na[j], sep = ", "))
         gfImputeMissingValue(data.dep = ki.data.dep, 
                              data.indep = ki.data.indep,
                              na.limit = na.limit, 
-                             pos.na = pos.na[j], 
+                             pos.na = as.numeric(pos.na[[j]]),
+                             time.window = time.window,
                              data.coords = data.coords, 
                              n.plot = n.plot, 
                              prm.dep = prm.dep[i], 
-                             prm.indep = prm.indep[i])
+                             prm.indep = prm.indep[i], 
+                             family = family)
       })
     }
+
     
     # Replace NA values by predicted values
-    ki.data.dep@Parameter[[prm.dep[i]]][pos.na] <- unlist(lapply(seq(model.output), function(k) {
-      ki.data.dep@Parameter[[prm.dep[i]]][pos.na[k]] <- model.output[[k]][[4]]
-    }))
+    for (h in seq(pos.na)) {
+      gap.start <- pos.na[[h]][,1]
+      gap.end <- pos.na[[h]][,2]
+      gap.span <- seq(gap.start, gap.end)
+      
+      ki.data.dep@Parameter[[prm.dep[i]]][gap.span] <- unlist(lapply(seq(model.output[[h]]), function(l) {
+        model.output[[h]][[l]][[4]]
+        }))
+    }
+    
   }
   
   
@@ -110,7 +108,8 @@ gfRun <- function(files.dep,
   ### Gap-filled output data frame
   
   
-  data.output <- gfOutputData(data.dep = ki.data.dep)
+  data.output <- gfOutputData(data.dep = ki.data.dep, 
+                              plevel = plevel)
   
   
   # Return output
