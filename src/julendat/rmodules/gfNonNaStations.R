@@ -11,15 +11,16 @@ gfNonNaStations <- function(data.indep,
 ##  
 ##  parameters are as follows:
 ##  
-##  data.indep (list):    List of monthly data sets of independent plots.
+##  data.indep (list):    List of data sets of independent plots.
 ##                        Must be composed of ki.data objects.
-##  pos.na (numeric):     NA position in monthly data set of dependent plot.
+##  pos.na (numeric):     Gap in data set of dependent plot including
+##                        starting point, endpoint, and length of the gap.
 ##  prm.dep (character):  Parameter under investigation.
 ##  ...                   Further arguments to be passed
 ##
 ################################################################################
 ##
-##  Copyright (C) 2012 Florian Detsch, Tim Appelhans
+##  Copyright (C) 2013 Florian Detsch, Tim Appelhans
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -42,16 +43,20 @@ gfNonNaStations <- function(data.indep,
 cat("\n",
     "Module   :  gfNonNaStations", "\n",
     "Author   :  Florian Detsch <florian.detsch@geo.uni-marburg.de>, Tim Appelhans <tim.appelhans@gmail.com>",
-    "Version  :  2012-12-20", "\n",
+    "Version  :  2013-01-08", "\n",
     "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n",
     "\n")
 
 ########## FUNCTION BODY #######################################################
   
     
-  # Identify plots with available records at pos.na
+  # Identify plots with available records for the given gap
+  data.temp <- lapply(seq(data.indep), function(i) {
+    (pos.na[1]:pos.na[2]) %in% which(is.na(data.indep[[i]]@Parameter[[prm.dep]]))
+  })
+
   data.avl <- lapply(seq(data.indep), function(i) {
-    !pos.na %in% which(is.na(data.indep[[i]]@Parameter[[prm.dep]]))
+    sum(data.temp[[i]]) == 0
   })
 
   # Plot names

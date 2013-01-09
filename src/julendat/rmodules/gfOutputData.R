@@ -1,4 +1,5 @@
-gfOutputData <- function(data.dep, 
+gfOutputData <- function(data.dep,
+                         plevel, 
                          ...) {
   
   # Define columns of output data frame
@@ -8,7 +9,7 @@ gfOutputData <- function(data.dep,
   plotid <- data.dep@PlotId$Shortname
   epplotid <- data.dep@EpPlotId
   stationid <- data.dep@StationId$Longname
-  processlevel <- rep("0150", length(datetime))
+  processlevel <- rep(plevel, length(datetime))
   qualityflag <- data.dep@Qualityflag
   parameter <- as.data.frame(data.dep@Parameter)
   
