@@ -20,7 +20,7 @@ gfRejectLowQuality <- function(data,
   ##
   ################################################################################
   ##
-  ##  Copyright (C) 2012 Florian Detsch, Tim Appelhans
+  ##  Copyright (C) 2013 Florian Detsch, Tim Appelhans
   ##
   ##  This program is free software: you can redistribute it and/or modify
   ##  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ gfRejectLowQuality <- function(data,
   cat("\n",
       "Module   :  gfRejectLowQuality.R", "\n",
       "Author   :  Florian Detsch <florian.detsch@geo.uni-marburg.de>, Tim Appelhans <tim.appelhans@gmail.com>",
-      "Version  :  2012-12-20", "\n",
+      "Version  :  2013-01-09", "\n",
       "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n",
       "\n")
   
@@ -54,9 +54,16 @@ gfRejectLowQuality <- function(data,
                         which(names(data@Parameter) == prm.dep), 
                         which(names(data[[1]]@Parameter) == prm.dep))
 
-  # Limits for quality flag extraction 
-  substr.min <- 1 + prm.dep.col + (prm.dep.col - 1) * 2
+  # Limits for quality flag extraction
+  if (prm.dep.col == 1) {
+    substr.min <- 1 + prm.dep.col + (prm.dep.col - 1) * 2
+    substr.max <- substr.min + 2
+  } else {  
+  substr.min <- ifelse(!is.list(data), 
+                       2 + length(unique(substr(names(data@Parameter[c(1:(prm.dep.col-1))]), 1, 2))) * 3,
+                       2 + length(unique(substr(names(data[[1]]@Parameter[c(1:(prm.dep.col-1))]), 1, 2))) * 3)
   substr.max <- substr.min + 2
+  }
   
   if(!is.list(data)) {
     # Identify measurements that yield a bad quality flag
