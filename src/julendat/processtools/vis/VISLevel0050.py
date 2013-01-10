@@ -158,8 +158,8 @@ class VISLevel0050:
         loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt']
         parameters_rug = ['Ta_200', 'rH_200']
         parameters_pu1 = ['P_RT_NRT']
-        parameters_pu2 = ['P_RT_NRT_1', 'P_RT_NRT_2', \
-                          'F_RT_NRT_1', 'F_RT_NRT_2']
+        parameters_pu2 = ['P_RT_NRT_01', 'P_RT_NRT_02', \
+                          'F_RT_NRT_01', 'F_RT_NRT_02']
         parameters_rad = ['Ta_200', 'rH_200',
                           'par_01', 'par_02', 'par_03', 'par_04', 
                           'par_05', 'par_06', 'par_07', 'par_08', 
@@ -171,8 +171,8 @@ class VISLevel0050:
                       'SWUR_300', 'LWDR_300', 'LWUR_300', 'Ts_10']
         par_range = {'Ta_200': [-10,50],'rH_200': [0,100], \
                      'P_RT_NRT': [0,60], \
-                     'P_RT_NRT_1': [0,60], 'P_RT_NRT_2': [0,60],
-                     'F_RT_NRT_1': [0,60], 'F_RT_NRT_2': [0,60],
+                     'P_RT_NRT_01': [0,60], 'P_RT_NRT_02': [0,60],
+                     'F_RT_NRT_01': [0,60], 'F_RT_NRT_02': [0,60],
                      'SWDR_300': [0,1400], 'SWUR_300': [0,500], \
                      'LWDR_300': [200,500], 'LWUR_300': [200,500], \
                      'WD': [0,360], 'WV': [0,10], \
