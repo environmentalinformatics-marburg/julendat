@@ -96,9 +96,9 @@ gfRun <- function(files.dep,
       gap.end <- pos.na[[h]][,2]
       gap.span <- seq(gap.start, gap.end)
       
-      ki.data.dep@Parameter[[prm.dep[i]]][gap.span] <- unlist(lapply(seq(model.output[[h]]), function(l) {
+      ki.data.dep@Parameter[[prm.dep[i]]][gap.span] <- round(unlist(lapply(seq(model.output[[h]]), function(l) {
         model.output[[h]][[l]][[4]]
-        }))
+        })), digits = 2)
     }
     
   }
