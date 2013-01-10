@@ -151,10 +151,10 @@ sqfvalues = 10, 20
 [000pu2_header_0000]
 Date=Date
 Time=Time
-Impulses=P_RT_NRT_I_1
+Impulses=P_RT_NRT_I_01
 Datum=Date
 Zeit=Time
-Impulse=P_RT_NRT_I_2
+Impulse=P_RT_NRT_I_02
 
 [000pu2_header_0005]
 header_0005 = Datetime, 
@@ -165,14 +165,14 @@ header_0005 = Datetime,
               StationId,
               Processlevel,
               Qualityflag,
-              P_RT_NRT_1,
-              P_RT_NRT_1_I,
-              P_RT_NRT_2,
-              P_RT_NRT_2_I,
-              F_RT_NRT_1,
-              F_RT_NRT_1_I,
-              F_RT_NRT_2,
-              F_RT_NRT_2_I
+              P_RT_NRT_01,
+              P_RT_NRT_01_I,
+              P_RT_NRT_02,
+              P_RT_NRT_02_I,
+              F_RT_NRT_01,
+              F_RT_NRT_01_I,
+              F_RT_NRT_02,
+              F_RT_NRT_02_I
 
 [000pu2_header_0050]
 header_0050 = Datetime, 
@@ -183,16 +183,16 @@ header_0050 = Datetime,
               StationId,
               Processlevel,
               Qualityflag,
-              P_RT_NRT_1,
-              P_RT_NRT_2,
-              F_RT_NRT_1,
-              F_RT_NRT_2
+              P_RT_NRT_01,
+              P_RT_NRT_02,
+              F_RT_NRT_01,
+              F_RT_NRT_02
 
 [000pu2_quality_settings]
-quality_parameter = P_RT_NRT_1,
-                    P_RT_NRT_2,
-                    F_RT_NRT_1,
-                    F_RT_NRT_2
+quality_parameter = P_RT_NRT_01,
+                    P_RT_NRT_02,
+                    F_RT_NRT_01,
+                    F_RT_NRT_02
 qfpos = 2, 5, 8, 11
 rthv_min = 0.0, 0.0, 0.0, 0.0
 rthv_max = 2.0, 2,0, 2,0, 2,0                                
