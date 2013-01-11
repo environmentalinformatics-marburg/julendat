@@ -158,6 +158,20 @@ print(length(ki.data@Datetime))
     aggdf[, prmean] <- aggdf[, prsum]
   }
   
+  if (any(names(ki.data@Parameter) == "P_RT_NRT_01") == TRUE)
+  {
+    prsum01 <- grep(glob2rx("P_RT_NRT_01_sum"), names(aggdf))
+    prmean01 <- grep(glob2rx("P_RT_NRT_01"), names(aggdf))
+    aggdf[, prmean01] <- aggdf[, prsum01]
+  }
+  
+  if (any(names(ki.data@Parameter) == "P_RT_NRT_02") == TRUE)
+  {
+    prsum02 <- grep(glob2rx("P_RT_NRT_02_sum"), names(aggdf))
+    prmean02 <- grep(glob2rx("P_RT_NRT_02"), names(aggdf))
+    aggdf[, prmean02] <- aggdf[, prsum02]
+  }
+  
   aggdf <- aggdf[, -exsum]
   
 #   wdmin <- grep(glob2rx("WD_min"), names(aggdf))
@@ -190,5 +204,5 @@ print(length(ki.data@Datetime))
 
 }
 
-#   test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/ki_0000cof3_000pu1_201110010000_201110310000_eat_fc01_fah01_0190.dat", "1h")
+#   test <- aggregate.ki.data("/home/ede/ki_0000foc0_000pu2_201201010000_201212310000_eat_qc25_fah01_0290.dat", "month")
 #   str(test)
