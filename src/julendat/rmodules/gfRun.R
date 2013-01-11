@@ -74,32 +74,33 @@ gfRun <- function(files.dep,
                             gap.limit = gap.limit)
       
       
-      # Impute missing value(s)
-      model.output <- lapply(seq(pos.na), function(j) {
-        gfImputeMissingValue(data.dep = ki.data.dep, 
-                             data.indep = ki.data.indep,
-                             na.limit = na.limit, 
-                             pos.na = as.numeric(pos.na[[j]]),
-                             time.window = time.window,
-                             data.coords = data.coords, 
-                             n.plot = n.plot, 
-                             prm.dep = prm.dep[i], 
-                             prm.indep = prm.indep[i], 
-                             family = family)
-      })
-      
-      
-      # Replace NA values by predicted values
-      for (h in seq(pos.na)) {
-        gap.start <- pos.na[[h]][,1]
-        gap.end <- pos.na[[h]][,2]
-        gap.span <- seq(gap.start, gap.end)
+      if (length(pos.na) > 0) {
+        # Impute missing value(s)
+        model.output <- lapply(seq(pos.na), function(j) {
+          gfImputeMissingValue(data.dep = ki.data.dep, 
+                               data.indep = ki.data.indep,
+                               na.limit = na.limit, 
+                               pos.na = as.numeric(pos.na[[j]]),
+                               time.window = time.window,
+                               data.coords = data.coords, 
+                               n.plot = n.plot, 
+                               prm.dep = prm.dep[i], 
+                               prm.indep = prm.indep[i], 
+                               family = family)
+        })
         
-        ki.data.dep@Parameter[[prm.dep[i]]][gap.span] <- round(unlist(lapply(seq(model.output[[h]]), function(l) {
-          model.output[[h]][[l]][[4]]
-        })), digits = 2)
-      }
-      
+        
+        # Replace NA values by predicted values
+        for (h in seq(pos.na)) {
+          gap.start <- pos.na[[h]][,1]
+          gap.end <- pos.na[[h]][,2]
+          gap.span <- seq(gap.start, gap.end)
+          
+          ki.data.dep@Parameter[[prm.dep[i]]][gap.span] <- round(unlist(lapply(seq(model.output[[h]]), function(l) {
+            model.output[[h]][[l]][[4]]
+          })), digits = 2)
+        }
+      } 
     }
   }
   

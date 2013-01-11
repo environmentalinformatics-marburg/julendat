@@ -80,8 +80,12 @@ gfGapLength <- function(data.dep,
   gap <- subset(gap, gap[,3] <= gap.limit)
  
   # Convert data frame to list
-  gap <- lapply(1:nrow(gap), function(i) gap[i,])
-  
+  if (nrow(gap) > 0) {
+    gap <- lapply(1:nrow(gap), function(i) gap[i,])
+  } else {
+    gap <- list()
+  }
+    
   # Return output
   return(gap)
 }
