@@ -49,7 +49,7 @@ gfRun <- function(files.dep,
     ki.data.dep <- gfRejectLowQuality(data = ki.data.dep, 
                                       prm.dep = prm.dep[i], 
                                       quality.levels = quality.levels)
-
+    
     
     # Independent plots
     ki.data.indep <- gfRejectLowQuality(data = ki.data.indep, 
@@ -68,39 +68,40 @@ gfRun <- function(files.dep,
     pos.na <- which(is.na(ki.data.dep@Parameter[[prm.dep[i]]]))
     
     # Calculate gap lengths and reject too large gaps
-    pos.na <- gfGapLength(data.dep = ki.data.dep, 
-                          pos.na = pos.na, 
-                          gap.limit = gap.limit)
-    
-    
-    # Impute missing value(s)
     if (length(pos.na) > 0) {
-      model.output <- lapply(seq(pos.na), function(j) {
-        gfImputeMissingValue(data.dep = ki.data.dep, 
-                             data.indep = ki.data.indep,
-                             na.limit = na.limit, 
-                             pos.na = as.numeric(pos.na[[j]]),
-                             time.window = time.window,
-                             data.coords = data.coords, 
-                             n.plot = n.plot, 
-                             prm.dep = prm.dep[i], 
-                             prm.indep = prm.indep[i], 
-                             family = family)
-      })
-    }
-
-    
-    # Replace NA values by predicted values
-    for (h in seq(pos.na)) {
-      gap.start <- pos.na[[h]][,1]
-      gap.end <- pos.na[[h]][,2]
-      gap.span <- seq(gap.start, gap.end)
+      pos.na <- gfGapLength(data.dep = ki.data.dep, 
+                            pos.na = pos.na, 
+                            gap.limit = gap.limit)
       
-      ki.data.dep@Parameter[[prm.dep[i]]][gap.span] <- unlist(lapply(seq(model.output[[h]]), function(l) {
-        model.output[[h]][[l]][[4]]
-        }))
+      
+      if (length(pos.na) > 0) {
+        # Impute missing value(s)
+        model.output <- lapply(seq(pos.na), function(j) {
+          gfImputeMissingValue(data.dep = ki.data.dep, 
+                               data.indep = ki.data.indep,
+                               na.limit = na.limit, 
+                               pos.na = as.numeric(pos.na[[j]]),
+                               time.window = time.window,
+                               data.coords = data.coords, 
+                               n.plot = n.plot, 
+                               prm.dep = prm.dep[i], 
+                               prm.indep = prm.indep[i], 
+                               family = family)
+        })
+        
+        
+        # Replace NA values by predicted values
+        for (h in seq(pos.na)) {
+          gap.start <- pos.na[[h]][,1]
+          gap.end <- pos.na[[h]][,2]
+          gap.span <- seq(gap.start, gap.end)
+          
+          ki.data.dep@Parameter[[prm.dep[i]]][gap.span] <- round(unlist(lapply(seq(model.output[[h]]), function(l) {
+            model.output[[h]][[l]][[4]]
+          })), digits = 2)
+        }
+      } 
     }
-    
   }
   
   

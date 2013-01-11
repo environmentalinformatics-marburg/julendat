@@ -8,7 +8,7 @@ gfWrite(files.dep = "/media/permanent/r_mulreg/data/year/complete/ki_0000cof5_00
                         "/media/permanent/r_mulreg/data/year/complete/ki_0000sav3_000rug_201201010000_201212310000_eat_qc25_fah01_0290.dat", 
                         "/media/permanent/r_mulreg/data/year/complete/ki_0000sav4_000rug_201201010000_201212310000_eat_qc25_fah01_0290.dat", 
                         "/media/permanent/r_mulreg/data/year/complete/ki_0000sav5_000rug_201201010000_201212310000_eat_qc25_fah01_0290.dat"),
-        filepath.output = "/home/dogbert/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0150/imputation_test_2.dat",
+        filepath.output = "/home/dogbert/software/testing/julendat/processing/plots/ki/0000cof1/ca05_cti05_0150/imputation_test_3.dat",
         filepath.coords = "/home/dogbert/software/development/julendat/src/julendat/rmodules/station_master.csv",
         quality.levels = c(12, 22),
         gap.limit = 360, 

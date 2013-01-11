@@ -91,11 +91,11 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_dataset=locate("*rug*.dat", "*qc25_*", input_path)
+    station_dataset=locate("*rug*.dat", "*qc25_fah01_0290", input_path)
     for dataset in station_dataset:
         print " "
         systemdate = datetime.datetime.now()
-        filepath=dataset
+
         try:
             print " "
             print "Filling gaps in ", dataset

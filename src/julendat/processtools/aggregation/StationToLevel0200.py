@@ -157,6 +157,7 @@ class StationToLevel0200:
             os.makedirs(output_path)
         aggregation_level = "1h"
         self.process_aggregation(aggregation_level)
+        self.remove_inf()
         
         print "...finished."
 
@@ -191,15 +192,15 @@ class StationToLevel0200:
         r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
         os.system(r_cmd)
         os.chdir(act_wd)
-        
-        '''
-    def get_level0050_standards(self):
-        """Sets format standards for level 1 station data files
+
+    def remove_inf(self):
+        """Remove inf and -inf valus in aggregated level 0200 files.
         """
-        level0050_standard = Level01Standards(\
-            filepath=self.level0050_standards, \
-            station_id=self.filenames.get_station_id())
-        self.level0050_column_headers = \
-            level0050_standard.get_level0050_column_headers()
-    
-    '''
+        infile = open(self.filenames.get_filename_dictionary()[\
+                'level_0200_ascii-filepath'], "r")
+        infile_content = infile.read()
+        infile.close()
+        outfile = open(self.filenames.get_filename_dictionary()\
+                      ["level_0200_ascii-filepath"], "w")
+        outfile.write(infile_content.replace("-Inf", "NA").replace("Inf", "NA"))
+        outfile.close()

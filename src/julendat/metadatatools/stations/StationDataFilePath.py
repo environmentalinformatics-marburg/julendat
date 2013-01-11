@@ -295,16 +295,22 @@ class StationDataFilePath(StationDataFile):
         calibration_level="qc25"
         processing = "0290"
         extension="dat"
+        level_0290_startdatetime = start_datetime[0:4] + '01010000'
+        level_0290_enddatetime = end_datetime[0:4] + '12310000'
         self.filename_dictionary['level_0290_calibration_level'] = calibration_level
         self.filename_dictionary['level_0290_processing'] = processing
+        self.filename_dictionary['level_0290_startdatetime'] =  \
+            level_0290_startdatetime[0:4] + "-01-01 00:00:00"
+        self.filename_dictionary['level_0290_enddatetime'] =  \
+            level_0290_enddatetime[0:4] + "-12-31 23:00:00"
         self.filename_dictionary['level_0290_wildcard'] =  "*" + \
-            self.get_station_id() + "*" + start_datetime + "*" + \
+            self.get_station_id() + "*" + level_0290_startdatetime + "*" + \
             calibration_level + "_" + self.get_aggregation() + "_" + \
             processing + "." + extension
         self.filename_dictionary['level_0290_ascii-filename'] = \
             self.build_filename(\
-                start_datetime = start_datetime[0:4] + '01010000', \
-                end_datetime = end_datetime[0:4] + '12310000', \
+                start_datetime = level_0290_startdatetime, \
+                end_datetime = level_0290_enddatetime, \
                 time_zone = self.level_0005_time_zone, \
                 calibration_level=calibration_level, \
                 processing=processing, \
