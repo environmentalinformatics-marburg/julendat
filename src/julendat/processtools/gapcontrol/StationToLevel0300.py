@@ -153,7 +153,7 @@ class StationToLevel0300:
                                          self.tl_processing_path)):
             for filename in fnmatch.filter(files, \
                 self.filenames.get_filename_dictionary()\
-                ['level_0250_wildcard']):
+                ['level_0290_wildcard']):
                 #if fnmatch.fnmatch(path, "*qc25_*"):
                     self.independent_files.append(os.path.join(path, filename))
         
@@ -162,14 +162,20 @@ class StationToLevel0300:
         """Process gap filling on level 0200 file.
         
         """
+        if not os.path.isdir(self.filenames.get_filename_dictionary()\
+                                 ["level_0300_ascii-path"]):
+                os.makedirs(self.filenames.get_filename_dictionary()\
+                            ["level_0300_ascii-path"])
+        
         r_source = 'source("' + self.r_filepath + os.sep + \
                 'gfWrite.R")'
         r_keyword = "gfWrite"
         r_fd = 'files.dep = "' +  self.filenames.get_filename_dictionary()\
-                                  ["level_0250_ascii-filepath"] + '"'
-        
+                                  ["level_0290_ascii-filepath"] + '"'
+        print r_fd
+        print self.independent_files 
         self.independent_files.remove(self.filenames.get_filename_dictionary()\
-                                      ["level_0250_ascii-filepath"])
+                                      ["level_0290_ascii-filepath"])
         
         independent_stations = 'c('
         for station in self.independent_files:
@@ -180,13 +186,15 @@ class StationToLevel0300:
         r_fop = 'filepath.output = "' +  self.filenames.get_filename_dictionary()\
                                   ["level_0300_ascii-filepath"] + '"'
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
-        r_ql = 'quality.levels = c(21)'
+        r_ql = 'quality.levels = c(12,22)'
+        r_gl = 'gap.limit = 1500' 
         r_nal = 'na.limit = 0.1'
+        r_tw = 'time.window = 1000'
         r_nplot = 'n.plot = 10'
         r_pdp = 'prm.dep = c("Ta_200", "rH_200")' 
         r_pid = 'prm.indep = c(NA, "Ta_200")'
-        r_pdp = 'prm.dep = c("Ta_200")' 
-        r_pid = 'prm.indep = c(NA)'
+        r_plevel = 'plevel = 0300'
+        r_family = 'family = gaussian'
 
         act_wd = os.getcwd()
         os.chdir(self.r_filepath)
@@ -197,15 +205,18 @@ class StationToLevel0300:
                 r_fop + ',\n' + \
                 r_fcp + ',\n' + \
                 r_ql + ',\n' + \
+                r_gl + ',\n' + \
                 r_nal + ',\n' + \
+                r_tw + ',\n' + \
                 r_nplot + ',\n' + \
                 r_pdp + ',\n' + \
-                r_pid + ')\n'
+                r_pid + ',\n' + \
+                r_plevel + ',\n' + \
+                r_family + ')\n'
         r_script = "gfcall.rscript" 
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
         r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
         os.system(r_cmd)
-        sys.exit()
         os.chdir(act_wd)
