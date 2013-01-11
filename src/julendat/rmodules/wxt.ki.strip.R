@@ -3,6 +3,8 @@ wxt.ki.strip <- function(inputpath,
                          plotid = "nkw1",
                          year,
                          ptrn = "*fah01_200.dat",
+                         minx = list(-10, 0, -10, 0, 0, 200, 200, 0, 0, 750, 0),
+                         maxx = list(50, 100, 50, 1400, 500, 500, 600, 360, 10, 1100, 60),
                          ...) {
 
   stopifnot(require(latticeExtra))
@@ -52,8 +54,8 @@ wxt.ki.strip <- function(inputpath,
   
   dflist <- lapply(seq(dflist), function(i) as.data.frame(dflist[[i]][[year]]))
   
-  minx <- lapply(seq(dflist), function(i) min(na.exclude(dflist[[i]][4])))
-  maxx <- lapply(seq(dflist), function(i) max(na.exclude(dflist[[i]][4])))
+  #minx <- lapply(seq(dflist), function(i) min(na.exclude(dflist[[i]][4])))
+  #maxx <- lapply(seq(dflist), function(i) max(na.exclude(dflist[[i]][4])))
   
   aggls <- lapply(seq(dflist), function(i) {
     
@@ -155,7 +157,7 @@ wxt.ki.strip <- function(inputpath,
 }
 # png("c:/tappelhans/uni/marburg/kili/stations/ki/plots/test.png",
 #     height = 768*3, width = 1024*3, res = 300)
-# wxt.ki.strip(inputpath = "/home/ede/software/testing/julendat/processing/plots/ki/0000cof3/fa01_fah01_0200/",
-#              plotid = "cof3",
-#              year = "2011",
-#              ptrn = "*fah01_0200.dat")
+wxt.ki.strip(inputpath = "/home/ede/software/testing/julendat/processing/plots/ki/0000cof3/fa01_fah01_0200/",
+             plotid = "cof3",
+             year = "2011",
+             ptrn = "*fah01_0200.dat")

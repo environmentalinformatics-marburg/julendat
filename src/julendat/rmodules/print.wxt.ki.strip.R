@@ -3,6 +3,8 @@ print.wxt.ki.strip <- function(inputpath,
                                plotid = "cof3",
                                year,
                                ptrn = "*fah01_0200.dat",
+                               minx = list(-10, 0, -10, 0, 0, 200, 200, 0, 0, 750, 0),
+                               maxx = list(50, 100, 50, 1400, 500, 500, 600, 360, 10, 1100, 60),
                                ...) {
   
   source("wxt.ki.strip.R")
