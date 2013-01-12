@@ -14,7 +14,7 @@ aggregate.ki.data <- function(input,
   stopifnot(require(reshape))
 
   ki.data <- as.ki.data(input)
-print(length(ki.data@Datetime))
+
   switch(level,
          "qh" = agglevel <- ki.data@AggregationLevels$AggQh,
          "1h" = agglevel <- ki.data@AggregationLevels$Agg1h,
@@ -59,7 +59,7 @@ print(length(ki.data@Datetime))
   qsplitind <- lapply(seq(NCOL(qsplit)), function(i) {
     which(qsplit[, i] == "012" | qsplit[, i] == "022")
   })
-  print(qsplitind)
+  
 
   try(
     for (i in seq(qsplitind)) ki.data@Parameter[[i]][qsplitind[[i]]] <- NA
@@ -102,6 +102,10 @@ print(length(ki.data@Datetime))
     
     lapply(seq(prm.df), function(j) {
       
+      tmp <- prm.ls[[i]][[j]]
+      
+      tmp <- if (all(is.nan(tmp))) rep(NA, length(tmp)) else tmp[! is.na(tmp)]
+      
       list(mean(prm.ls[[i]][[j]], na.rm = T),
            min(prm.ls[[i]][[j]], na.rm = T),
            max(prm.ls[[i]][[j]], na.rm = T),
@@ -109,7 +113,7 @@ print(length(ki.data@Datetime))
            sd(prm.ls[[i]][[j]], na.rm = T),
            quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.25, names = F),
            quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.75, names = F),
-           sum(prm.ls[[i]][[j]]),
+           sum(tmp, na.rm = FALSE),
            sum(complete.cases(prm.ls[[i]][[j]])),
            length(prm.ls[[i]][[j]]) - sum(complete.cases(prm.ls[[i]][[j]]))
            )
@@ -190,5 +194,5 @@ print(length(ki.data@Datetime))
 
 }
 
-   #test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/ki_0000cof3_000pu1_201110010000_201110310000_eat_fc01_fah01_0190.dat", "1h")
-   #str(test)
+#    test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/0000cof3/qc25_fah01_0290/ki_0000cof3_000pu1_201101010000_201112310000_eat_qc25_fah01_0290.dat", "month")
+#    str(test)
