@@ -59,7 +59,7 @@ def main():
         configure(config_file=config_file)
     
     VISLevel0050(config_file=config_file, pattern="*fah01_0300.dat", \
-                 loggers = ['wxt'])
+                 loggers = ['rug'])
     print "Finished"        
 
 if __name__ == '__main__':

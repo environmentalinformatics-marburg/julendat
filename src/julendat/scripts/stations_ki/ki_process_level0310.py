@@ -1,4 +1,4 @@
-"""Process data from level 0290 to gap-filled level 0300.
+"""Process data from level 0300 to second-times gap-filled level 0310.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -77,10 +77,10 @@ def configure(config_file):
     
 def main():
     """Main program function
-    Process data from level 0290 to level 0300.
+    Process data from level 0300 to level 0310.
     """
     print
-    print 'Module: gapfill_level0300'
+    print 'Module: gapfill_level0310'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
@@ -92,7 +92,7 @@ def main():
     input_path = toplevel_processing_plots_path + project_id
     loggers = ["rug", "wxt"]
     parameters = ["Ta_200", "rH_200"]
-    station_dataset=locate("*.dat", "*qc25_fah01_0290", input_path)
+    station_dataset=locate("*.dat", "*gc01_fah01_0300", input_path)
     for dataset in station_dataset:
         print " "
         try:
@@ -101,7 +101,7 @@ def main():
             systemdate = datetime.datetime.now()
             filepath=dataset
             StationToLevel0300(filepath = filepath, config_file = config_file, \
-                               parameters = parameters, level = "0300")
+                               parameters = parameters, level = "0310")
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"

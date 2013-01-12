@@ -43,15 +43,18 @@ class StationToLevel0300:
     """
 
     def __init__(self, filepath, config_file, \
-                 parameters = ["Ta_200", "rH_200"], run_mode="auto"):
+                 parameters = ["Ta_200", "rH_200"], level = "300", \
+                 run_mode="auto"):
         """Inits StationToLevel0100. 
         
         Args:
             filepath: Full path and name of the level 0050 file
             config_file: Configuration file.
             parameters: Meteorological parameters that should be processed
+            level: Target level
             run_mode: Running mode (auto, manual)
         """
+        self.level = level
         self.set_parameters(parameters)
         self.set_run_mode(run_mode)
         self.configure(config_file)
@@ -169,20 +172,27 @@ class StationToLevel0300:
     def set_independent_files(self):
         """Sets a list of independent files used for gap filling
         """
+        if self.level == "0300":
+            wildcard = self.filenames.get_filename_dictionary()\
+                ['level_0290_wildcard']
+            wildcard_rug = self.filenames.get_filename_dictionary()\
+                ['level_0290_wildcard_rug']
+        elif self.level == "0310":
+            wildcard = self.filenames.get_filename_dictionary()\
+                ['level_0300_wildcard']
+            wildcard_rug = self.filenames.get_filename_dictionary()\
+                ['level_0300_wildcard_rug']
+
         self.independent_files = []
         for path, dirs, files in os.walk(os.path.abspath(\
                                          self.tl_processing_path)):
-            for filename in fnmatch.filter(files, \
-                self.filenames.get_filename_dictionary()\
-                ['level_0290_wildcard']):
+            for filename in fnmatch.filter(files, wildcard):
                     self.independent_files.append(os.path.join(path, filename))
 
         if "wxt" in self.filenames.get_station_id():
             for path, dirs, files in os.walk(os.path.abspath(\
                                          self.tl_processing_path)):
-                for filename in fnmatch.filter(files, \
-                self.filenames.get_filename_dictionary()\
-                ['level_0290_wildcard_rug']):
+                for filename in fnmatch.filter(files, wildcard_rug):
                     self.independent_files.append(os.path.join(path, filename))
 
             
@@ -190,20 +200,31 @@ class StationToLevel0300:
         """Process gap filling on level 0200 file.
         
         """
-        if not os.path.isdir(self.filenames.get_filename_dictionary()\
-                                 ["level_0300_ascii-path"]):
-                os.makedirs(self.filenames.get_filename_dictionary()\
-                            ["level_0300_ascii-path"])
+        if self.level == "0300":
+            output_path = self.filenames.get_filename_dictionary()\
+                                  ["level_0300_ascii-path"]
+            output_filepath = self.filenames.get_filename_dictionary()\
+                                  ["level_0300_ascii-filepath"]
+            input_filepath = self.filenames.get_filename_dictionary()\
+                                  ["level_0290_ascii-filepath"]
+        elif self.level == "0310":
+            output_path = self.filenames.get_filename_dictionary()\
+                                  ["level_0310_ascii-path"]
+            output_filepath = self.filenames.get_filename_dictionary()\
+                                  ["level_0310_ascii-filepath"]
+            input_filepath = self.filenames.get_filename_dictionary()\
+                                  ["level_0300_ascii-filepath"]
+
+        if not os.path.isdir(output_path):
+                os.makedirs(output_path)
         
         r_source = 'source("' + self.r_filepath + os.sep + \
                 'gfWrite.R")'
         r_keyword = "gfWrite"
-        r_fd = 'files.dep = "' +  self.filenames.get_filename_dictionary()\
-                                  ["level_0290_ascii-filepath"] + '"'
+        r_fd = 'files.dep = "' +  input_filepath + '"'
         print r_fd
         print self.independent_files 
-        self.independent_files.remove(self.filenames.get_filename_dictionary()\
-                                      ["level_0290_ascii-filepath"])
+        self.independent_files.remove(input_filepath)
         
         independent_stations = 'c('
         for station in self.independent_files:
@@ -211,12 +232,11 @@ class StationToLevel0300:
                                    station + '", \n' 
         independent_stations = independent_stations[:-3]
         r_fid = 'files.indep = ' + independent_stations  + ')'
-        r_fop = 'filepath.output = "' +  self.filenames.get_filename_dictionary()\
-                                  ["level_0300_ascii-filepath"] + '"'
+        r_fop = 'filepath.output = "' +  output_filepath + '"'
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
         r_ql = 'quality.levels = c(12,22)'
-        r_gl = 'gap.limit = 3000' 
-        r_nal = 'na.limit = 0.4'
+        r_gl = 'gap.limit = 9000' 
+        r_nal = 'na.limit = 0.99'
         r_tw = 'time.window = 1000'
         r_nplot = 'n.plot = 10'
         r_pdp = 'prm.dep = c('
