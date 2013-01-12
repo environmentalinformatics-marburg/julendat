@@ -58,8 +58,8 @@ def main():
     toplevel_processing_plots_path, project_id, r_filepath = \
         configure(config_file=config_file)
     
-    VISLevel0050(config_file=config_file, pattern="*fah01_0250.dat", \
-                 loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt'])
+    VISLevel0050(config_file=config_file, pattern="*fah01_0300.dat", \
+                 loggers = ['wxt'])
     print "Finished"        
 
 if __name__ == '__main__':

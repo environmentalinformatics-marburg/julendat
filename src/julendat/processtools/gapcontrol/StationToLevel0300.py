@@ -216,7 +216,7 @@ class StationToLevel0300:
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
         r_ql = 'quality.levels = c(12,22)'
         r_gl = 'gap.limit = 3000' 
-        r_nal = 'na.limit = 0.1'
+        r_nal = 'na.limit = 0.4'
         r_tw = 'time.window = 1000'
         r_nplot = 'n.plot = 10'
         r_pdp = 'prm.dep = c('
