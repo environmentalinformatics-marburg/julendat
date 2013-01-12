@@ -261,7 +261,9 @@ class VISLevel0050:
         r_source = 'source("print.wxt.ki.strip.R")'
         r_script = 'print.wxt.ki.strip('
         r_outputpath = 'outputfilepath = "' + self.output_path + '",'
-        r_pattern = 'ptrn  = "' + self.pattern + '"'
+        r_pattern = 'ptrn  = "' + self.pattern + '",'
+        r_minx = 'minx = list(-10, 0, -10, 0, 0, 200, 200, 0, 0, 750, 0),'
+        r_maxx = 'maxx = list(50, 100, 50, 1400, 500, 500, 600, 360, 10, 1100, 60)'
         par_range = {'Ta_200': [-10,50],'rH_200': [0,100], \
                      'P_RT_NRT': [0,60], \
                      'P_RT_NRT_01': [0,60], 'P_RT_NRT_02': [0,60],
@@ -306,9 +308,11 @@ class VISLevel0050:
                 r_outputpath + "\n" + \
                 r_pid + " \n" + \
                 r_year + " \n" + \
-                r_pattern + ")\n"
+                r_pattern + " \n" + \
+                r_minx + " \n" + \
+                r_maxx + ")\n"
     
-                script = "vis0050.rscript" 
+                script = "vis0050wxt.rscript" 
                 f = open(script,"w")
                 f.write(r_cmd)
                 f.close()
