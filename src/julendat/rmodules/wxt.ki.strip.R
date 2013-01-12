@@ -10,8 +10,8 @@ swxt.ki.strip <- function(inputpath,
   stopifnot(require(latticeExtra))
   stopifnot(require(grid))
   
-  source("/home/ede/software/development/julendat/src/julendat/rmodules/VColList.R")
-  source("/home/ede/software/development/julendat/src/julendat/rmodules/as.ki.data.R")
+  source("VColList.R")
+  source("as.ki.data.R")
   
   Old.TZ <- Sys.timezone()
   Sys.setenv(TZ = "UTC")

@@ -307,6 +307,10 @@ class StationDataFilePath(StationDataFile):
             self.get_station_id() + "*" + level_0290_startdatetime + "*" + \
             calibration_level + "_" + self.get_aggregation() + "_" + \
             processing + "." + extension
+        self.filename_dictionary['level_0290_wildcard_rug'] =  "*" + \
+            "rug" + "*" + level_0290_startdatetime + "*" + \
+            calibration_level + "_" + self.get_aggregation() + "_" + \
+            processing + "." + extension
         self.filename_dictionary['level_0290_ascii-filename'] = \
             self.build_filename(\
                 start_datetime = level_0290_startdatetime, \

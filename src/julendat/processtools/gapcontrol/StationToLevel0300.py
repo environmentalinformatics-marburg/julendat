@@ -42,14 +42,17 @@ class StationToLevel0300:
     """Instance for processing station level 0200 to level 0300 data.
     """
 
-    def __init__(self, filepath, config_file, run_mode="auto"):
+    def __init__(self, filepath, config_file, \
+                 parameters = ["Ta_200", "rH_200"], run_mode="auto"):
         """Inits StationToLevel0100. 
         
         Args:
             filepath: Full path and name of the level 0050 file
             config_file: Configuration file.
+            parameters: Meteorological parameters that should be processed
             run_mode: Running mode (auto, manual)
         """
+        self.set_parameters(parameters)
         self.set_run_mode(run_mode)
         self.configure(config_file)
         self.init_filenames(filepath)
@@ -58,6 +61,22 @@ class StationToLevel0300:
         else:
             raise Exception, "Run flag is false."
 
+    def set_parameters(self,parameters):
+        """Set meteorological parameters to be processed.
+        
+        Args:
+            parameters: Meteorological parameters that should be processed
+        """
+        self.parameters = parameters
+
+    def get_parameters(self):
+        """Gets meteorological parameters to be processed.
+        
+        Returns:
+            parameters: Meteorological parameters that should be processed
+        """
+        return self.parameters
+    
     def set_run_mode(self,run_mode):
         """Sets run mode.
         
@@ -112,7 +131,8 @@ class StationToLevel0300:
         
         Returns:
             Runtime flag.
-        """
+        """        
+
         return self.run_flag
 
     def run(self):
@@ -145,6 +165,7 @@ class StationToLevel0300:
         self.level0100_quality_settings = \
             level0100_standard.get_level0100_quality_settings()
 
+
     def set_independent_files(self):
         """Sets a list of independent files used for gap filling
         """
@@ -154,10 +175,17 @@ class StationToLevel0300:
             for filename in fnmatch.filter(files, \
                 self.filenames.get_filename_dictionary()\
                 ['level_0290_wildcard']):
-                #if fnmatch.fnmatch(path, "*qc25_*"):
                     self.independent_files.append(os.path.join(path, filename))
-        
 
+        if "wxt" in self.filenames.get_station_id():
+            for path, dirs, files in os.walk(os.path.abspath(\
+                                         self.tl_processing_path)):
+                for filename in fnmatch.filter(files, \
+                self.filenames.get_filename_dictionary()\
+                ['level_0290_wildcard_rug']):
+                    self.independent_files.append(os.path.join(path, filename))
+
+            
     def process_gap_filling(self):
         """Process gap filling on level 0200 file.
         
@@ -187,11 +215,14 @@ class StationToLevel0300:
                                   ["level_0300_ascii-filepath"] + '"'
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
         r_ql = 'quality.levels = c(12,22)'
-        r_gl = 'gap.limit = 1500' 
+        r_gl = 'gap.limit = 3000' 
         r_nal = 'na.limit = 0.1'
         r_tw = 'time.window = 1000'
         r_nplot = 'n.plot = 10'
-        r_pdp = 'prm.dep = c("Ta_200", "rH_200")' 
+        r_pdp = 'prm.dep = c('
+        for parameter in self.get_parameters():
+            r_pdp = r_pdp + '"' + parameter + '", ' 
+        r_pdp = r_pdp[:-2] + ')'
         r_pid = 'prm.indep = c(NA, "Ta_200")'
         r_plevel = 'plevel = 0300'
         r_family = 'family = gaussian'
