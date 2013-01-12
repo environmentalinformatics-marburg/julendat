@@ -90,18 +90,18 @@ def main():
     toplevel_processing_plots_path, project_id = \
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
-    
-    station_dataset=locate("*rug*.dat", "*qc25_fah01_0290", input_path)
+    loggers = ["rug", "wxt"]
+    parameters = ["Ta_200", "rH_200"]
+    station_dataset=locate("*.dat", "*qc25_fah01_0290", input_path)
     for dataset in station_dataset:
         print " "
-        systemdate = datetime.datetime.now()
-
         try:
             print " "
             print "Filling gaps in ", dataset
             systemdate = datetime.datetime.now()
             filepath=dataset
-            StationToLevel0300(filepath=filepath, config_file=config_file)
+            StationToLevel0300(filepath = filepath, config_file = config_file, \
+                               parameters = parameters)
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"
