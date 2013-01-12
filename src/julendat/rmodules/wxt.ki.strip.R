@@ -1,15 +1,15 @@
-swxt.ki.strip <- function(inputpath,
+wxt.ki.strip <- function(inputpath,
                          fun = mean,
                          plotid = "nkw1",
                          year,
                          ptrn = "*fah01_200.dat",
                          minx = list(-10, 0, -10, 0, 0, 200, 200, 0, 0, 750, 0),
-                         maxx = list(50, 100, 50, 1400, 500, 500, 600, 360, 10, 1100, 60),
+                         maxx = list(50, 100, 50, 1400, 500, 500, 800, 360, 10, 1100, 60),
                          ...) {
 
   stopifnot(require(latticeExtra))
   stopifnot(require(grid))
-  
+
   source("VColList.R")
   source("as.ki.data.R")
   
@@ -26,7 +26,8 @@ swxt.ki.strip <- function(inputpath,
                                                          sep="/")))
 
   prms <- names(wxt.data.list[[1]]@Parameter)
-  prms <- prms[seq(1, length(prms), 9)]
+
+  if(length(prms) > 11) prms <- prms[seq(1, length(prms), 9)]
 
   prmlist <- lapply(seq(wxt.data.list),
                     function(i) lapply(seq(prms),
@@ -38,22 +39,22 @@ swxt.ki.strip <- function(inputpath,
                                            X = wxt.data.list[[i]]@Parameter[[prms[j]]])
                                        )
                     )
-  
+
   for (i in seq(prmlist))
        for (j in seq(prms))
             names(prmlist[[i]][[j]]) <- c("Datetime", "PlotId", "Year", prms[j])
   
   dflist <- do.call("rbind", prmlist)
-  
+
   sqnc <- rep(1:length(prms), each = length(wxt.data.list))
   dflist <- split(dflist, as.factor(sqnc))
-  
+    
   dflist <- lapply(seq(dflist), function(i) do.call("rbind", dflist[[i]]))
   dflist <- lapply(seq(dflist), function(i) split(dflist[[i]], dflist[[i]]$Year, 
                                                   drop = T))
   
   dflist <- lapply(seq(dflist), function(i) as.data.frame(dflist[[i]][[year]]))
-  
+  print(str(dflist))   
   #minx <- lapply(seq(dflist), function(i) min(na.exclude(dflist[[i]][4])))
   #maxx <- lapply(seq(dflist), function(i) max(na.exclude(dflist[[i]][4])))
   
@@ -99,9 +100,9 @@ swxt.ki.strip <- function(inputpath,
     xlabs <- format(unique(xbar, "%b"))
     xat <- seq.Date(as.Date(datetime_from), as.Date(datetime_to), by = "month")
     xat <- as.integer(julian(xat, origin = as.Date(origin))) + 15
-    
+    print(minx[[i]])
     levelplot(t(strip_z), ylim = c(24.5, -0.5), col.regions = VColList[[i]],
-              strip = F, ylab = "Hour of day\n\n\n", xlab = NULL, asp = "iso",
+              strip = F, ylab = "Hour of day\n", xlab = NULL, asp = "iso",
               at = seq(minx[[i]], maxx[[i]], 0.1),
               strip.left = strip.custom(
                 bg = "black", factor.levels = toupper(prms),
@@ -125,7 +126,7 @@ swxt.ki.strip <- function(inputpath,
                   )  
   
   out <- aggls[[1]]
-  if (length(ls) > 1) {
+  if (length(aggls) > 1) {
     for (i in 2:length(aggls)) {
       out <- c(out, aggls[[i]], x.same = T, y.same = T, merge.legends = F)
     }
@@ -133,7 +134,7 @@ swxt.ki.strip <- function(inputpath,
 
   out <- update(out, layout = c(1, length(aggls)),
                 scales = list(y = list(draw = T, rot = list(0, 0)), 
-                              tck = c(0, 0)),
+                              tck = c(0, 0), alternating = 1),
                 ylim = c(24.5, -0.5))
   print(out)
   
@@ -152,14 +153,17 @@ swxt.ki.strip <- function(inputpath,
       trellis.unfocus()
     }
   }
-  
+  print(length(aggls))
   addColorKey(length(aggls))
   
   Sys.setenv(TZ = Old.TZ)
 }
 # png("c:/tappelhans/uni/marburg/kili/stations/ki/plots/test.png",
 #     height = 768*3, width = 1024*3, res = 300)
-# wxt.ki.strip(inputpath = "/home/ede/software/testing/julendat/processing/plots/ki/0000cof3/fa01_fah01_0200/",
-#              plotid = "cof3",
-#              year = "2011",
-#              ptrn = "*fah01_0200.dat")
+# setwd("/home/ede/software/development/julendat/src/julendat/rmodules/")
+# wxt.ki.strip(inputpath = "/home/ede/software/testing/julendat/processing/plots/ki/0000sav0/gc01_fah01_0300/",
+#              plotid = "sav0",
+#              year = "2012",
+#              ptrn = "*fah01_0300.dat",
+#              minx = list(-10, 0, -10, 0, 0, 200, 200, 0, 0, 750, 0),
+#              maxx = list(50, 100, 50, 1400, 500, 500, 600, 360, 10, 1100, 60))
