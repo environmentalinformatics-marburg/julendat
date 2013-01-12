@@ -1,4 +1,4 @@
-wxt.ki.strip <- function(inputpath,
+swxt.ki.strip <- function(inputpath,
                          fun = mean,
                          plotid = "nkw1",
                          year,
@@ -101,7 +101,7 @@ wxt.ki.strip <- function(inputpath,
     xat <- as.integer(julian(xat, origin = as.Date(origin))) + 15
     
     levelplot(t(strip_z), ylim = c(24.5, -0.5), col.regions = VColList[[i]],
-              strip = F, ylab = "Hour of day", xlab = NULL, asp = "iso",
+              strip = F, ylab = "Hour of day\n\n\n", xlab = NULL, asp = "iso",
               at = seq(minx[[i]], maxx[[i]], 0.1),
               strip.left = strip.custom(
                 bg = "black", factor.levels = toupper(prms),
@@ -125,12 +125,14 @@ wxt.ki.strip <- function(inputpath,
                   )  
   
   out <- aggls[[1]]
-  for (i in 2:length(aggls)) {
-    out <- c(out, aggls[[i]], x.same = T, y.same = T, merge.legends = F)
+  if (length(ls) > 1) {
+    for (i in 2:length(aggls)) {
+      out <- c(out, aggls[[i]], x.same = T, y.same = T, merge.legends = F)
+    }
   }
 
   out <- update(out, layout = c(1, length(aggls)),
-                scales = list(y = list(draw = F, rot = list(0, 0)), 
+                scales = list(y = list(draw = T, rot = list(0, 0)), 
                               tck = c(0, 0)),
                 ylim = c(24.5, -0.5))
   print(out)
@@ -157,7 +159,7 @@ wxt.ki.strip <- function(inputpath,
 }
 # png("c:/tappelhans/uni/marburg/kili/stations/ki/plots/test.png",
 #     height = 768*3, width = 1024*3, res = 300)
-wxt.ki.strip(inputpath = "/home/ede/software/testing/julendat/processing/plots/ki/0000cof3/fa01_fah01_0200/",
-             plotid = "cof3",
-             year = "2011",
-             ptrn = "*fah01_0200.dat")
+# wxt.ki.strip(inputpath = "/home/ede/software/testing/julendat/processing/plots/ki/0000cof3/fa01_fah01_0200/",
+#              plotid = "cof3",
+#              year = "2011",
+#              ptrn = "*fah01_0200.dat")
