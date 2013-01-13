@@ -162,6 +162,34 @@ aggregate.ki.data <- function(input,
     aggdf[, prmean] <- aggdf[, prsum]
   }
   
+  if (any(names(ki.data@Parameter) == "P_RT_NRT_01") == TRUE)
+  {
+    prsum <- grep(glob2rx("P_RT_NRT_01_sum"), names(aggdf))
+    prmean <- grep(glob2rx("P_RT_NRT_01"), names(aggdf))
+    aggdf[, prmean] <- aggdf[, prsum]
+  }
+  
+  if (any(names(ki.data@Parameter) == "P_RT_NRT_02") == TRUE)
+  {
+    prsum <- grep(glob2rx("P_RT_NRT_02_sum"), names(aggdf))
+    prmean <- grep(glob2rx("P_RT_NRT_02"), names(aggdf))
+    aggdf[, prmean] <- aggdf[, prsum]
+  }
+  
+  if (any(names(ki.data@Parameter) == "F_RT_NRT_01") == TRUE)
+  {
+    prsum <- grep(glob2rx("F_RT_NRT_01_sum"), names(aggdf))
+    prmean <- grep(glob2rx("F_RT_NRT_01"), names(aggdf))
+    aggdf[, prmean] <- aggdf[, prsum]
+  }
+  
+  if (any(names(ki.data@Parameter) == "F_RT_NRT_02") == TRUE)
+  {
+    prsum <- grep(glob2rx("F_RT_NRT_02_sum"), names(aggdf))
+    prmean <- grep(glob2rx("F_RT_NRT_02"), names(aggdf))
+    aggdf[, prmean] <- aggdf[, prsum]
+  }
+  
   aggdf <- aggdf[, -exsum]
   
 #   wdmin <- grep(glob2rx("WD_min"), names(aggdf))
