@@ -54,7 +54,7 @@ class EITFStationToLevel0000:
     """Instance for querying and storing throughfall data to level 0 folders.
     """
 
-    def __init__(self, config_file, run_mode="auto-gui"):
+    def __init__(self, config_file, run_mode="auto-gui", dataset="noname.asc"):
         """Inits EIStationToLevel0000.
         The instance is initialized by reading a configuration file and the 
         initialization of the throughfall station setup data file instance.
@@ -68,6 +68,7 @@ class EITFStationToLevel0000:
         """
         self.temp_isotope_bottle = 50
         self.final_isotope_bottle = 20
+        self.dataset = dataset
         self.set_run_mode(run_mode)
         self.configure(config_file)
         #self.init_StationFile()
@@ -201,6 +202,8 @@ class EITFStationToLevel0000:
         #sys.exit()
         if self.get_run_mode() == "manual":
             pass
+        elif self.get_run_mode() == "auto-resort":
+            self.resort_file()
         elif self.get_run_mode() == "auto-gui":
             self.select_tfplot_gui()
             if self.tfplot_id != False:
@@ -222,6 +225,49 @@ class EITFStationToLevel0000:
                 self.done_gui()
             else:
                 self.run()
+
+    def resort_file(self):
+        """Resort already processed files according to filename or content.
+        """
+        self.filenames = StationDataFilePath(filepath = self.dataset)
+        if self.filenames.get_standard_name() == False:
+            input = []
+            input_file = open(self.dataset, "r")
+            for line in input_file:
+                input.append(line)
+            input_file.close()
+            plot_id = input[0][6:10]
+            date =  input[8][0:10]
+            time =  input[8][12:20]
+            start_datetime = datetime.datetime.strptime(\
+                             date + " " + time,"%Y-%m-%d %H:%M:%S")
+            time_step_delta = TimeInterval(start_datetime - \
+                              datetime.timedelta(hours=1), \
+                              start_datetime)
+            self.filenames = StationDataFilePath(\
+                             toplevel_path=self.tl_data_path, \
+                             project_id=self.project_id, \
+                             plot_id=plot_id, \
+                             station_id="000tfi", \
+                             start_datetime=start_datetime, \
+                             end_datetime=start_datetime, \
+                             time_step_delta = time_step_delta, \
+                             logger_time_zone=self.logger_time_zone, \
+                             aggregation_level="na", \
+                             postexflag=None)
+
+        self.filenames.build_filename_dictionary()
+
+        if not os.path.isdir(self.filenames.get_filename_dictionary()\
+                             ['level_0000_ascii-path']):
+            os.makedirs(self.filenames.get_filename_dictionary()\
+                        ['level_0000_ascii-path'])
+        cmd = "mv " + self.dataset + " " + \
+              self.filenames.get_filename_dictionary()['level_0000_ascii-filepath']
+        print cmd
+        #os.system(cmd)    
+        os.sys.exit()
+        
 
     def set_level0_filenames(self):
         """Sets level0 filenames and path information
