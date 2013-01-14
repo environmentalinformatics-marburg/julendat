@@ -91,7 +91,7 @@ def main():
     input_path = toplevel_processing_plots_path + project_id
     loggers = ["rug", "wxt"]
     parameters = ["Ta_200", "rH_200"]
-    station_dataset=locate("*fpo1*.dat", "*gc01_fah01_0300", input_path)
+    station_dataset=locate("*.dat", "*gc01_fah01_0300", input_path)
     for dataset in station_dataset:
         try:
             print " "
