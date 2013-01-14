@@ -91,16 +91,16 @@ def main():
     input_path = toplevel_processing_plots_path + project_id
     loggers = ["rug", "wxt"]
     parameters = ["Ta_200", "rH_200"]
-    station_dataset=locate("*.dat", "*gc01_fah01_0300", input_path)
+    station_dataset=locate("*fpo1*.dat", "*gc01_fah01_0300", input_path)
     for dataset in station_dataset:
-        print " "
         try:
             print " "
             print "Filling gaps in ", dataset
             systemdate = datetime.datetime.now()
             filepath=dataset
             StationToLevel0300(filepath = filepath, config_file = config_file, \
-                               parameters = parameters, level = "0310")
+                               parameters = parameters, level = "0310", \
+                               end_datetime = "2012-12-16")
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"

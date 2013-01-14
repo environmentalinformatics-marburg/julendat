@@ -91,6 +91,7 @@ class StationToLevel0050:
         self.level0050_standards = config.get('general','level0050_standards')
         self.r_filepath = config.get('general','r_filepath')
 
+
     def init_filenames(self, filepath):
         """Initializes D&K station data file.
         
@@ -98,6 +99,8 @@ class StationToLevel0050:
             filepath: Full path and name of the level 0 file
         """
         try:
+            if "tfi" in filepath:
+                self.logger_time_zone = self.level_0005_timezone
             self.filenames = StationDataFilePath(filepath=filepath, \
                                 toplevel_path=self.tl_data_path, \
                                 logger_time_zone=self.logger_time_zone, \
@@ -137,13 +140,13 @@ class StationToLevel0050:
     def main(self):
         """Processes level 0000 station files to level 0050.
         """
+
         self.init_level_0000_ascii_file()
+        print self.get_run_flag()
         if self.get_run_flag():
             self.get_station_inventory_information()
-        
         if self.get_run_flag():
             self.calibration_level_0005()
-
         if self.get_run_flag():
             self.calibration_level_0050()
         
@@ -409,6 +412,29 @@ class StationToLevel0050:
                         continue
                 self.level_0000_data.append(act_row)
         
+        elif self.filenames.get_station_id().find("tfi") != -1:
+            templates  = ['B_', 'Fog', 'Rainfall']
+            parameters = []
+            for entry in self.level_0000_ascii_file.get_column_headers():
+                for template in templates:
+                    
+                    if entry.strip().startswith(template):   
+                        parameters.append(entry)
+            self.level_0000_data = []
+            for row in self.level_0000_ascii_file.get_data():
+                act_row = row
+                for parameter in parameters:
+                    try:
+                        raw_value_index = self.level_0000_ascii_file.get_column_headers().index(parameter)
+                        raw_value = float(row[raw_value_index])
+                        calib_coefficient_index = self.calibration_coefficients_headers.index('pu1_P_RT_NRT')
+                        calib_coefficient = float(self.calibration_coefficients[calib_coefficient_index])
+                        param_value = raw_value * calib_coefficient
+                        act_row[raw_value_index] = param_value
+                    except:
+                        continue
+                self.level_0000_data.append(act_row)
+        
         else:
             self.level_0000_data = self.level_0000_ascii_file.get_data()
 
@@ -435,9 +461,16 @@ class StationToLevel0050:
         output=[]
         for row in self.level_0000_data:
             try:
-                act_time = time_utilities.convert_timezone( \
-                    datetime.datetime.strptime(row[0]+row[1],"%d.%m.%y%H:%M:%S"), \
-                    self.level_0005_timezone).strftime("%Y-%m-%d %H:%M:%S")
+                if "tfi" in self.filenames.get_station_id():
+                    act_time = time_utilities.convert_timezone( \
+                        datetime.datetime.strptime(row[0]+row[1],\
+                                                   "%Y-%m-%d %H:%M:%S"), \
+                        self.level_0005_timezone).strftime("%Y-%m-%d %H:%M:%S")
+                else:
+                    act_time = time_utilities.convert_timezone( \
+                        datetime.datetime.strptime(row[0]+row[1],\
+                                                   "%d.%m.%y%H:%M:%S"), \
+                        self.level_0005_timezone).strftime("%Y-%m-%d %H:%M:%S")
 
                 act_out=      [act_time, \
                                self.level_0005_timezone, \

@@ -44,7 +44,7 @@ class StationToLevel0300:
 
     def __init__(self, filepath, config_file, \
                  parameters = ["Ta_200", "rH_200"], level = "300", \
-                 run_mode="auto"):
+                 end_datetime = None, run_mode="auto"):
         """Inits StationToLevel0300. 
         
         Args:
@@ -52,9 +52,11 @@ class StationToLevel0300:
             config_file: Configuration file.
             parameters: Meteorological parameters that should be processed
             level: Target level
+            end_date: End date for data interpolation
             run_mode: Running mode (auto, manual)
         """
         self.level = level
+        self.end_datetime = end_datetime
         self.set_parameters(parameters)
         self.set_run_mode(run_mode)
         self.configure(config_file)
@@ -131,7 +133,7 @@ class StationToLevel0300:
 
     def get_run_flag(self):
         """Gets runtime flag information.
-        
+        self
         Returns:
             Runtime flag.
         """        
@@ -156,9 +158,19 @@ class StationToLevel0300:
         """
         self.get_level0100_quality_settings()
         self.set_independent_files()
+        self.set_end_datetime()
         self.process_gap_filling()
 
 
+    def set_end_datetime(self):
+        """Sets end date for gap filling
+        """
+        if self.end_datetime == None:
+            self.end_datetime = datetime.datetime.now() 
+        else:
+            self.end_datetime = datetime.datetime.strptime(self.end_datetime ,\
+                                                   "%Y-%m-%d")
+    
     def get_level0100_quality_settings(self):
         """Sets quality settings for level 0100 station data files
         """
@@ -235,7 +247,9 @@ class StationToLevel0300:
         r_fop = 'filepath.output = "' +  output_filepath + '"'
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
         r_ql = 'quality.levels = c(12,22)'
-        r_gl = 'gap.limit = 9000' 
+        r_gl = 'gap.limit = 9000'
+        r_ed = 'end.datetime = "' + \
+            self.end_datetime.strftime("%Y-%m-%d") + '"' 
         r_nal = 'na.limit = 0.99'
         r_tw = 'time.window = 1000'
         r_nplot = 'n.plot = 10'
@@ -257,6 +271,7 @@ class StationToLevel0300:
                 r_fcp + ',\n' + \
                 r_ql + ',\n' + \
                 r_gl + ',\n' + \
+                r_ed + ',\n' + \
                 r_nal + ',\n' + \
                 r_tw + ',\n' + \
                 r_nplot + ',\n' + \
