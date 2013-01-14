@@ -63,7 +63,10 @@ class DKStationDataFile(StationDataFile):
     def set_serial_number_ascii(self):
         """Sets station serial number extracted from ascii logger file.
         """
-        line = linecache.getline(self.get_filepath(), 2)
+        if "tfi" in self.get_filename():
+            line = linecache.getline(self.get_filepath(), 3)
+        else:
+            line = linecache.getline(self.get_filepath(), 2)
         self.set_serial_number(string.strip(line.partition(':')[2]))
 
     def set_time_range_ascii(self):
@@ -107,7 +110,10 @@ class DKStationDataFile(StationDataFile):
         infile = open(self.get_filepath())
         for header_extension in range (0, self.get_header_line()-1):
             infile.next()
-        reader = csv.reader(infile,delimiter='\t')
+        if "tfi" in self.get_filepath():
+            reader = csv.reader(infile,delimiter=',')
+        else:
+            reader = csv.reader(infile,delimiter='\t')
         self.set_column_headers(reader.next())
         infile.close() 
 
@@ -117,7 +123,10 @@ class DKStationDataFile(StationDataFile):
         infile = open(self.get_filepath())
         for header_extension in range (0, self.get_first_data_line()-1):
             infile.next()
-        reader = csv.reader(infile,delimiter='\t')
+        if "tfi" in self.get_filepath():
+            reader = csv.reader(infile,delimiter=',')
+        else:
+            reader = csv.reader(infile,delimiter='\t')
         self.dataset = []
         for row in reader:
             self.dataset.append(row)

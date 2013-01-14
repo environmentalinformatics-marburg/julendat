@@ -229,7 +229,8 @@ class EITFStationToLevel0000:
     def resort_file(self):
         """Resort already processed files according to filename or content.
         """
-        self.filenames = StationDataFilePath(filepath = self.dataset)
+        self.filenames = StationDataFilePath(filepath = self.dataset, \
+                                             toplevel_path = self.tl_data_path)
         if self.filenames.get_standard_name() == False:
             input = []
             input_file = open(self.dataset, "r")
@@ -237,8 +238,13 @@ class EITFStationToLevel0000:
                 input.append(line)
             input_file.close()
             plot_id = input[0][6:10]
-            date =  input[8][0:10]
-            time =  input[8][12:20]
+            try: 
+                date =  input[8][0:10]
+                time =  input[8][12:20]
+            except:
+                date =  input[7][0:10]
+                time =  input[7][12:20]
+                
             start_datetime = datetime.datetime.strptime(\
                              date + " " + time,"%Y-%m-%d %H:%M:%S")
             time_step_delta = TimeInterval(start_datetime - \
@@ -257,7 +263,8 @@ class EITFStationToLevel0000:
                              postexflag=None)
 
         self.filenames.build_filename_dictionary()
-
+        print self.filenames.get_filename_dictionary()['level_0000_ascii-path']
+        
         if not os.path.isdir(self.filenames.get_filename_dictionary()\
                              ['level_0000_ascii-path']):
             os.makedirs(self.filenames.get_filename_dictionary()\
@@ -265,8 +272,7 @@ class EITFStationToLevel0000:
         cmd = "mv " + self.dataset + " " + \
               self.filenames.get_filename_dictionary()['level_0000_ascii-filepath']
         print cmd
-        #os.system(cmd)    
-        os.sys.exit()
+        os.system(cmd)    
         
 
     def set_level0_filenames(self):

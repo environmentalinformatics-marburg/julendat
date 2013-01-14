@@ -3,6 +3,7 @@ gfRun <- function(files.dep,
                   filepath.coords, 
                   quality.levels, 
                   gap.limit,
+                  end.datetime,
                   na.limit,
                   time.window,
                   n.plot,
@@ -71,7 +72,8 @@ gfRun <- function(files.dep,
     if (length(pos.na) > 0) {
       pos.na <- gfGapLength(data.dep = ki.data.dep, 
                             pos.na = pos.na, 
-                            gap.limit = gap.limit)
+                            gap.limit = gap.limit,
+                            end.datetime = end.datetime)
       
       
       if (length(pos.na) > 0) {

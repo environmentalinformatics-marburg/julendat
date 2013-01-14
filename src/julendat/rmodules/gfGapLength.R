@@ -1,6 +1,7 @@
 gfGapLength <- function(data.dep, 
                         pos.na,
                         gap.limit,
+                        end.datetime,
                         ...) {
 
   ################################################################################
@@ -13,6 +14,7 @@ gfGapLength <- function(data.dep,
   ##  data.dep (ki.data):         Data set of dependent plot.
   ##  pos.na (numeric):           NA positions in data set of dependent plot.
   ##  gap.limit (numeric):        Maximum length of a gap to be filled.
+  ##  end.datetime (datetime):    End date and time to be set for final gap
   ##  ...                         Further arguments to be passed
   ##
   ################################################################################
@@ -46,7 +48,6 @@ gfGapLength <- function(data.dep,
   
   ########## FUNCTION BODY #######################################################
   
-  
   # Temporal space between single NA values
   pos.na.diff <- c(-99, diff(pos.na), -99)
   
@@ -72,6 +73,17 @@ gfGapLength <- function(data.dep,
   gap <- as.data.frame(rbind(cbind(pos.na[which(gap.start)], pos.na[which(gap.end)]), 
                cbind(pos.na[which(gap.single)], pos.na[which(gap.single)])))
   gap <- gap[order(gap[,1]),]
+  print(gap)
+  gap.end.set <- as.Date(end.datetime, "%Y-%m-%d")
+  gap.end.act <- as.Date(paste(data.dep@Date$Year[gap[nrow(gap),2]],
+                               data.dep@Date$Month[gap[nrow(gap),2]],
+                               data.dep@Date$Day[gap[nrow(gap),2]], sep="-"),
+                         "%Y-%m-%d")
+  time.difference.hours <- difftime(gap.end.set, gap.end.act, units="hours")
+  if (time.difference.hours < 0.0) {
+    gap[nrow(gap),2] <- gap[nrow(gap),2] + time.difference.hours
+  }
+  print(gap)
   
   # Calculate gap length
   gap[,3] <- gap[,2] + 1 - gap[,1]

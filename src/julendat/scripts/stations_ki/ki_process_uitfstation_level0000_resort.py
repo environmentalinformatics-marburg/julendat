@@ -80,8 +80,16 @@ def main():
     for dataset in station_dataset:
         print " "
         print "Processing dataset ", dataset
-        EITFStationToLevel0000(config_file, run_mode="auto-resort", \
-                               dataset=dataset)
+        try:
+            EITFStationToLevel0000(config_file, run_mode="auto-resort", \
+                                   dataset=dataset)
+        except Exception as inst:
+            print "An error occured with the following dataset."
+            print "Some details:"
+            print "Filename: " + dataset
+            print "Exception type: " , type(inst)
+            print "Exception args: " , inst.args
+            print "Exception content: " , inst  
         
     print "...finished."
 if __name__ == '__main__':
