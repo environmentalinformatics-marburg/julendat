@@ -67,7 +67,7 @@ gfRejectLowQuality <- function(data,
   
   if(!is.list(data)) {
     # Identify measurements that yield a bad quality flag
-    pos.na.qc <- unique(c(data@Valid$NAIndex, which(as.numeric(substr(data@Qualityflag, substr.min, substr.max)) %in% quality.levels)))
+    pos.na.qc <- unique(c(which(is.na(data@Parameter[[prm.dep[1]]])), which(as.numeric(substr(data@Qualityflag, substr.min, substr.max)) %in% quality.levels)))
     # Replace invalid measurements by NA
     data@Parameter[[prm.dep]][pos.na.qc] <- NaN
     # Update quality flag

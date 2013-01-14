@@ -69,6 +69,7 @@ as.ki.data <- function(input_filepath,
   print (input_filepath)
   df <- read.table(input_filepath, header = T, sep = ",", fill = T,
                    stringsAsFactors = F, na.strings = c("", "NA", "NaN"))
+
   year <- substr(df$Datetime, 1, 4)
   len <- length(year)
   origin <- paste(year[1], "01-01", sep = "-")
@@ -182,7 +183,7 @@ as.ki.data <- function(input_filepath,
 # input_filepath <- "/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/fa01_fah01_0200/ki_0000cof1_000rug_201102010000_201102282355_eat_fa01_fah01_0200.dat"
 # input_filepath <- "c:/tappelhans/uni/marburg/kili/testing/kili_data/ki_0000cof3_000pu1_201104010000_201104302355_eat_ca05_cti05_0005.dat"
 # input_filepath <- "c:/tappelhans/uni/marburg/kili/testing/kili_data/ki_0000foc3_000rug_201110010000_201110312355_eat_ca05_cti05_0005.dat"
-# 
+# input_filepath <- "/media/permanent/r_mulreg/data/year/complete/ki_0000hel1_000wxt_201201010000_201212310000_eat_qc25_fah01_0290.dat"
 # test <- as.ki.data(input_filepath)
 # str(test)
 # test@PrmHisto

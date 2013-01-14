@@ -18,4 +18,5 @@ gfWrite(files.dep = "/media/permanent/r_mulreg/data/year/complete/ki_0000cof5_00
         prm.dep = c("Ta_200", "rH_200"), 
         prm.indep = c(NA, "Ta_200"), 
         family = gaussian, 
-        plevel = sprintf("%04.0f", 100))
+        plevel = sprintf("%04.0f", 100), 
+        end.datetime = Sys.Date())
