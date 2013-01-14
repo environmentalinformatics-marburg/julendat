@@ -73,7 +73,6 @@ gfGapLength <- function(data.dep,
   gap <- as.data.frame(rbind(cbind(pos.na[which(gap.start)], pos.na[which(gap.end)]), 
                cbind(pos.na[which(gap.single)], pos.na[which(gap.single)])))
   gap <- gap[order(gap[,1]),]
-  print(gap)
   gap.end.set <- as.Date(end.datetime, "%Y-%m-%d")
   gap.end.act <- as.Date(paste(data.dep@Date$Year[gap[nrow(gap),2]],
                                data.dep@Date$Month[gap[nrow(gap),2]],
@@ -83,7 +82,6 @@ gfGapLength <- function(data.dep,
   if (time.difference.hours < 0.0) {
     gap[nrow(gap),2] <- gap[nrow(gap),2] + time.difference.hours
   }
-  print(gap)
   
   # Calculate gap length
   gap[,3] <- gap[,2] + 1 - gap[,1]
