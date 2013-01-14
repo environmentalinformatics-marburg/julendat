@@ -84,7 +84,6 @@ def main():
         systemdate = datetime.datetime.now()
         filepath=dataset
         StationToLevel0050(filepath=filepath, config_file=config_file)
-        os.sys.exit()
         try:
             StationToLevel0050(filepath=filepath, config_file=config_file)
             move_file = "mv " + dataset + " " + \
