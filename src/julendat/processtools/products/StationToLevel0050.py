@@ -1,4 +1,4 @@
-"""Convert D&K level 0 logger data to level 1.
+"""Convert D&K as well as UI level 0000 logger data to level 0050.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-01-17"
+__version__ = "2013-01-13"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import sys
@@ -37,12 +37,12 @@ from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.metadatatools.stations.Level01Standards import Level01Standards
 
 
-class DKStationToLevel0050:   
-    """Instance for converting D&K logger level 0 to level 1data.
+class StationToLevel0050:   
+    """Instance for converting logger level 0000 to level 0050 data.
     """
 
     def __init__(self, filepath, config_file,run_mode="auto"):
-        """Inits DKStationToLevel0050. 
+        """Inits StationToLevel0050. 
         
         Args:
             filepath: Full path and name of the level 0 file

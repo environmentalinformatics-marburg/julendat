@@ -45,7 +45,7 @@ class StationToLevel0300:
     def __init__(self, filepath, config_file, \
                  parameters = ["Ta_200", "rH_200"], level = "300", \
                  run_mode="auto"):
-        """Inits StationToLevel0100. 
+        """Inits StationToLevel0300. 
         
         Args:
             filepath: Full path and name of the level 0050 file

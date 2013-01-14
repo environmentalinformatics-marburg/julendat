@@ -35,8 +35,7 @@ import datetime
 from julendat.metadatatools.stations.StationDataFilePath import StationDataFilePath
 from julendat.metadatatools.stations.StationInventory import StationInventory
 from julendat.metadatatools.stations.Level01Standards import Level01Standards
-from julendat.processtools.stations.dkstations.DKStationToLevel0050 import \
-    DKStationToLevel0050
+from julendat.processtools.products.StationToLevel0050 import StationToLevel0050
 
 
 
@@ -45,7 +44,7 @@ class StationToLevel0290:
     """
 
     def __init__(self, filepath, config_file,run_mode="auto"):
-        """Inits StationToLevel0200. 
+        """Inits StationToLevel0290. 
         
         Args:
             filepath: Full path and name of the level 0100 file
