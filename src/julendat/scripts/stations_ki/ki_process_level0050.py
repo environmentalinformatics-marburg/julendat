@@ -26,8 +26,7 @@ import ConfigParser
 import datetime
 import fnmatch
 import os
-from julendat.processtools.stations.dkstations.DKStationToLevel0050 import \
-    DKStationToLevel0050
+from julendat.processtools.products.StationToLevel0050 import StationToLevel0050
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -85,7 +84,7 @@ def main():
         systemdate = datetime.datetime.now()
         filepath=dataset
         try:
-            DKStationToLevel0050(filepath=filepath, config_file=config_file)
+            StationToLevel0050(filepath=filepath, config_file=config_file)
             move_file = "mv " + dataset + " " + \
                 dataset + ".processed." + systemdate.strftime("%Y%m%d%H%M")
             os.system(move_file)

@@ -26,8 +26,7 @@ import ConfigParser
 import datetime
 import fnmatch
 import os
-from julendat.processtools.stations.dkstations.DKStationToLevel0050 import \
-    DKStationToLevel0050
+from julendat.processtools.products.StationToLevel0050 import StationToLevel0050
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively

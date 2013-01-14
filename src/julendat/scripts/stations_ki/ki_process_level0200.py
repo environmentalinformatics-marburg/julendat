@@ -27,8 +27,7 @@ import datetime
 import fnmatch
 import os
 import shutil
-from julendat.processtools.aggregation.StationToLevel0200 import \
-    StationToLevel0200
+from julendat.processtools.products.StationToLevel0200 import StationToLevel0200
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
