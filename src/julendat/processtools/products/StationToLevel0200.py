@@ -117,7 +117,10 @@ class StationToLevel0200:
             self.concatenate()
         elif self.get_run_mode() == "aggregate_0200":
             self.target_level = "0200"
-            self.aggregate()
+            self.aggregate_0200()
+        elif self.get_run_mode() == "aggregate_0400":
+            self.target_level = "0400"
+            self.aggregate_0400()
         else:
             pass
 
@@ -146,7 +149,7 @@ class StationToLevel0200:
         outfile.write(infile_content)
         outfile.close()
 
-    def aggregate(self):
+    def aggregate_0200(self):
         """Aggregate level 0100 station files to level 0200.
         """
         aggregation_level = "fah01"
@@ -156,16 +159,36 @@ class StationToLevel0200:
         if not os.path.isdir(output_path):
             os.makedirs(output_path)
         aggregation_level = "1h"
-        self.process_aggregation(aggregation_level)
+        outputfilepath = self.filenames.get_filename_dictionary()[\
+                             'level_0200_ascii-filepath']
+        self.process_aggregation(aggregation_level, outputfilepath)
         self.remove_inf()
         
         print "...finished."
 
-    def process_aggregation(self, aggregation_level):
+    def aggregate_0400(self):
+        """Aggregate level 0310 station files to level 0400.
+        """
+        aggregation_level = "fam01"
+        self.filenames.build_filename_dictionary(aggregation_level)
+        output_path = self.filenames.get_filename_dictionary()\
+                      ["level_0400_ascii-path"]
+        if not os.path.isdir(output_path):
+            os.makedirs(output_path)
+        aggregation_level = "month"
+        outputfilepath = self.filenames.get_filename_dictionary()[\
+                             'level_0400_ascii-filepath']
+        self.process_aggregation(aggregation_level, outputfilepath)
+        self.remove_inf()
+        
+        print "...finished."
+
+    def process_aggregation(self, aggregation_level, outputfilepath):
         """Process aggragation.
         
         Args:
             aggregation_level: Aggregation level
+            outputfilepath: Output filepath
         """
         act_wd = os.getcwd()
         os.chdir(self.r_filepath)
@@ -173,9 +196,7 @@ class StationToLevel0200:
                 'write.aggregate.ki.data.R")'
         r_keyword = "write.aggregate.ki.data"
         r_ifp = 'inputfilepath="' + self.filenames.get_filepath() + '"'
-        r_ofp = 'outputfilepath="' + \
-            self.filenames.get_filename_dictionary()[\
-                'level_0200_ascii-filepath'] + '"'
+        r_ofp = 'outputfilepath="' + outputfilepath + '"'
         r_level = 'level="' + aggregation_level  + '"'
         r_plevel = 'plevel =' + self.target_level
         
@@ -196,11 +217,15 @@ class StationToLevel0200:
     def remove_inf(self):
         """Remove inf and -inf valus in aggregated level 0200 files.
         """
-        infile = open(self.filenames.get_filename_dictionary()[\
-                'level_0200_ascii-filepath'], "r")
+        if self.get_run_mode() == "aggregate_0200":
+            file = self.filenames.get_filename_dictionary()[\
+                       'level_0200_ascii-filepath'] 
+        elif self.get_run_mode() == "aggregate_0400":
+            file = self.filenames.get_filename_dictionary()[\
+                       'level_0400_ascii-filepath'] 
+        infile = open(file, "r")        
         infile_content = infile.read()
         infile.close()
-        outfile = open(self.filenames.get_filename_dictionary()\
-                      ["level_0200_ascii-filepath"], "w")
+        outfile = open(file, "w")
         outfile.write(infile_content.replace("-Inf", "NA").replace("Inf", "NA"))
         outfile.close()

@@ -203,6 +203,10 @@ aggregate.ki.data <- function(input,
 #   aggdf <- aggdf[, -c(wdmin, wdmax, wdq25, wdq75)]
   
   datetime <- rownames(aggdf)
+  print(datetime)
+  if(nchar(datetime) == 6){
+    datetime <- paste(datetime, "0101", sep="")
+  } 
   datetime <- as.POSIXct(strptime(datetime, format = "%Y%m%d%H"), 
                          origin = ki.data@Origin) 
   
