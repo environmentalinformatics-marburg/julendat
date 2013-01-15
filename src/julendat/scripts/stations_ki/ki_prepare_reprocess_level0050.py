@@ -56,8 +56,7 @@ def configure(config_file):
     config = ConfigParser.ConfigParser()
     config.read(config_file)
     return config.get('repository', 'toplevel_processing_plots_path'), \
-           config.get('repository', 'toplevel_temp_path'), \
-           config.get('repository', 'toplevel_processing_logger_path')
+           config.get('project', 'project_id')
 
 
 
@@ -73,10 +72,9 @@ def main():
     print   
     
     config_file = "ki_config.cnf"
-    toplevel_processing_plots_path, toplevel_temp_path , \
-        toplevel_processing_logger_path = configure(config_file)
-    
-    station_dataset=locate("*.asc*", "*", toplevel_processing_plots_path)
+    toplevel_processing_plots_path, project_id = configure(config_file)
+    path = toplevel_processing_plots_path + project_id
+    station_dataset=locate("*.asc*", "*", path)
     for dataset in station_dataset:
         print " "
         print "Preparing dataset ", dataset

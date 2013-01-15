@@ -414,6 +414,8 @@ class StationToLevel0050:
         
         elif self.filenames.get_station_id().find("tfi") != -1:
             templates  = ['B_', 'Fog', 'Rainfall']
+            coefficients = {'B_': 'pu1_P_RT_NRT', \
+                            'Ra': 'pu2_1', 'Fo': 'pu2_2'}
             parameters = []
             for entry in self.level_0000_ascii_file.get_column_headers():
                 for template in templates:
@@ -424,10 +426,11 @@ class StationToLevel0050:
             for row in self.level_0000_ascii_file.get_data():
                 act_row = row
                 for parameter in parameters:
+                    act_coefficient = coefficients[parameter.strip()[0:2]]
                     try:
                         raw_value_index = self.level_0000_ascii_file.get_column_headers().index(parameter)
                         raw_value = float(row[raw_value_index])
-                        calib_coefficient_index = self.calibration_coefficients_headers.index('pu1_P_RT_NRT')
+                        calib_coefficient_index = self.calibration_coefficients_headers.index(act_coefficient)
                         calib_coefficient = float(self.calibration_coefficients[calib_coefficient_index])
                         param_value = raw_value * calib_coefficient
                         act_row[raw_value_index] = param_value
