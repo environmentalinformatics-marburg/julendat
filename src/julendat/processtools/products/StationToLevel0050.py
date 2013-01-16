@@ -142,7 +142,6 @@ class StationToLevel0050:
         """
 
         self.init_level_0000_ascii_file()
-        print self.get_run_flag()
         if self.get_run_flag():
             self.get_station_inventory_information()
         if self.get_run_flag():
