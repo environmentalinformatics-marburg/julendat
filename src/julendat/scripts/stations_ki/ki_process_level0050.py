@@ -77,7 +77,6 @@ def main():
     input_path = toplevel_processing_plots_path + project_id
     
     station_dataset=locate("*.asc", "*ra01_*", input_path)
-    
     for dataset in station_dataset:
         print " "
         print "Processing dataset ", dataset
