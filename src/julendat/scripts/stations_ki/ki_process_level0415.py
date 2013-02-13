@@ -26,6 +26,8 @@ import ConfigParser
 import datetime
 import fnmatch
 import os
+from julendat.processtools.resampling.stations.StationConcatenation import StationConcatenation
+
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -81,31 +83,23 @@ def main():
         print "Processing logger type ", logger
         station_dataset=locate("*" + logger + "*_0400.dat", "*gc02_fam01*", \
                                input_path)
-        counter = 0
-        zip_number = 0
-        act_set = []
+        station_dataset = sorted(station_dataset)
         for dataset in station_dataset:
-            counter = counter + 1
-            if counter <= 50:
-                act_set.append(dataset)
-            else:
-                zip_number = zip_number + 1
-                cmd = "7z a " + \
-                      input_path + os.sep + logger + "_" + str(zip_number) + \
-                      "_0410.zip " + \
-                      " ".join(act_set)
-                os.system(cmd)
-                counter = 0
-        if counter != 0:
-            zip_number = zip_number + 1
-            cmd = "7z a " + \
-                  input_path + os.sep + logger + "_" + str(zip_number) + \
-                  "_0410.zip " + \
-                  " ".join(act_set)
-            os.system(cmd)
-            counter = 0
-      
-    print "...finished"
-            
+            try:
+                print " "
+                print "Concatenating dataset ", dataset
+                systemdate = datetime.datetime.now()
+                filepath=dataset
+                StationConcatenation(filepath=filepath, config_file=config_file, \
+                                   level = "0415", run_mode="concatenate")
+            except Exception as inst:
+                print "An error occured with the following dataset."
+                print "Some details:"
+                print "Filename: " + dataset
+                print "Exception type: " , type(inst)
+                print "Exception args: " , inst.args
+                print "Exception content: " , inst        
+
 if __name__ == '__main__':
     main()
+

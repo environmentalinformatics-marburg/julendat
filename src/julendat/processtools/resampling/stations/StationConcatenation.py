@@ -1,4 +1,4 @@
-"""Process level 0250 station data to concatenated level 0290.
+"""Process level 0250 station data to concatenated files.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -39,18 +39,19 @@ from julendat.processtools.products.StationToLevel0050 import StationToLevel0050
 
 
 
-class StationToLevel0290:   
-    """Instance for processing station level 0250 to level 0290 data.
+class StationConcatenation:   
+    """Instance for processing station data to concatenated files.
     """
 
-    def __init__(self, filepath, config_file,run_mode="auto"):
-        """Inits StationToLevel0290. 
+    def __init__(self, filepath, config_file, level = "0290", run_mode="auto"):
+        """Inits StationConcatenation. 
         
         Args:
             filepath: Full path and name of the level 0100 file
             config_file: Configuration file.
             run_mode: Running mode (auto, manual)
         """
+        self.level = level
         self.set_run_mode(run_mode)
         self.configure(config_file)
         self.init_filenames(filepath)
@@ -127,7 +128,10 @@ class StationToLevel0290:
         """Executes class functions according to run_mode settings. 
         """
         if self.get_run_mode() == "concatenate":
-            self.concatenate()
+            if self.level == "0290":
+                self.concatenate_level0290()
+            elif self.level == "0415":
+                self.concatenate_level0415()
         else:
             pass
 
@@ -136,16 +140,15 @@ class StationToLevel0290:
         """
         shutil.move(self.source,self.destination)
 
-    def concatenate(self):
+    def concatenate_level0290(self):
         """Concatenate level 0250 station files.
         """
         #aggregation_level = "fah01"
         self.filenames.build_filename_dictionary()
+        self.get_actual_filenames()
         self.init_level_0290()
         
-        level_0290_file = open( \
-            self.filenames.get_filename_dictionary()\
-            ["level_0290_ascii-filepath"])
+        level_0290_file = open(self.output_filepath)
         for level_0290_lines in range (0,1):
             level_0290_header = level_0290_file.next()
         reader = csv.reader(level_0290_file,delimiter=',', \
@@ -197,8 +200,7 @@ class StationToLevel0290:
                     for entry in self.reorder:
                         act_out.append(level_0250_input[level_0250_counter][entry-1])
                     act_out[calibration_level_index] = \
-                        self.filenames.get_filename_dictionary()\
-                        ['level_0290_processing']
+                        self.output_processing
                     if len(act_out) < len(self.level0290_column_headers):
                         act_out = act_out + [float('nan')]*(len(self.level0290_column_headers)-len(act_out))    
                     out.append(act_out)
@@ -215,7 +217,7 @@ class StationToLevel0290:
                                self.filenames.get_plot_id()[4:], \
                                'xxx', \
                                self.filenames.get_station_id(), \
-                               self.filenames.get_filename_dictionary()['level_0290_processing'], \
+                               self.output_processing, \
                                'q' + '000' * (len(self.level0290_column_headers)-8)]
                     if len(act_out) < len(self.level0290_column_headers):
                         act_out = act_out + [float('nan')]*(len(self.level0290_column_headers)-len(act_out))    
@@ -224,36 +226,78 @@ class StationToLevel0290:
 
 
         
-        print self.filenames.get_filename_dictionary()\
-                       ["level_0290_ascii-filepath"]
-        outfile = open(self.filenames.get_filename_dictionary()\
-                       ["level_0290_ascii-filepath"], "w")
+        outfile = open(self.output_filepath, "w")
         outfile.write(', '.join(str(i) for i in self.level0290_column_headers) + '\n')
         writer = csv.writer(outfile,delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
         for row in out:
             writer.writerow(row)
         outfile.close()       
+
+    def concatenate_level0415(self):
+        """Concatenate level 0400 station files.
+        """
+        #aggregation_level = "fah01"
+        self.filenames.build_filename_dictionary()
+        self.get_actual_filenames()
+        if not os.path.isdir(self.output_path):
+            os.makedirs(self.output_path)
         
+        input_file = open(self.filenames.get_filepath())
+        if os.path.isfile(self.output_filepath) != True:
+            output_file = open(self.output_filepath, 'w')
+            for inline in input_file:
+                output_file.write(inline.replace(',"0400",', ',"0415",'))
+            output_file.close()
+        else:
+            input_file.next()
+            output_file = open(self.output_filepath, 'a')
+            for inline in input_file:
+                output_file.write(inline.replace(',"0400",', ',"0415",'))
+            output_file.close()
+                
+    def get_actual_filenames(self):
+        """Get actual output filenames and metadata
+        """
+        if self.level == "0290":
+            self.output_filepath = self.filenames.get_filename_dictionary()\
+                          ["level_0290_ascii-filepath"]
+            self.output_path = self.filenames.get_filename_dictionary()\
+                                 ["level_0290_ascii-path"]
+            self.output_startdatetime = self.filenames.get_filename_dictionary()\
+                          ['level_0290_startdatetime']
+            self.output_enddatetime = self.filenames.get_filename_dictionary()\
+                          ['level_0290_enddatetime']
+            self.output_timestep = '3600'
+            self.output_processing = self.filenames.get_filename_dictionary()\
+                        ['level_0290_processing']
+
+        elif self.level == "0415":
+            self.output_filepath = self.filenames.get_filename_dictionary()\
+                          ["level_0415_ascii-filepath"]
+            self.output_path = self.filenames.get_filename_dictionary()\
+                                 ["level_0415_ascii-path"]
+            self.output_startdatetime = self.filenames.get_filename_dictionary()\
+                          ['level_0415_startdatetime']
+            self.output_enddatetime = self.filenames.get_filename_dictionary()\
+                          ['level_0415_enddatetime']
+            self.output_timestep = '3600'
+            self.output_processing = self.filenames.get_filename_dictionary()\
+                        ['level_0415_processing']
+
     def init_level_0290(self):
         """Init level 0290 file
         """
-        if os.path.isfile(self.filenames.get_filename_dictionary()\
-                          ["level_0290_ascii-filepath"]) != True:
-            if not os.path.isdir(self.filenames.get_filename_dictionary()\
-                                 ["level_0290_ascii-path"]):
-                os.makedirs(self.filenames.get_filename_dictionary()\
-                            ["level_0290_ascii-path"])
+        if os.path.isfile(self.output_filepath) != True:
+            if not os.path.isdir(self.output_path):
+                os.makedirs(self.output_path)
 
             r_source = 'source("' + self.r_filepath + os.sep + \
                 'InitLevel050File.R")'
             r_keyword = "init_level_010_file"
-            r_ofp = 'outpath="' + self.filenames.get_filename_dictionary()\
-                          ["level_0290_ascii-filepath"] + '",'
-            r_st = 'start_time="' + self.filenames.get_filename_dictionary()\
-                          ['level_0290_startdatetime'] + '",'
-            r_et = 'end_time="' + self.filenames.get_filename_dictionary()\
-                          ['level_0290_enddatetime'] + '",'
-            r_ts = 'time_step= 3600'
+            r_ofp = 'outpath="' + self.output_filepath + '",'
+            r_st = 'start_time="' + self.output_startdatetime + '",'
+            r_et = 'end_time="' + self.output_enddatetime + '",'
+            r_ts = 'time_step= ' + self.output_timestep
             r_cmd = r_source + "\n" + \
                     r_keyword + " (\n" + \
                     r_ofp + "\n" + \

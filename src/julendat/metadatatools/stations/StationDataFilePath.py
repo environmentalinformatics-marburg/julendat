@@ -413,6 +413,38 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_0400_ascii-path'] + \
             self.filename_dictionary['level_0400_ascii-filename']    
     
+        #Level 0415 (monthly aggregated, gap-filled files, standard format)
+        calibration_level="gc02"
+        processing = "0415"
+        extension="dat"
+        level_0415_startdatetime = start_datetime[0:4] + '01010000'
+        level_0415_enddatetime = end_datetime[0:4] + '12310000'
+        self.filename_dictionary['level_0415_calibration_level'] = calibration_level
+        self.filename_dictionary['level_0415_processing'] = processing
+        self.filename_dictionary['level_0415_startdatetime'] =  \
+            level_0290_startdatetime[0:4] + "-01-01 00:00:00"
+        self.filename_dictionary['level_0415_enddatetime'] =  \
+            level_0290_enddatetime[0:4] + "-12-31 23:00:00"
+        self.filename_dictionary['level_0415_ascii-filename'] = \
+            self.build_filename(\
+                plot_id = "00000000", \
+                start_datetime = level_0415_startdatetime, \
+                end_datetime = level_0415_enddatetime, \
+                time_zone = self.level_0005_time_zone, \
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing, \
+                extension=extension)
+        self.filename_dictionary['level_0415_ascii-path'] = \
+            self.build_path(\
+                plot_id = "00000000", \
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing)
+        self.filename_dictionary['level_0415_ascii-filepath'] = \
+            self.filename_dictionary['level_0415_ascii-path'] + \
+            self.filename_dictionary['level_0415_ascii-filename']    
+
     def get_filename_dictionary(self):
         """Gets dictionary for data filenames of different levels.
         

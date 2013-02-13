@@ -27,7 +27,7 @@ import datetime
 import fnmatch
 import os
 import shutil
-from julendat.processtools.products.StationToLevel0290 import StationToLevel0290
+from julendat.processtools.resampling.stations.StationConcatenation import StationConcatenation
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -102,8 +102,8 @@ def main():
             print "Concatenating dataset ", dataset
             systemdate = datetime.datetime.now()
             filepath=dataset
-            StationToLevel0290(filepath=filepath, config_file=config_file, \
-                               run_mode="concatenate")
+            StationConcatenation(filepath=filepath, config_file=config_file, \
+                               level = "0290", run_mode="concatenate")
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"
