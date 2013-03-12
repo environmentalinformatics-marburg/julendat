@@ -1,6 +1,7 @@
 write.aggregate.ki.data <- function(inputfilepath, 
                                     outputfilepath,
                                     level = "1h",
+                                    start.column = 9,
                                     ...) 
 {
 
@@ -8,6 +9,7 @@ write.aggregate.ki.data <- function(inputfilepath,
   
   out <- aggregate.ki.data(inputfilepath,
                            level = level,
+                           start.column = start.column,
                            ...)
   
   print(str(out))

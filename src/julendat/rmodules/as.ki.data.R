@@ -60,7 +60,7 @@ setClass("ki.data",
            )
          )
 
-as.ki.data <- function(input_filepath, 
+as.ki.data <- function(input_filepath, start.column = 9,  
                        ...) {
 
   stopifnot(require(ggplot2, quietly = TRUE))
@@ -172,7 +172,7 @@ as.ki.data <- function(input_filepath,
                 Processlevel = unique(na.exclude(df$Processlevel)),
                 Qualityflag = as.character(df$Qualityflag),
                 Valid = list(N = validn, NAIndex = nok),
-                Parameter = as.list(df[9:length(df)]),
+                Parameter = as.list(df[start.column:length(df)]),
                 PrmHisto = list(graph)
                 )
   
