@@ -200,12 +200,18 @@ class StationToLevel0200:
         r_level = 'level="' + aggregation_level  + '"'
         r_plevel = 'plevel =' + self.target_level
         
+        if self.project_id == "be":
+            r_scolumn = 'start.column = 10'
+        else:
+            r_scolumn = 'start.column = 9'
+        
         r_cmd = r_source + '\n' + \
                 r_keyword + '(\n' + \
                 r_ifp + ',\n' + \
                 r_ofp + ',\n' + \
                 r_level + ',\n' + \
-                r_plevel + ')\n'
+                r_plevel + ',\n' + \
+                r_scolumn + ')\n'
         r_script = "aggregation.rscript" 
         f = open(r_script,"w")
         f.write(r_cmd)

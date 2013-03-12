@@ -1,6 +1,7 @@
 aggregate.ki.data <- function(input,
                               level = "1h",
                               plevel = 0000,
+                              start.column = 9,
                               ...) {
   
   Old.TZ <- Sys.timezone()
@@ -13,7 +14,7 @@ aggregate.ki.data <- function(input,
   source("uv2wd.R")
   stopifnot(require(reshape))
 
-  ki.data <- as.ki.data(input)
+  ki.data <- as.ki.data(input, start.column = start.column)
 
   switch(level,
          "qh" = agglevel <- ki.data@AggregationLevels$AggQh,
