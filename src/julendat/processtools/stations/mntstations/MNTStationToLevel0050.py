@@ -431,16 +431,28 @@ class MNTStationToLevel0050:
 
                     if len(act_out) < len(self.level0050_column_headers):
                         act_out = act_out + [float('nan')]*(len(self.level0050_column_headers)-len(act_out))
-
                     out.append(act_out)
                     #out.append(station_input[station_counter])
                     found = True
                     break
                 station_counter = station_counter + 1
             if found != True:
-                out.append(level_10_input[level_10_counter])
+                if len(level_10_input[level_10_counter]) > 1:
+                    out.append(level_10_input[level_10_counter])
+                else:
+                    act_out = [level_10_input[level_10_counter][0], \
+                          self.level_0005_timezone, \
+                          self.filenames.get_aggregation(), \
+                               self.filenames.get_plot_id(), \
+                               'xxx', \
+                               self.filenames.get_station_id(), \
+                               self.filenames.get_filename_dictionary()['level_0050_processing'], \
+                               'q' + '000' * (len(self.level0050_column_headers)-9)]
+                    if len(act_out) < len(self.level0050_column_headers):
+                        act_out = act_out + [float('nan')]*(len(self.level0050_column_headers)-len(act_out))    
+                    out.append(act_out)
             level_10_counter = level_10_counter + 1
-
+          
 
         outfile = open(self.act_level_0050_filepath,"w")
         outfile.write(', '.join(str(i) for i in self.level0050_column_headers) + '\n')

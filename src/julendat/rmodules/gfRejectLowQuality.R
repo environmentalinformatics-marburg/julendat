@@ -59,9 +59,10 @@ gfRejectLowQuality <- function(data,
     substr.min <- 1 + prm.dep.col + (prm.dep.col - 1) * 2
     substr.max <- substr.min + 2
   } else {  
-  substr.min <- ifelse(!is.list(data), 
-                       2 + length(unique(substr(names(data@Parameter[c(1:(prm.dep.col-1))]), 1, 3))) * 3,
-                       2 + length(unique(substr(names(data[[1]]@Parameter[c(1:(prm.dep.col-1))]), 1, 2))) * 3)
+  # substr.min <- ifelse(!is.list(data), 
+  #                     2 + length(unique(substr(names(data@Parameter[c(1:(prm.dep.col-1))]), 1, 3))) * 3,
+  #                     2 + length(unique(substr(names(data[[1]]@Parameter[c(1:(prm.dep.col-1))]), 1, 2))) * 3)
+  substr.min <- prm.dep.col * 3 - 1
   substr.max <- substr.min + 2
   }
   

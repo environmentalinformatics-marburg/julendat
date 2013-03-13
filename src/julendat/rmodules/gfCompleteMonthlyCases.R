@@ -68,8 +68,8 @@ cat("\n",
 
   # Merge lists containing ki.data objects
   data <- append(data.dep, data.indep)
-
   # Convert data.indep.avl to list
+  str(data.indep.avl)
   data.indep.avl <- lapply(seq(data.indep.avl[,2]), function(i) {
     data.indep.avl[i,2]
   })

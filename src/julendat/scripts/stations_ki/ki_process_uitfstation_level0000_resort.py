@@ -42,6 +42,7 @@ def locate(pattern, patternpath, root=os.curdir):
     for path, dirs, files in os.walk(os.path.abspath(root)):
         for filename in fnmatch.filter(files, pattern):
             # Modified by Thomas Nauss
+            print path
             if fnmatch.fnmatch(path, patternpath):
                 yield os.path.join(path, filename)
 
@@ -76,7 +77,7 @@ def main():
     toplevel_incoming_path, toplevel_temp_path , \
         toplevel_processing_logger_path = configure(config_file)
     
-    station_dataset=locate("*.asc*", "*", toplevel_incoming_path)
+    station_dataset=locate("*000tfi*.asc", "*", toplevel_incoming_path)
     for dataset in station_dataset:
         print " "
         print "Processing dataset ", dataset
