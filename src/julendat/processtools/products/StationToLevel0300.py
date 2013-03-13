@@ -265,7 +265,7 @@ class StationToLevel0300:
         r_fid = 'files.indep = ' + independent_stations  + ')'
         r_fop = 'filepath.output = "' +  output_filepath + '"'
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
-        r_ql = 'quality.levels = c(12,22)'
+        r_ql = 'quality.levels = c(12,22,21)'
         r_gl = 'gap.limit = 9000'
         r_ed = 'end.datetime = "' + \
             self.end_datetime.strftime("%Y-%m-%d") + '"' 
