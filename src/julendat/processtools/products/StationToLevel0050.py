@@ -634,6 +634,7 @@ class StationToLevel0050:
                             act_out = act_out + [float(station_input[station_counter][index])]
                         except:
                             act_out = act_out + [float('nan')]
+                    
                     if len(act_out) < len(self.level0050_column_headers):
                         act_out = act_out + [float('nan')]*(len(self.level0050_column_headers)-len(act_out))    
                     out.append(act_out)

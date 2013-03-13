@@ -88,6 +88,18 @@ class Level01Standards():
         temp = temp.rsplit(',\n')
         self.level0050_column_headers = temp
 
+    def set_level0200_standards(self):
+        """Sets station entries information from station id
+        """
+        try:
+            config = ConfigParser.ConfigParser()
+            config.read(self.filepath)
+            temp = config.get(self.station_id +  '_header_0200', 'header_0200')
+            temp = temp.rsplit(',\n')
+            self.level0200_column_headers = temp
+        except:
+            self.level0200_column_headers = self.get_level0050_column_headers()
+
     def set_level0100_quality_settings(self):
         """Sets quality settings for level 0100 files
         """
@@ -164,6 +176,17 @@ class Level01Standards():
         except:
             self.set_level0050_standards()
         return self.level0050_column_headers
+
+    def get_level0200_column_headers(self):
+        """Gets column headers of level 0200+ file
+        
+        Returns:
+            Column headers of level 0200+ file
+        """
+        try: self.level0200_column_headers
+        except:
+            self.set_level0200_standards()
+        return self.level0200_column_headers
 
     def get_level0100_quality_settings(self):
         """Gets settings for level 0100 quality checks

@@ -90,17 +90,34 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     loggers = ["CEMU"]
-    parameters = ["Ta_200", "rH_200"]
+    parameters = ["Ta_200","rH_200", \
+                  "Ta_10","Ts_5","Ts_10","Ts_20","Ts_50", \
+                  "SM_10","SM_15","SM_20","SM_30","SM_40","SM_50", \
+                  "PAR_200"]
+    pids = ['NA',"Ta_200",
+            'NA','NA','NA','NA','NA', \
+            'NA','NA','NA','NA','NA','NA', \
+            'NA',]
     station_dataset=locate("*.dat", "*qc25_fah01_0290", input_path)
     for dataset in station_dataset:
         print " "
+        print " "
+        print "Filling gaps in ", dataset
+        systemdate = datetime.datetime.now()
+        filepath=dataset
+        StationToLevel0300(filepath = filepath, config_file = config_file, \
+                               parameters = parameters, pids=pids,
+                               level = "0300", end_datetime = "2012-12-01")
+        sys.exit()
+        '''
         try:
             print " "
             print "Filling gaps in ", dataset
             systemdate = datetime.datetime.now()
             filepath=dataset
             StationToLevel0300(filepath = filepath, config_file = config_file, \
-                               parameters = parameters, level = "0300")
+                               parameters = parameters, level = "0300", 
+                               end_datetime = "2012-12-01")
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"
@@ -108,6 +125,7 @@ def main():
             print "Exception type: " , type(inst)
             print "Exception args: " , inst.args
             print "Exception content: " , inst        
+        '''
 
 if __name__ == '__main__':
     main()

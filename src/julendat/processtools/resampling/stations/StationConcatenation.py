@@ -114,7 +114,7 @@ class StationConcatenation:
             filepath=self.level0050_standards, \
             station_id=self.filenames.get_station_id())
         self.level0290_column_headers = \
-            level_standard.get_level0050_column_headers()
+            level_standard.get_level0200_column_headers()
 
     def get_run_flag(self):
         """Gets runtime flag information.
@@ -211,14 +211,25 @@ class StationConcatenation:
                 if len(level_0290_input[level_0290_counter]) > 1:
                     out.append(level_0290_input[level_0290_counter])
                 else:
-                    act_out = [level_0290_input[level_0290_counter][0], \
-                               self.level_0005_timezone, \
-                               self.filenames.get_aggregation(), \
-                               self.filenames.get_plot_id()[4:], \
-                               'xxx', \
-                               self.filenames.get_station_id(), \
-                               self.output_processing, \
-                               'q' + '000' * (len(self.level0290_column_headers)-8)]
+                    if self.project_id == "be":
+                        act_out = [level_0290_input[level_0290_counter][0], \
+                                   self.level_0005_timezone, \
+                                   self.filenames.get_aggregation(), \
+                                   self.filenames.get_plot_id(), \
+                                   'xxx', \
+                                   self.filenames.get_station_id(), \
+                                   self.output_processing, \
+                                   'q' + '000' * (len(self.level0290_column_headers)-8)]
+                    else:
+                        act_out = [level_0290_input[level_0290_counter][0], \
+                                   self.level_0005_timezone, \
+                                   self.filenames.get_aggregation(), \
+                                   self.filenames.get_plot_id()[4:], \
+                                   'xxx', \
+                                   self.filenames.get_station_id(), \
+                                   self.output_processing, \
+                                   'q' + '000' * (len(self.level0290_column_headers)-8)]
+
                     if len(act_out) < len(self.level0290_column_headers):
                         act_out = act_out + [float('nan')]*(len(self.level0290_column_headers)-len(act_out))    
                     out.append(act_out)

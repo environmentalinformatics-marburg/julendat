@@ -15,6 +15,7 @@ toplevel_temp_path = /media/permanent/development/test/julendat/temp/
 
 [inventory]
 station_inventory = be_config_station_inventory.cnf
+station_master = be_station_master.csv
 
 [project]
 project_id = be

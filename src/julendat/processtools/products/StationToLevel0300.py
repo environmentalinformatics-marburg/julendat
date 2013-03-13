@@ -43,7 +43,9 @@ class StationToLevel0300:
     """
 
     def __init__(self, filepath, config_file, \
-                 parameters = ["Ta_200", "rH_200"], level = "300", \
+                 parameters = ["Ta_200", "rH_200"], 
+                 pids = ['NA', "Ta_200"],
+                 level = "300", \
                  end_datetime = None, run_mode="auto"):
         """Inits StationToLevel0300. 
         
@@ -58,6 +60,7 @@ class StationToLevel0300:
         self.level = level
         self.end_datetime = end_datetime
         self.set_parameters(parameters)
+        self.set_pids(pids)
         self.set_run_mode(run_mode)
         self.configure(config_file)
         self.init_filenames(filepath)
@@ -74,6 +77,14 @@ class StationToLevel0300:
         """
         self.parameters = parameters
 
+    def set_pids(self,pids):
+        """Set additional variables used for gap filling.
+        
+        Args:
+            pids: Additional variables used for gap filling.
+        """
+        self.pids = pids
+
     def get_parameters(self):
         """Gets meteorological parameters to be processed.
         
@@ -82,6 +93,14 @@ class StationToLevel0300:
         """
         return self.parameters
     
+    def get_pids(self):
+        """Gets additional variables used for gap filling.
+        
+        Returns:
+            pid: additional variables used for gap filling.
+        """
+        return self.pids
+
     def set_run_mode(self,run_mode):
         """Sets run mode.
         
@@ -257,7 +276,13 @@ class StationToLevel0300:
         for parameter in self.get_parameters():
             r_pdp = r_pdp + '"' + parameter + '", ' 
         r_pdp = r_pdp[:-2] + ')'
-        r_pid = 'prm.indep = c(NA, "Ta_200")'
+        r_pid = 'prm.indep = c('
+        for pid in self.get_pids():
+            if pid == "NA":
+                r_pid = r_pid + 'NA, '
+            else:
+                r_pid = r_pid + '"' + pid + '", ' 
+        r_pid = r_pid[:-2] + ')'
         r_plevel = 'plevel = 0300'
         r_family = 'family = gaussian'
 
