@@ -92,7 +92,7 @@ def main():
                 zip_number = zip_number + 1
                 cmd = "7z a " + \
                       input_path + os.sep + logger + "_" + str(zip_number) + \
-                      "_0110.zip " + \
+                      "_0100.zip " + \
                       " ".join(act_set)
                 os.system(cmd)
                 counter = 0
@@ -100,7 +100,7 @@ def main():
             zip_number = zip_number + 1
             cmd = "7z a " + \
                   input_path + os.sep + logger + "_" + str(zip_number) + \
-                  "_0110.zip " + \
+                  "_0100.zip " + \
                   " ".join(act_set)
             os.system(cmd)
             counter = 0

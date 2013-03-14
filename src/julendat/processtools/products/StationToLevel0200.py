@@ -249,6 +249,9 @@ class StationToLevel0200:
         elif self.get_run_mode() == "aggregate_0400":
             file = self.filenames.get_filename_dictionary()[\
                        'level_0400_ascii-filepath'] 
+        elif self.get_run_mode() == "aggregate_0405":
+            file = self.filenames.get_filename_dictionary()[\
+                       'level_0405_ascii-filepath'] 
         infile = open(file, "r")        
         infile_content = infile.read()
         infile.close()
