@@ -121,6 +121,9 @@ class StationToLevel0200:
         elif self.get_run_mode() == "aggregate_0400":
             self.target_level = "0400"
             self.aggregate_0400()
+        elif self.get_run_mode() == "aggregate_0405":
+            self.target_level = "0405"
+            self.aggregate_0405()
         else:
             pass
 
@@ -178,6 +181,23 @@ class StationToLevel0200:
         aggregation_level = "month"
         outputfilepath = self.filenames.get_filename_dictionary()[\
                              'level_0400_ascii-filepath']
+        self.process_aggregation(aggregation_level, outputfilepath)
+        self.remove_inf()
+        
+        print "...finished."
+
+    def aggregate_0405(self):
+        """Aggregate level 0310 station files to level 0405.
+        """
+        aggregation_level = "fad01"
+        self.filenames.build_filename_dictionary(aggregation_level)
+        output_path = self.filenames.get_filename_dictionary()\
+                      ["level_0405_ascii-path"]
+        if not os.path.isdir(output_path):
+            os.makedirs(output_path)
+        aggregation_level = "day"
+        outputfilepath = self.filenames.get_filename_dictionary()[\
+                             'level_0405_ascii-filepath']
         self.process_aggregation(aggregation_level, outputfilepath)
         self.remove_inf()
         

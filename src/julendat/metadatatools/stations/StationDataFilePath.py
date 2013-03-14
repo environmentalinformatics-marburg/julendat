@@ -413,6 +413,32 @@ class StationDataFilePath(StationDataFile):
             self.filename_dictionary['level_0400_ascii-path'] + \
             self.filename_dictionary['level_0400_ascii-filename']    
     
+        #Level 0405 (daily aggregated, gap-filled files, standard format)
+        calibration_level="gc02"
+        processing = "0405"
+        extension="dat"
+        start_datetime = start_datetime
+        end_datetime = end_datetime
+        self.filename_dictionary['level_0405_calibration_level'] = calibration_level
+        self.filename_dictionary['level_0405_processing'] = processing
+        self.filename_dictionary['level_0405_ascii-filename'] = \
+            self.build_filename(\
+                start_datetime = start_datetime, \
+                end_datetime = end_datetime, \
+                time_zone = self.level_0005_time_zone, \
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing, \
+                extension=extension)
+        self.filename_dictionary['level_0405_ascii-path'] = \
+            self.build_path(\
+                calibration_level=calibration_level, \
+                aggregation_level=aggregation_level, \
+                processing=processing)
+        self.filename_dictionary['level_0405_ascii-filepath'] = \
+            self.filename_dictionary['level_0405_ascii-path'] + \
+            self.filename_dictionary['level_0405_ascii-filename']    
+
         #Level 0415 (monthly aggregated, gap-filled files, standard format)
         calibration_level="gc02"
         processing = "0415"
