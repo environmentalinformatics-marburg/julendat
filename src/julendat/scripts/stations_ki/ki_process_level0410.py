@@ -61,7 +61,7 @@ def configure(config_file):
     
 def main():
     """Main program function
-    Process data from level 0400 to level 0410 zip files.
+    Process data from level 0400/0405 to level 0410 zip files.
     """
     print
     print 'Module: ki_process_level0410'
@@ -92,7 +92,7 @@ def main():
                 zip_number = zip_number + 1
                 cmd = "7z a " + \
                       input_path + os.sep + logger + "_" + str(zip_number) + \
-                      "_0410.zip " + \
+                      "_0400.zip " + \
                       " ".join(act_set)
                 os.system(cmd)
                 counter = 0
@@ -100,11 +100,41 @@ def main():
             zip_number = zip_number + 1
             cmd = "7z a " + \
                   input_path + os.sep + logger + "_" + str(zip_number) + \
-                  "_0410.zip " + \
+                  "_0400.zip " + \
                   " ".join(act_set)
             os.system(cmd)
             counter = 0
       
+    loggers = ["rug", "pu1", "pu2", "rad", "wxt"]
+    for logger in loggers:
+        print " "
+        print "Processing logger type ", logger
+        station_dataset=locate("*" + logger + "*_0400.dat", "*gc02_fam01*", \
+                               input_path)
+        counter = 0
+        zip_number = 0
+        act_set = []
+        for dataset in station_dataset:
+            counter = counter + 1
+            if counter <= 50:
+                act_set.append(dataset)
+            else:
+                zip_number = zip_number + 1
+                cmd = "7z a " + \
+                      input_path + os.sep + logger + "_" + str(zip_number) + \
+                      "_0405.zip " + \
+                      " ".join(act_set)
+                os.system(cmd)
+                counter = 0
+        if counter != 0:
+            zip_number = zip_number + 1
+            cmd = "7z a " + \
+                  input_path + os.sep + logger + "_" + str(zip_number) + \
+                  "_0405.zip " + \
+                  " ".join(act_set)
+            os.system(cmd)
+            counter = 0
+
     print "...finished"
             
 if __name__ == '__main__':

@@ -96,13 +96,14 @@ def main():
 
     station_dataset=locate("*.dat", "*fah01_0310*", input_path)
     for dataset in station_dataset:
-        try:
-            print " "
-            print "Aggregating dataset ", dataset
-            systemdate = datetime.datetime.now()
-            filepath=dataset
-            StationToLevel0200(filepath=filepath, config_file=config_file, \
+        #try:
+        print " "
+        print "Aggregating dataset ", dataset
+        systemdate = datetime.datetime.now()
+        filepath=dataset
+        StationToLevel0200(filepath=filepath, config_file=config_file, \
                                run_mode="aggregate_0405")
+        '''
         except Exception as inst:
             print "An error occured with the following dataset."
             print "Some details:"
@@ -110,7 +111,7 @@ def main():
             print "Exception type: " , type(inst)
             print "Exception args: " , inst.args
             print "Exception content: " , inst        
-
+        '''
 if __name__ == '__main__':
     main()
 

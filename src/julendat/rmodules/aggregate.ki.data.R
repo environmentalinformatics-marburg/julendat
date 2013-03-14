@@ -208,6 +208,9 @@ aggregate.ki.data <- function(input,
   if(nchar(datetime) == 6){
     datetime <- paste(datetime, "0101", sep="")
   } 
+  if(nchar(datetime) == 8){
+    datetime <- paste(datetime, "01", sep="")
+  } 
   datetime <- as.POSIXct(strptime(datetime, format = "%Y%m%d%H"), 
                          origin = ki.data@Origin) 
   
