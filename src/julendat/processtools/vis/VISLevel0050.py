@@ -44,7 +44,7 @@ class VISLevel0050:
 
     def __init__(self, config_file, pattern="*fah01_0250.dat", \
                  loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt'], \
-                 run_mode="auto"):
+                 self.start_year = None, end_year = None, run_mode="auto"):
         """Inits VISLevel0050. 
         
         Args:
@@ -55,6 +55,15 @@ class VISLevel0050:
         """
         self.loggers = loggers
         self.pattern = pattern
+        
+        if self.start_year == None: 
+            self.start_year = datetime.datetime.now().year
+        else:
+            self.start_year = start_year
+        if end_year == None: 
+            self.end_year = datetime.datetime.now().year
+        else:
+            self.end_year = end_year
         self.set_run_mode(run_mode)
         self.configure(config_file)
         self.get_level0050_settings()
@@ -205,7 +214,7 @@ class VISLevel0050:
         
         print self.level0100_quality_parameters
         for parameter in self.level0100_quality_parameters:
-           for year in range(2011, 2013):
+           for year in range(self.start_year, self.end_year):
                 print parameter
                 self.inputfilepath = []
                 for i in range(0, len(self.loggers)):
@@ -286,7 +295,7 @@ class VISLevel0050:
                      'swdr_21': [0, 5000], 'swdr_22': [0, 5000], \
                      'swdr_23': [0, 5000], 'swdr_24': [0, 5000]}
         
-        for year in range(2011, 2013):
+        for year in range(self.start_year, self.end_year):
             self.inputpath = []
             for i in range(0, len(self.loggers)):
                 for path, dirs, files in os.walk(os.path.abspath(\
