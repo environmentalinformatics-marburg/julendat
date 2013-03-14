@@ -48,7 +48,7 @@ def main():
     Process data from level 0000 to level 0050.
     """
     print
-    print 'Module: be_process_dkstation_level0050'
+    print 'Module: ki_process_dkstation_level0050'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
@@ -58,43 +58,8 @@ def main():
     toplevel_processing_plots_path, project_id, r_filepath = \
         configure(config_file=config_file)
     
-    VISLevel0050(config_file=config_file)
-    '''
-    input_path = toplevel_processing_plots_path + project_id
-    print input_path
-    os.chdir(r_filepath)
-    r_source = 'source("print.be.strip.R")'
-    r_script = 'print.be.strip('
-    r_inputpath = 'inputpath = "' + input_path + '",'
-    r_logger = 'logger = "rug",'
-    r_prm = 'prm = "Ta_200",'
-    r_fun = 'fun = mean,'
-    r_arrange = 'arrange = "long",'
-    r_range = 'range = c(0, 40),'
-    r_pattern = 'pattern  = "*cti05_0050.dat",'
-    r_colour = 'colour = VColList$Ta_200,'
-    r_year = 'year = "2011"'
-    
-    r_cmd = r_source + "\n" + \
-            r_script + "\n" + \
-            r_inputpath + "\n" + \
-            r_logger + " \n" + \
-            r_prm + " \n" + \
-            r_fun + " \n" + \
-            r_arrange + " \n" + \
-            r_range + " \n" + \
-            r_pattern + " \n" + \
-            r_colour + " \n" + \
-            r_year + ")\n"
-    
-    r_script = "vis0050.rscript" 
-    f = open(r_script,"w")
-    f.write(r_cmd)
-    f.close()
-    r_cmd = "R CMD BATCH " + r_script + " " + r_script + ".log"
-    print r_cmd
-    os.system(r_cmd)
-    '''
+    VISLevel0050(config_file=config_file, pattern="*fah01_0300.dat", \
+                 loggers = ['CEMU','EEMU','AEMU'])
     print "Finished"        
 
 if __name__ == '__main__':

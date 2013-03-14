@@ -116,7 +116,7 @@ class VISLevel0050:
         self.level0050_column_headers = []
         for logger in self.loggers:
             temp = Level01Standards(filepath=self.level0050_standards, \
-                                    station_id= "000" + logger)
+                                    station_id= (6-len(logger))*"0" + logger)
             self.level0050_column_headers.append(\
                 temp.get_level0050_column_headers())
             for item in temp.get_level0100_quality_settings()\
