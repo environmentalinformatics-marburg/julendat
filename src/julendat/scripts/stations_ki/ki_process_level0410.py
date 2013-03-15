@@ -109,7 +109,7 @@ def main():
     for logger in loggers:
         print " "
         print "Processing logger type ", logger
-        station_dataset=locate("*" + logger + "*_0400.dat", "*gc02_fam01*", \
+        station_dataset=locate("*" + logger + "*_0405.dat", "*gc02_fam01*", \
                                input_path)
         counter = 0
         zip_number = 0
