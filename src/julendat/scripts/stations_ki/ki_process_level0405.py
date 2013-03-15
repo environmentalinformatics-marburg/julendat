@@ -79,7 +79,7 @@ def main():
     Process data from level 0000 to level 0050.
     """
     print
-    print 'Module: calibration_level0100'
+    print 'Module: aggregation_level0405'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
@@ -90,7 +90,7 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_folders=locate_path("gc02_fam01*", input_path)
+    station_folders=locate_path("gc02_fad01*", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
 

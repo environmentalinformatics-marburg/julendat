@@ -85,7 +85,7 @@ def main():
     print 'License: ' + __license__
     print   
     
-    config_file = "ki_config.cnf"
+    config_file = "be_config.cnf"
     toplevel_processing_plots_path, project_id = \
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id

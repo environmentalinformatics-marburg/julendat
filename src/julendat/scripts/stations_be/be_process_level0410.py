@@ -1,4 +1,4 @@
-"""Process data from level 0310 to aggregated level 0400.
+"""Process data from level 0400 to ready-for-bexis-upload-zips.
 Copyright (C) 2011 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -19,15 +19,13 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-12-17"
+__version__ = "2013-01-09"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
 import datetime
 import fnmatch
 import os
-import shutil
-from julendat.processtools.products.StationToLevel0200 import StationToLevel0200
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -46,19 +44,6 @@ def locate(pattern, patternpath, root=os.curdir):
             if fnmatch.fnmatch(path, patternpath):
                 yield os.path.join(path, filename)
 
-def locate_path(patternpath, root=os.curdir):
-    '''Locate files matching filename pattern recursively
-    
-    This routine is based on the one from Simon Brunning at
-    http://code.activestate.com/recipes/499305/ and extended by the patternpath.
-     
-    Args:
-        patternpath: Pattern of the filepath
-        root: Root directory for the recursive search
-    '''
-    for path, dirs, files in os.walk(os.path.abspath(root)):
-        for dir_name in fnmatch.filter(dirs, patternpath):
-                yield os.path.join(path, dir_name)
 
 def configure(config_file):
     """Reads configuration settings and configure object.
@@ -76,41 +61,81 @@ def configure(config_file):
     
 def main():
     """Main program function
-    Process data from level 0310 to level 0400.
+    Process data from level 0400/0405 to level 0410 zip files.
     """
     print
-    print 'Module: aggregation_level0400'
+    print 'Module: be_process_level0410'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
     print   
     
-    config_file = "ki_config.cnf"
+    config_file = "be_config.cnf"
     toplevel_processing_plots_path, project_id = \
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_folders=locate_path("gc02_fam01*", input_path)
-    for folders in station_folders:
-        shutil.rmtree(folders)
+    loggers = ["rug", "pu1", "pu2", "rad", "wxt"]
+    for logger in loggers:
+        print " "
+        print "Processing logger type ", logger
+        station_dataset=locate("*" + logger + "*_0400.dat", "*gc02_fam01*", \
+                               input_path)
+        counter = 0
+        zip_number = 0
+        act_set = []
+        for dataset in station_dataset:
+            counter = counter + 1
+            if counter <= 50:
+                act_set.append(dataset)
+            else:
+                zip_number = zip_number + 1
+                cmd = "7z a " + \
+                      input_path + os.sep + logger + "_" + str(zip_number) + \
+                      "_0400.zip " + \
+                      " ".join(act_set)
+                os.system(cmd)
+                counter = 0
+        if counter != 0:
+            zip_number = zip_number + 1
+            cmd = "7z a " + \
+                  input_path + os.sep + logger + "_" + str(zip_number) + \
+                  "_0400.zip " + \
+                  " ".join(act_set)
+            os.system(cmd)
+            counter = 0
+      
+    loggers = ["rug", "pu1", "pu2", "rad", "wxt"]
+    for logger in loggers:
+        print " "
+        print "Processing logger type ", logger
+        station_dataset=locate("*" + logger + "*_0405.dat", "*gc02_fam01*", \
+                               input_path)
+        counter = 0
+        zip_number = 0
+        act_set = []
+        for dataset in station_dataset:
+            counter = counter + 1
+            if counter <= 50:
+                act_set.append(dataset)
+            else:
+                zip_number = zip_number + 1
+                cmd = "7z a " + \
+                      input_path + os.sep + logger + "_" + str(zip_number) + \
+                      "_0405.zip " + \
+                      " ".join(act_set)
+                os.system(cmd)
+                counter = 0
+        if counter != 0:
+            zip_number = zip_number + 1
+            cmd = "7z a " + \
+                  input_path + os.sep + logger + "_" + str(zip_number) + \
+                  "_0405.zip " + \
+                  " ".join(act_set)
+            os.system(cmd)
+            counter = 0
 
-    station_dataset=locate("*.dat", "*fah01_0310*", input_path)
-    for dataset in station_dataset:
-        try:
-            print " "
-            print "Aggregating dataset ", dataset
-            systemdate = datetime.datetime.now()
-            filepath=dataset
-            StationToLevel0200(filepath=filepath, config_file=config_file, \
-                               run_mode="aggregate_0400")
-        except Exception as inst:
-            print "An error occured with the following dataset."
-            print "Some details:"
-            print "Filename: " + dataset
-            print "Exception type: " , type(inst)
-            print "Exception args: " , inst.args
-            print "Exception content: " , inst        
-
+    print "...finished"
+            
 if __name__ == '__main__':
     main()
-
