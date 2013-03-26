@@ -44,7 +44,7 @@ class VISLevel0050:
 
     def __init__(self, config_file, pattern="*fah01_0250.dat", \
                  loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt'], \
-                 self.start_year = None, end_year = None, run_mode="auto"):
+                 start_year = None, end_year = None, run_mode="auto"):
         """Inits VISLevel0050. 
         
         Args:
@@ -56,7 +56,7 @@ class VISLevel0050:
         self.loggers = loggers
         self.pattern = pattern
         
-        if self.start_year == None: 
+        if start_year == None: 
             self.start_year = datetime.datetime.now().year
         else:
             self.start_year = start_year
