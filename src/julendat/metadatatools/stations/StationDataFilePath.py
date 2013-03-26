@@ -540,13 +540,16 @@ class StationDataFilePath(StationDataFile):
         end_datetime = time_utilities.convert_timezone(end_datetime, \
                             self.level_0005_time_zone)
 
+        print end_datetime.year, start_datetime.year
+        print start_datetime.month, end_datetime.month
         if end_datetime.year - start_datetime.year > 0:
-            month_number = 13-start_datetime.month + end_datetime.month
+            month_number = (end_datetime.year - start_datetime.year) * 13 - \
+                           start_datetime.month + end_datetime.month
+            print month_number
         else:
             month_number = end_datetime.month-start_datetime.month+1
         self.month_number = month_number
         start_datetime = self.set_first_time_of_month(start_datetime)
-
         self.set_start_datetime(start_datetime)
         self.last_time_of_month = self.set_last_time_of_month(start_datetime)
 
