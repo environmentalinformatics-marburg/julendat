@@ -189,7 +189,6 @@ class VISLevel0050:
                           'swdr_21,', 'swdr_22', 'swdr_23', 'swdr_24']
         self.parameters_wxt = ['P_RT_NRT', 'SWDR_300', \
                       'SWUR_300', 'LWDR_300', 'LWUR_300', 'Ts_10']
-        '''
         par_range = {'Ta_200': [-10,50],'rH_200': [0,100], \
                      'P_RT_NRT': [0,60], \
                      'P_RT_NRT_01': [0,60], 'P_RT_NRT_02': [0,60],
@@ -211,56 +210,82 @@ class VISLevel0050:
                      'swdr_19': [0, 5000], 'swdr_20': [0, 5000], \
                      'swdr_21': [0, 5000], 'swdr_22': [0, 5000], \
                      'swdr_23': [0, 5000], 'swdr_24': [0, 5000]}
+        '''
         
+        par_range = {'Ta': [-10,50],'rH': [0,100], \
+                     'P': [0,60], \
+                     'F': [0,60], \
+                     'SWDR': [0,1400], \
+                     'LWDR': [200,500], \
+                     'WD': [0,360], 'WV': [0,10], \
+                     'Ts': [-10, 50], \
+                     'SM': [0, 100], \
+                     'p_200': [750, 1100], \
+                     'Tra': [-10, 50], \
+                     'par': [0, 5000], \
+                     'swdr_xxxx': [0, 5000]}
+
         print self.level0100_quality_parameters
         for parameter in self.level0100_quality_parameters:
-           for year in range(self.start_year, self.end_year):
-                print parameter
-                self.inputfilepath = []
-                for i in range(0, len(self.loggers)):
-                    if parameter in self.level0050_column_headers[i]:
-                        for path, dirs, files in os.walk(os.path.abspath(\
-                                             self.tl_processing_path)):
-                            for filename in fnmatch.filter(files, \
-                                                    "*" + self.loggers[i] + \
-                                                    "*" + str(year) + "*" + \
-                                                    self.pattern):
-                                self.inputfilepath.append(\
-                                                os.path.join(path, filename))
-                self.inputfilepath = sorted(self.inputfilepath)
-                inputfilepath = 'c('
-                for station in self.inputfilepath:
-                    inputfilepath = inputfilepath + '"' + \
-                                           station + '", \n' 
-                inputfilepath = inputfilepath[:-3]
-            
-                r_inputfilepath = 'inputfilepath = ' + inputfilepath + '),'
-                r_prm = 'prm = "' + parameter + '",'
-                r_range = 'range = c(' + str(par_range[parameter][0]) + ', ' + \
-                          str(par_range[parameter][1]) + '),'
-                r_colour = 'colour = VColList$' + str(parameter) + ', '
-                r_fun = 'fun = mean,'
-                if 'RT_NRT' in parameter:
-                    r_fun = 'fun = sum,'
-                r_year = 'year = "' + str(year) + '"'
-                r_cmd = r_source + "\n" + \
-                r_script + "\n" + \
-                r_inputfilepath + "\n" + \
-                r_outputpath + "\n" + \
-                r_prm + " \n" + \
-                r_fun + " \n" + \
-                r_arrange + " \n" + \
-                r_range + " \n" + \
-                r_pattern + " \n" + \
-                r_colour + " \n" + \
-                r_year + ")\n"
-    
-                script = "vis0050.rscript" 
-                f = open(script,"w")
-                f.write(r_cmd)
-                f.close()
-                r_cmd = "R CMD BATCH " + script + " " + script + ".log"
-                os.system(r_cmd)
+           try:
+               if parameter == "p_200":
+                   act_par_range = par_range[parameter]
+               elif parameter[0:parameter.find("_")] == "swdr"  and \
+                    parameter != "SDWR_300":
+                   act_par_range = par_range["swdr_xxxx"]
+               else:
+                   act_par_range = par_range[parameter[0:parameter.find("_")]]
+           
+               for year in range(self.start_year, self.end_year):
+                    print parameter
+                    self.inputfilepath = []
+                    for i in range(0, len(self.loggers)):
+                        if parameter in self.level0050_column_headers[i]:
+                            for path, dirs, files in os.walk(os.path.abspath(\
+                                                 self.tl_processing_path)):
+                                for filename in fnmatch.filter(files, \
+                                                        "*" + self.loggers[i] + \
+                                                        "*" + str(year) + "*" + \
+                                                        self.pattern):
+                                    self.inputfilepath.append(\
+                                                    os.path.join(path, filename))
+                    self.inputfilepath = sorted(self.inputfilepath)
+                    inputfilepath = 'c('
+                    for station in self.inputfilepath:
+                        inputfilepath = inputfilepath + '"' + \
+                                               station + '", \n' 
+                    inputfilepath = inputfilepath[:-3]
+                
+                    r_inputfilepath = 'inputfilepath = ' + inputfilepath + '),'
+                    r_prm = 'prm = "' + parameter + '",'
+                    r_range = 'range = c(' + str(act_par_range[0]) + ', ' + \
+                              str(act_par_range[1]) + '),'
+                    r_colour = 'colour = VColList$' + str(parameter) + ', '
+                    r_fun = 'fun = mean,'
+                    if 'RT_NRT' in parameter:
+                        r_fun = 'fun = sum,'
+                    r_year = 'year = "' + str(year) + '"'
+                    r_cmd = r_source + "\n" + \
+                    r_script + "\n" + \
+                    r_inputfilepath + "\n" + \
+                    r_outputpath + "\n" + \
+                    r_prm + " \n" + \
+                    r_fun + " \n" + \
+                    r_arrange + " \n" + \
+                    r_range + " \n" + \
+                    r_pattern + " \n" + \
+                    r_colour + " \n" + \
+                    r_year + ")\n"
+        
+                    script = "vis0050.rscript" 
+                    f = open(script,"w")
+                    f.write(r_cmd)
+                    f.close()
+                    r_cmd = "R CMD BATCH " + script + " " + script + ".log"
+                    os.system(r_cmd)
+           except:
+               print "HALLO"
+               continue
    
    
     def visualize_wxt(self):
