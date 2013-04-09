@@ -284,7 +284,7 @@ class VISLevel0050:
                     r_cmd = "R CMD BATCH " + script + " " + script + ".log"
                     os.system(r_cmd)
            except:
-               print "HALLO"
+               print parameter
                continue
    
    
