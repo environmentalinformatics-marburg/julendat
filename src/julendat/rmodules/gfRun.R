@@ -26,9 +26,13 @@ gfRun <- function(files.dep,
   
   
   # Import plot coordinates
-  data.coords <- read.csv(filepath.coords, header=TRUE)
-  data.coords <- data.coords[,c("PlotID", "Lon", "Lat")]
-  
+  if (!is.null(filepath.coords)) {
+    data.coords <- read.csv(filepath.coords, header=TRUE)
+    data.coords <- data.coords[,c("PlotID", "Lon", "Lat")]
+  } else {
+    data.coords <- NULL
+  }
+ 
 
   # Import data set of dependent plot
   ki.data.dep <- as.ki.data(files.dep)
