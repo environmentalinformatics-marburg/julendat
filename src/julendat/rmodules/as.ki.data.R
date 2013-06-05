@@ -65,10 +65,15 @@ as.ki.data <- function(input_filepath, start.column = 9,
 
   stopifnot(require(ggplot2, quietly = TRUE))
   stopifnot(require(reshape, quietly = TRUE))
-  
-  print (input_filepath)
-  df <- read.table(input_filepath, header = T, sep = ",", fill = T,
-                   stringsAsFactors = F, na.strings = c("", "NA", "NaN"))
+ 
+  # Check if data set to convert to ki.data already exists, otherwise import via read.table 
+  if (exists("input_filepath")) {
+    df <- input_filepath
+  } else {
+    print (input_filepath)
+    df <- read.table(input_filepath, header = T, sep = ",", fill = T,
+                     stringsAsFactors = F, na.strings = c("", "NA", "NaN"))
+  }
 
   year <- substr(df$Datetime, 1, 4)
   len <- length(year)
@@ -169,7 +174,7 @@ as.ki.data <- function(input_filepath, start.column = 9,
                 StationId = list(Unique = unique(na.exclude(station_short)),
                                  Longname = station_long,
                                  Shortname = station_short),
-                Processlevel = unique(na.exclude(df$Processlevel)),
+                Processlevel = as.integer(unique(na.exclude(df$Processlevel))),
                 Qualityflag = as.character(df$Qualityflag),
                 Valid = list(N = validn, NAIndex = nok),
                 Parameter = as.list(df[start.column:length(df)]),

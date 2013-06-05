@@ -1,7 +1,7 @@
 gfWrite <- function(files.dep, 
                     files.indep, 
                     filepath.output, 
-                    filepath.coords, 
+                    filepath.coords = NULL, 
                     quality.levels, 
                     gap.limit,
                     end.datetime,
