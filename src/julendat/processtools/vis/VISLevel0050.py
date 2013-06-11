@@ -174,6 +174,9 @@ class VISLevel0050:
         r_arrange = 'arrange = "long",'
         r_pattern = 'pattern  = "' + self.pattern + '",'
         r_year = 'year = "2011"'
+        if self.project_id == "be" :
+            r_resolution ='"200"'
+
         '''
         self.loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt']
         self.parameters_rug = ['Ta_200', 'rH_200']
@@ -224,6 +227,11 @@ class VISLevel0050:
                      'Tra': [-10, 50], \
                      'par': [0, 5000], \
                      'swdr_xxxx': [0, 5000]}
+	if self.project_id == "be" :
+		par_range = {'Ta': [-10,50],\
+                     'Ts': [-10, 50], \
+                     'SM': [0, 100], \
+                     }
 
         print self.level0100_quality_parameters
         for parameter in self.level0100_quality_parameters:
@@ -264,7 +272,7 @@ class VISLevel0050:
                     r_fun = 'fun = mean,'
                     if 'RT_NRT' in parameter:
                         r_fun = 'fun = sum,'
-                    r_year = 'year = "' + str(year) + '"'
+                    r_year = 'year = "' + str(year) + '",'
                     r_cmd = r_source + "\n" + \
                     r_script + "\n" + \
                     r_inputfilepath + "\n" + \
@@ -275,7 +283,8 @@ class VISLevel0050:
                     r_range + " \n" + \
                     r_pattern + " \n" + \
                     r_colour + " \n" + \
-                    r_year + ")\n"
+                    r_year + " \n" + \
+                    r_resolution + ")\n"
         
                     script = "vis0050.rscript" 
                     f = open(script,"w")
