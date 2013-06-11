@@ -1,8 +1,16 @@
 VColList <- list(
   Ta_200 = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
-
+  
+  Ta_200_max = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+  
+  Ta_200_min = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+  
   Ta_10 = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
-
+  
+  Ta_10_max = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+    
+  Ta_10_min = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+  
   rH_200 = colorRampPalette(brewer.pal(9, "PuOr")),
   
   Ts_10 = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
