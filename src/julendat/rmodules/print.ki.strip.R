@@ -7,6 +7,7 @@ print.ki.strip <- function(inputfilepath,
                              range = c(-10, 50),
                              pattern,
                              colour = colList$colTa,
+			     resolution = 400,
                              ...) {
   
   source("ki.strip.R")
@@ -17,7 +18,7 @@ print.ki.strip <- function(inputfilepath,
   png(paste(outputpath, plotname, sep = "/"), 
       width = ifelse(arrange == "wide", 1024*8, 768*8), 
       height = ifelse(arrange == "wide", 768*8, 1024*8),
-      res = 300)
+      res = resolution)
   ki.strip(inputfilepath = inputfilepath,
              prm = prm,
              arrange = arrange,
