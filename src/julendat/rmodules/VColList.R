@@ -11,9 +11,37 @@ VColList <- list(
     
   Ta_10_min = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
   
+  SM_40 = colorRampPalette(brewer.pal(9, "PuOr")),
+  
+  SM_20 = colorRampPalette(brewer.pal(9, "PuOr")),
+  
+  SM_10 = colorRampPalette(brewer.pal(9, "PuOr")),
+  
   rH_200 = colorRampPalette(brewer.pal(9, "PuOr")),
   
+  Ts_5 = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+
+  Ts_5_min = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+
+  Ts_5_max = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+  
   Ts_10 = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+
+  Ts_10_min = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+
+  Ts_10_max = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+  
+  Ts_20 = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+
+  Ts_20_min = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+
+  Ts_20_max = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+
+  Ts_50 = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+
+  Ts_50_min = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
+
+  Ts_50_max = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
   
   SWDR_300 = colorRampPalette(rev(brewer.pal(9, "YlGnBu"))),
   
