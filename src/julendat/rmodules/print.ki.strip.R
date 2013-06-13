@@ -7,7 +7,7 @@ print.ki.strip <- function(inputfilepath,
                              range = c(-10, 50),
                              pattern,
                              colour = colList$colTa,
-			     resolution = 400,
+			                 resolution = 400,
                              ...) {
   
   source("ki.strip.R")

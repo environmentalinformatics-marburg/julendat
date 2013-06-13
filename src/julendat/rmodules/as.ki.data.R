@@ -67,13 +67,14 @@ as.ki.data <- function(input_filepath, start.column = 9,
   stopifnot(require(reshape, quietly = TRUE))
  
   # Check if data set to convert to ki.data already exists, otherwise import via read.table 
-  if (exists("input_filepath")) {
-    df <- input_filepath
-  } else {
-    print (input_filepath)
+  ## Comment out by tnauss, 2013-0613, todo Florian: check!
+  ##if (exists("input_filepath")) {
+  ##  df <- input_filepath
+  ##} else {
+  ##  print (input_filepath)
     df <- read.table(input_filepath, header = T, sep = ",", fill = T,
                      stringsAsFactors = F, na.strings = c("", "NA", "NaN"))
-  }
+  ##}
 
   year <- substr(df$Datetime, 1, 4)
   len <- length(year)
