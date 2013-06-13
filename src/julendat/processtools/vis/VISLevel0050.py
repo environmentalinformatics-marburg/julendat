@@ -175,7 +175,9 @@ class VISLevel0050:
         r_pattern = 'pattern  = "' + self.pattern + '",'
         r_year = 'year = "2011"'
         if self.project_id == "be" :
-            r_resolution ='"200"'
+            r_resolution ='resolution = 200'
+        elif self.project_id == "ki" :
+            r_resolution ='resolution = 400'
 
         '''
         self.loggers = ['rug', 'pu1', 'pu2', 'rad', 'wxt']
