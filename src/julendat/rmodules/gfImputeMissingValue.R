@@ -67,9 +67,9 @@ gfImputeMissingValue <- function(data.dep,
   ########## FUNCTION BODY #######################################################
   
   
-  ##
+  ## Status message
   
-  print(paste("Current gap:", pos.na))
+  print(paste("Current gap:", paste(pos.na[1:2], collapse = " to ")))
   
   ## Required libraries
   
@@ -88,7 +88,7 @@ gfImputeMissingValue <- function(data.dep,
                              time.window.post, 
                              length(data.dep@Parameter[[prm.dep]]))
   time.window.post.span <- time.window.post - pos.na[2]
-   
+  
   
   ## Reject independent data sets with a too high amount of NA values
   
@@ -121,7 +121,7 @@ gfImputeMissingValue <- function(data.dep,
            NA)
     }))
     
-  # If there is at least one valid adjacent plot  
+    # If there is at least one valid adjacent plot  
   } else {
     
     
@@ -134,59 +134,98 @@ gfImputeMissingValue <- function(data.dep,
                                       pos.na = pos.na, 
                                       prm.dep = prm.dep)
     
-    
-    ## Calculate distance between independent plots and dependent plot
-    data.indep.avl[,3] <- unlist(lapply(seq(data.indep.avl[,1]), function(k) {
-      geodist(Nfrom=data.coords[which(data.coords[,1] == data.dep@PlotId$Unique),"Lat"], 
-              Efrom=data.coords[which(data.coords[,1] == data.dep@PlotId$Unique),"Lon"], 
-              Nto=data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lat"], 
-              Eto=data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lon"])
-    }))
-    
-    # Order independent stations by distance from the dependent plot
-    data.indep.avl <- data.indep.avl[order(data.indep.avl[,3]),]
-    data.indep <- data.indep[as.numeric(row.names(data.indep.avl))]  
-    
-    
-    ## Merge monthly data sets to obtain complete cases of dependent and independent plots
-    
-    # Load function 'gfCompleteMonthlyCases'
-    source("gfCompleteMonthlyCases.R")
-    # Get complete cases
-    data.prm.cc <- gfCompleteMonthlyCases(data.dep = data.dep, 
-                                          data.indep = data.indep, 
-                                          data.indep.avl = data.indep.avl, 
-                                          n.plot = n.plot, 
-                                          prm.dep = prm.dep,
-                                          time.window.pre = time.window.pre, 
-                                          time.window.post = time.window.post, 
-                                          pos.na = pos.na,
-                                          prm.indep = prm.indep)
-    
-    
-    ## Fit generalized linear model 
-    
-    # Load function 'gfComputeLinearModel'
-    source("gfComputeLinearModel.R")
-    # Fit linear Model
-    data.prm.cc.lm <- gfComputeLinearModel(data = data.prm.cc[[1]], 
-                                           data.cc = data.prm.cc[[2]], 
-                                           data.dep = data.dep, 
-                                           family = family, 
-                                           pos.na = pos.na, 
-                                           plots = data.indep.avl,
-                                           n.plot = n.plot, 
-                                           prm.dep = prm.dep, 
-                                           prm.indep = prm.indep, 
-                                           time.window.pre = time.window.pre, 
-                                           time.window.pre.span = time.window.pre.span, 
-                                           time.window.post = time.window.post,
-                                           time.window.post.span = time.window.post.span)
-    
+    # Check if there is at least one plot with valid measurement
+    if (sum(data.indep.avl[,2]) == 0) {
+      
+      # Error message and breakup of current iteration
+      print(paste("Filling of gap from", pos.na[1], "to", pos.na[2], "not possible."))
+      return(lapply(seq(pos.na[1], pos.na[2]), function(i) {
+        list(data.dep@Datetime[i],
+             data.dep@PlotId$Unique,
+             prm.dep,
+             NA,
+             NA,
+             NA,
+             prm.indep,
+             NA)
+      }))
+      
+    } else {
+      
+      ## Calculate distance between independent plots and dependent plot if desired
+      if (!is.null(data.coords)) {
+        data.indep.avl[,3] <- unlist(lapply(seq(data.indep.avl[,1]), function(k) {
+          geodist(Nfrom=data.coords[which(data.coords[,1] == data.dep@PlotId$Unique),"Lat"], 
+                  Efrom=data.coords[which(data.coords[,1] == data.dep@PlotId$Unique),"Lon"], 
+                  Nto=data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lat"], 
+                  Eto=data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lon"])
+        }))
         
-    
-    ## Return output list
-    
-    return(data.prm.cc.lm)
+        # Order independent stations by distance from the dependent plot
+        data.indep.avl <- data.indep.avl[order(data.indep.avl[,3]),]
+        data.indep <- data.indep[as.numeric(row.names(data.indep.avl))]
+      }
+      
+      
+      ## Merge monthly data sets to obtain complete cases of dependent and independent plots
+      
+      # Load function 'gfCompleteMonthlyCases'
+      source("gfCompleteMonthlyCases.R")
+      # Get complete cases
+      data.prm.cc <- gfCompleteMonthlyCases(data.dep = data.dep, 
+                                            data.indep = data.indep, 
+                                            data.indep.avl = data.indep.avl, 
+                                            n.plot = n.plot, 
+                                            prm.dep = prm.dep,
+                                            time.window.pre = time.window.pre, 
+                                            time.window.post = time.window.post, 
+                                            pos.na = pos.na,
+                                            prm.indep = prm.indep)
+      
+      
+      ## Fit generalized linear model 
+      
+      # Check if there are any complete cases
+      if (nrow(data.prm.cc[[2]]) == 0) {
+        
+        # Error message and breakup of current iteration
+        print(paste("Filling of gap from", pos.na[1], "to", pos.na[2], "not possible."))
+        return(lapply(seq(pos.na[1], pos.na[2]), function(i) {
+          list(data.dep@Datetime[i],
+               data.dep@PlotId$Unique,
+               prm.dep,
+               NA,
+               NA,
+               NA,
+               prm.indep,
+               NA)
+        }))
+        
+      } else {
+        
+        # Load function 'gfComputeLinearModel'
+        source("gfComputeLinearModel.R")
+        # Fit linear Model
+        data.prm.cc.lm <- gfComputeLinearModel(data = data.prm.cc[[1]], 
+                                               data.cc = data.prm.cc[[2]], 
+                                               data.dep = data.dep, 
+                                               family = family, 
+                                               pos.na = pos.na, 
+                                               plots = data.indep.avl,
+                                               n.plot = n.plot, 
+                                               prm.dep = prm.dep, 
+                                               prm.indep = prm.indep, 
+                                               time.window.pre = time.window.pre, 
+                                               time.window.pre.span = time.window.pre.span, 
+                                               time.window.post = time.window.post,
+                                               time.window.post.span = time.window.post.span)
+        
+        
+        
+        ## Return output list
+        
+        return(data.prm.cc.lm)
+      }
+    }
   }
 }

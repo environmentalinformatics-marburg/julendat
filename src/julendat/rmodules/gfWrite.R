@@ -2,7 +2,7 @@ gfWrite <- function(files.dep,
                     files.indep, 
                     filepath.output, 
                     filepath.coords = NULL, 
-                    quality.levels, 
+                    quality.levels = NULL, 
                     gap.limit,
                     end.datetime,
                     na.limit,
@@ -36,5 +36,5 @@ gfWrite <- function(files.dep,
   write.table(imputation.data[[2]], 
               filepath.output, 
               sep = ",", row.names = FALSE, col.names = TRUE)
-
+  
 }
