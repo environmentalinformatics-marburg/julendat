@@ -32,17 +32,17 @@ gfRun <- function(files.dep,
   } else {
     data.coords <- NULL
   }
- 
-
+  
+  
   # Import data set of dependent plot
   ki.data.dep <- as.ki.data(files.dep)
-
+  
   # Import data sets of independent plots
   ki.data.indep <- lapply(seq(files.indep), function(i) {
     as.ki.data(files.indep[i])
   })
   
-
+  
   
   ### Rejection of records with bad quality flags
   
@@ -50,16 +50,19 @@ gfRun <- function(files.dep,
   # Loop through dependent parameters
   for (i in seq(prm.dep)) {
     
-    # Dependent plot
-    ki.data.dep <- gfRejectLowQuality(data = ki.data.dep, 
-                                      prm.dep = prm.dep[i], 
-                                      quality.levels = quality.levels)
-    
-    
-    # Independent plots
-    ki.data.indep <- gfRejectLowQuality(data = ki.data.indep, 
+    # Apply quality control if desired
+    if (!is.null(quality.levels)) {
+      # Dependent plot
+      ki.data.dep <- gfRejectLowQuality(data = ki.data.dep, 
                                         prm.dep = prm.dep[i], 
                                         quality.levels = quality.levels)
+      
+      
+      # Independent plots
+      ki.data.indep <- gfRejectLowQuality(data = ki.data.indep, 
+                                          prm.dep = prm.dep[i], 
+                                          quality.levels = quality.levels)
+    }
     
     
     
@@ -80,33 +83,31 @@ gfRun <- function(files.dep,
                             end.datetime = end.datetime)
       
       
-      if (length(pos.na) > 0) {
-        # Impute missing value(s)
-        model.output <- lapply(seq(pos.na), function(j) {
-          gfImputeMissingValue(data.dep = ki.data.dep, 
-                               data.indep = ki.data.indep,
-                               na.limit = na.limit, 
-                               pos.na = as.numeric(pos.na[[j]]),
-                               time.window = time.window,
-                               data.coords = data.coords, 
-                               n.plot = n.plot, 
-                               prm.dep = prm.dep[i], 
-                               prm.indep = prm.indep[i], 
-                               family = family)
-        })
+      # Impute missing value(s)
+      model.output <- lapply(seq(pos.na), function(j) {
+        gfImputeMissingValue(data.dep = ki.data.dep, 
+                             data.indep = ki.data.indep,
+                             na.limit = na.limit, 
+                             pos.na = as.numeric(pos.na[[j]]),
+                             time.window = time.window,
+                             data.coords = data.coords, 
+                             n.plot = n.plot, 
+                             prm.dep = prm.dep[i], 
+                             prm.indep = prm.indep[i], 
+                             family = family)
+      })
+      
+      
+      # Replace NA values by predicted values
+      for (h in seq(pos.na)) {
+        gap.start <- pos.na[[h]][,1]
+        gap.end <- pos.na[[h]][,2]
+        gap.span <- seq(gap.start, gap.end)
         
-        
-        # Replace NA values by predicted values
-        for (h in seq(pos.na)) {
-          gap.start <- pos.na[[h]][,1]
-          gap.end <- pos.na[[h]][,2]
-          gap.span <- seq(gap.start, gap.end)
-          
-          ki.data.dep@Parameter[[prm.dep[i]]][gap.span] <- round(unlist(lapply(seq(model.output[[h]]), function(l) {
-            model.output[[h]][[l]][[4]]
-          })), digits = 2)
-        }
-      } 
+        ki.data.dep@Parameter[[prm.dep[i]]][gap.span] <- round(unlist(lapply(seq(model.output[[h]]), function(l) {
+          model.output[[h]][[l]][[4]]
+        })), digits = 2)
+      }
     }
   }
   
