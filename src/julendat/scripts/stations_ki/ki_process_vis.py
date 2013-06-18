@@ -27,6 +27,20 @@ import datetime
 import fnmatch
 import os
 from julendat.processtools.vis.VISLevel0050 import VISLevel0050
+from optparse import OptionParser
+
+""" Read from the console the year and level to process
+"""
+parser = OptionParser()
+parser.add_option('-y', '--year', 
+                  dest = "year", 
+                  default = "2008",
+                  )
+parser.add_option('-p', '--pattern', 
+                  dest = "pattern", 
+                  default = "*310",
+                  )
+(options, args) = parser.parse_args()
 
 def configure(config_file):
     """Reads configuration settings and configure object.
@@ -57,9 +71,15 @@ def main():
     config_file = "ki_config.cnf"
     toplevel_processing_plots_path, project_id, r_filepath = \
         configure(config_file=config_file)
-    
-    VISLevel0050(config_file=config_file, pattern="*fah01_0310.dat", \
-                 loggers = ['rug'], start_year = 2011)
+    try:
+        VISLevel0050(config_file=config_file, pattern="*" + options.pattern + ".dat", \
+                 loggers = ['rug'], start_year = int(options.year))
+    except Exception as inst:
+        print "An error occured with the following dataset."
+        print "Some details:"
+        print "Exception type: " , type(inst)
+        print "Exception args: " , inst.args
+        print "Exception content: " , inst    
 
     print "Finished"        
 
