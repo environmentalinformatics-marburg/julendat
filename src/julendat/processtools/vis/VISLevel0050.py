@@ -217,7 +217,7 @@ class VISLevel0050:
                      'swdr_23': [0, 5000], 'swdr_24': [0, 5000]}
         '''
         
-        par_range = {'Ta': [-10,50],'rH': [0,100], \
+        par_range = {'Ta': [-20,45],'rH': [0,100], \
                      'P': [0,60], \
                      'F': [0,60], \
                      'SWDR': [0,1400], \
@@ -234,9 +234,12 @@ class VISLevel0050:
                      'Ts': [-10, 50], \
                      'SM': [0, 100], \
                      }
-
+        #Get parameter list without min/max
+        vis_parameter = filter(lambda x: '_max' not in x and '_min' not in x,\
+                self.level0100_quality_parameters)
+        
         print self.level0100_quality_parameters
-        for parameter in self.level0100_quality_parameters:
+        for parameter in vis_parameter:
            try:
                if parameter == "p_200":
                    act_par_range = par_range[parameter]
