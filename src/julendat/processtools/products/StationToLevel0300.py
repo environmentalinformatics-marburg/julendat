@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
 """
-from EpsImagePlugin import split
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2012-01-18"
