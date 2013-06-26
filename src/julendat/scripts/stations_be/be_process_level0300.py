@@ -113,8 +113,7 @@ def main():
                 systemdate = datetime.datetime.now()
                 filepath=dataset
                 StationToLevel0300(filepath = filepath, config_file = config_file, \
-                                   parameters = parameters, level = "0300", 
-                                   end_datetime = "2012-12-31")
+                                   parameters = parameters, level = "0300")
             except Exception as inst:
                 print "An error occured with the following dataset."
                 print "Some details:"
