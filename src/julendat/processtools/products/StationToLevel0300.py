@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
 """
+from EpsImagePlugin import split
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2012-01-18"
@@ -308,6 +309,8 @@ class StationToLevel0300:
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
-        r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
+        plot_name = input_filepath.split("/")
+        plot_name = plot_name [len(plot_name)-3]
+        r_cmd = 'R CMD BATCH ' + r_script  + ' ' + self.tl_data_path +'error_log/0300/' + plot_name + '_' + r_script +'.log'
         os.system(r_cmd)
         os.chdir(act_wd)
