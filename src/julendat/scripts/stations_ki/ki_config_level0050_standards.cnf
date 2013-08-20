@@ -622,3 +622,48 @@ slmts_max = 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0,
            10000.0, 10000.0, 10000.0, 10000.0
 spercentil = 5
 sqfvalues = 10, 20
+
+
+[000gp1_header_0000]
+Date=Date
+Time=Time
+Resistance=WD_R
+Current=WV_I
+
+[000gp1_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              WD_R,
+              WV_I,
+              WD,
+              WV
+
+[000gp1_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              WD,
+              WV
+
+[000gp1_quality_settings]
+quality_parameter = WD,
+                    WV
+qfpos = 2, 5
+rthv_min = 0.0, 0.0
+rthv_max = 360.0, 100.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0, 0.0 
+slmts_max = 360.0, 100.0
+spercentil = 5
+sqfvalues = 10, 20
