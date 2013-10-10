@@ -99,9 +99,9 @@ def main():
             'NA','NA','NA','NA','NA','NA', \
             'NA',]
     # Modified by Spaska Forteva
-  #  exploratories = ["AEG", "AEW", "HEG", "HEW", "SEG", "SEW"]
+    # exploratories = ["AEG", "AEW", "HEG", "HEW", "SEG", "SEW"]
     
-   # for exploratory in exploratories:
+    # for exploratory in exploratories:
     station_dataset=locate("*.dat", 
                                "*gc01_fah01_0300", input_path)
     for dataset in station_dataset:
