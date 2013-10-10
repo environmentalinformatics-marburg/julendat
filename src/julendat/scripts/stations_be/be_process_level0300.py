@@ -111,34 +111,35 @@ def main():
             'NA','NA','NA','NA','NA','NA', \
             'NA',]
     #pids = ['NA']
-    exploratories = ["AEG", "AEW", "HEG", "HEW", "SEG", "SEW"]
+    # Modified by Spaska Forteva
+    # exploratories = ["AEG", "AEW", "HEG", "HEW", "SEG", "SEW"]
     
-    for exploratory in exploratories:
+    # for exploratory in exploratories:
 
-        station_dataset=locate("*" + exploratory + "*" + options.year + "*.dat", 
-                               "*qc25_fah01_0290", input_path)
-        for dataset in station_dataset:
-            #print " "
+    station_dataset=locate("*"  + options.year + "*.dat", 
+                           "*qc25_fah01_0290", input_path)
+    for dataset in station_dataset:
+        #print " "
+        #print " "
+        #print "Filling gaps in ", dataset
+        try:
             #print " "
             #print "Filling gaps in ", dataset
-            try:
-                #print " "
-                #print "Filling gaps in ", dataset
-                systemdate = datetime.datetime.now()
-                filepath=dataset
-                #if ("000HEG05" in filepath) and "_20110101" in filepath:
-                #    print filepath
-                StationToLevel0300(filepath = filepath, config_file = config_file, \
-                                   parameters = parameters, pids=pids, level = "0300")
+            systemdate = datetime.datetime.now()
+            filepath=dataset
+            #if ("000HEG05" in filepath) and "_20110101" in filepath:
+            #    print filepath
+            StationToLevel0300(filepath = filepath, config_file = config_file, \
+                               parameters = parameters, pids=pids, level = "0300")
 
 
-            except Exception as inst:
-                print "An error occured with the following dataset."
-                print "Some details:"
-                print "Filename: " + dataset
-                print "Exception type: " , type(inst)
-                print "Exception args: " , inst.args
-                print "Exception content: " , inst        
+        except Exception as inst:
+            print "An error occured with the following dataset."
+            print "Some details:"
+            print "Filename: " + dataset
+            print "Exception type: " , type(inst)
+            print "Exception args: " , inst.args
+            print "Exception content: " , inst        
 
 if __name__ == '__main__':
     main()
