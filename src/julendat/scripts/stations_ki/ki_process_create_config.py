@@ -63,7 +63,7 @@ def main():
                               + '\n' + \
               'toplevel_processing_plots_path = ' + top_level_path + \
                 'processing/plots/' + '\n' + \
-              'toplevel_processing_logger_path = '+ top_level_path + '\n' + \
+              'toplevel_processing_logger_path = '+ top_level_path + 'processing/logger/\n' + \
               'toplevel_vis_path = '+ top_level_path + 'processing/vis/' + \
                 '\n' + \
               'toplevel_temp_path = '+ top_level_path + 'temp/' + '\n' + \
