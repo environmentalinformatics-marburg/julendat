@@ -9,7 +9,7 @@ toplevel_incoming_path = /media/permanent/development/test/julendat/incoming/
 toplevel_check_path = /media/permanent/development/test/julendat/incoming/check/
 toplevel_checked_path = /media/permanent/development/test/julendat/incoming/checked/
 toplevel_processing_plots_path = /media/permanent/development/test/julendat/processing/plots/
-toplevel_processing_logger_path = /media/permanent/development/test/julendat/
+toplevel_processing_logger_path = /media/permanent/development/test/julendat/processing/logger/
 toplevel_vis_path = /media/permanent/development/test/julendat/processing/vis/
 toplevel_temp_path = /media/permanent/development/test/julendat/temp/
 
@@ -23,4 +23,4 @@ level_0005_timezone = eat
 
 [general] 
 level0050_standards = ki_config_level0050_standards.cnf 
-r_filepath = /media/permanent/development/released/julendat/src/julendat/rmodules
+r_filepath = /media/permanent/development/released/googlecode/julendat/src/julendat/rmodules
