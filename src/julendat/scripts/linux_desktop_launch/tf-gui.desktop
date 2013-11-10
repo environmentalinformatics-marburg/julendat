@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Terminal=true
+Name=tf-gui
+Icon=/media/permanent/development/released/googlecode/julendat/src/julendat/scripts/linux_desktop_launch/logo.jpg
+Exec=gnome-terminal --execute bash -c "/media/permanent/development/released/googlecode/julendat/src/julendat/scripts/linux_desktop_launch/tf-gui.bash ; bash"
+
