@@ -1,5 +1,7 @@
-"""Prepare reprocessing of level 0000 to level 0050 files (DFG-Exploratories).
-Copyright (C) 2011 Thomas Nauss, Insa Otte, Falk Haensel
+
+
+"""Prepare reprocessing of level 0200 to level x files (DFG-Exploratories).
+Copyright (C) 2013 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,33 +21,31 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Insa Otte, Falk Haensel"
-__version__ = "2012-02-06"
+__version__ = "2013-11-12"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
 import fnmatch
 import os
-from julendat.processtools.stations.mntstations.MNTStationToLevel0000 import \
-    MNTStationToLevel0000
+import re
 
-def locate(pattern, patternpath, root=os.curdir):
-    '''Locate files matching filename pattern recursively
+def locate_dir(pattern, root=os.curdir):
+    '''Locate folders matching pattern recursively
     
-    This routine is based on the one from Simon Brunning at
-    http://code.activestate.com/recipes/499305/ and extended by the patternpath.
+    This routine is based on the one from Andrew Hare at
+    http://stackoverflow.com/questions/1548704/delete-multiple-files-matching-a-pattern.
      
     Args:
-        pattern: Pattern of the filename
-        patternpath: Pattern of the filepath
         root: Root directory for the recursive search
+        pattern: Pattern of the filename
     '''
-    for path, dirs, files in os.walk(os.path.abspath(root)):
-        for filename in fnmatch.filter(files, pattern):
-            # Modified by Thomas Nauss
-            if fnmatch.fnmatch(path, patternpath):
-                yield os.path.join(path, filename)
-
-
+    for path in os.walk(os.path.abspath(root)):
+        try:
+            if int(path[0][-4:]) >= 200:
+                yield path[0]
+        except:
+            continue
+    
 def configure(config_file):
     """Reads configuration settings and configure object.
 
@@ -55,10 +55,7 @@ def configure(config_file):
     """
     config = ConfigParser.ConfigParser()
     config.read(config_file)
-    return config.get('repository', 'toplevel_processing_plots_path'), \
-           config.get('repository', 'toplevel_temp_path'), \
-           config.get('repository', 'toplevel_processing_logger_path')
-
+    return config.get('repository', 'toplevel_processing_plots_path')
 
 
 def main():
@@ -73,16 +70,14 @@ def main():
     print   
     
     config_file = "be_config.cnf"
-    toplevel_processing_plots_path, toplevel_temp_path , \
-        toplevel_processing_logger_path = configure(config_file)
+    toplevel_processing_plots_path = configure(config_file)
     
-    station_dataset=locate("*.asc*", "*", toplevel_processing_plots_path)
-    for dataset in station_dataset:
+    directories = locate_dir("*_0200", toplevel_processing_plots_path)
+    for directory in directories:
         print " "
-        print "Preparing dataset ", dataset
-        cmd = "mv " + dataset + " " + \
-            os.path.dirname(dataset) + os.sep + \
-            os.path.basename(dataset).split(".asc")[0] + '.asc'
+        print "Deleting ", directory
+        cmd = "rm -r " + directory
+        print cmd
         os.system(cmd)
         
 if __name__ == '__main__':
