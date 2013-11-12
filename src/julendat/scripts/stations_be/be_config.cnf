@@ -24,4 +24,3 @@ level_0005_timezone = mez
 [general]
 level0050_standards = be_config_level0050_standards.cnf
 r_filepath = /home/eibestations/ei_data_exploratories/scripts/julendat/src/julendat/rmodules
-

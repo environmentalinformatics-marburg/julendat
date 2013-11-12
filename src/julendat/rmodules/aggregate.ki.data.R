@@ -58,7 +58,7 @@ aggregate.ki.data <- function(input,
 
   qsplit <- do.call("rbind", qsplit)
   qsplitind <- lapply(seq(NCOL(qsplit)), function(i) {
-    which(qsplit[, i] == "012" | qsplit[, i] == "022")
+    which(qsplit[, i] == "002" | qsplit[, i] == "012" | qsplit[, i] == "022")
   })
   
 
