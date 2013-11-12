@@ -341,10 +341,17 @@ class StationDataFilePath(StationDataFile):
         end_datetime = end_datetime[0:8]+"0000"
         self.filename_dictionary['level_0300_calibration_level'] = calibration_level
         self.filename_dictionary['level_0300_processing'] = processing
-        self.filename_dictionary['level_0300_wildcard'] =  "*" + \
-            self.get_station_id() + "*" + start_datetime + "*" + \
-            calibration_level + "_" + self.get_aggregation() + "_" + \
-            processing + "." + extension
+        if self.get_project_id() == "ki":
+            self.filename_dictionary['level_0300_wildcard'] =  "*" + \
+                self.get_station_id() + "*" + start_datetime + "*" + \
+                calibration_level + "_" + self.get_aggregation() + "_" + \
+                processing + "." + extension
+        else:
+            self.filename_dictionary['level_0300_wildcard'] =  "*" + \
+                "00*EMU" + "*" + start_datetime + "*" + \
+                calibration_level + "_" + self.get_aggregation() + "_" + \
+                processing + "." + extension
+
         self.filename_dictionary['level_0300_wildcard_rug'] =  "*" + \
             "rug" + "*" + start_datetime + "*" + \
             calibration_level + "_" + self.get_aggregation() + "_" + \
