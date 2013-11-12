@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Terminal=true
+Name=logger-gui
+Icon=/media/permanent/development/released/googlecode/julendat/src/julendat/scripts/linux_desktop_launch/logo.jpg
+Exec=gnome-terminal --execute bash -c "/media/permanent/development/released/googlecode/julendat/src/julendat/scripts/linux_desktop_launch/logger-gui.bash; bash"

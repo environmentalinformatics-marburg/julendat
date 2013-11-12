@@ -1,0 +1,669 @@
+[000rug_header_0000]
+Date = Date
+Time = Time
+Temperature   [°C] = Ta_200
+Rel.humidity   [%] = rH_200
+Datum = Date
+Zeit = Time
+Temperatur    [°C] = Ta_200
+rel.Feuchte    [%] = rH_200
+
+[000rug_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200
+
+[000rug_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200
+
+[000rug_quality_settings]
+quality_parameter = Ta_200,
+                    rH_200
+qfpos = 2,
+        5
+rthv_min = -30.0,
+            0.0
+rthv_max =  55.0,
+          100.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0,
+            0.0 
+slmts_max = 0.8,
+            1.0
+spercentil = 5
+sqfvalues = 10, 20
+
+
+
+[001rug_header_0000]
+Date = Date
+Time = Time
+Temperature   [°C] = Ta_200
+Rel.humidity   [%] = rH_200
+Datum = Date
+Zeit = Time
+Temperatur    [°C] = Ta_200
+rel.Feuchte    [%] = rH_200
+
+[001rug_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200
+
+[001rug_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200
+
+[001rug_quality_settings]
+quality_parameter = Ta_200,
+                    rH_200
+qfpos = 2,
+        5
+rthv_min = -30.0,
+            0.0
+rthv_max =  55.0,
+          100.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0,
+            0.0 
+slmts_max = 0.8,
+            1.0
+spercentil = 5
+sqfvalues = 10, 20
+              
+
+
+[000pu1_header_0000]
+Date=Date
+Time=Time
+Impulses=P_RT_NRT_I
+Datum=Date
+Zeit=Time
+Impulse=P_RT_NRT_I
+
+[000pu1_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              P_RT_NRT,
+              P_RT_NRT_I
+
+[000pu1_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              P_RT_NRT
+
+[000pu1_quality_settings]
+quality_parameter = P_RT_NRT
+qfpos = 2
+rthv_min = 0.0
+rthv_max = 200.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0 
+slmts_max = 200.0
+spercentil = 5
+sqfvalues = 10, 20
+
+
+
+[000pu2_header_0000]
+Date=Date
+Time=Time
+Impulses=P_RT_NRT_I_01
+Datum=Date
+Zeit=Time
+Impulse=P_RT_NRT_I_02
+
+[000pu2_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              P_RT_NRT_01,
+              P_RT_NRT_01_I,
+              P_RT_NRT_02,
+              P_RT_NRT_02_I,
+              F_RT_NRT_01,
+              F_RT_NRT_01_I,
+              F_RT_NRT_02,
+              F_RT_NRT_02_I
+
+[000pu2_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              P_RT_NRT_01,
+              P_RT_NRT_02,
+              F_RT_NRT_01,
+              F_RT_NRT_02
+
+[000pu2_quality_settings]
+quality_parameter = P_RT_NRT_01,
+                    P_RT_NRT_02,
+                    F_RT_NRT_01,
+                    F_RT_NRT_02
+qfpos = 2, 5, 8, 11
+rthv_min = 0.0, 0.0, 0.0, 0.0
+rthv_max = 200.0, 200.0, 200.0, 200.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0, 0.0, 0.0, 0.0 
+slmts_max = 200.0, 200.0, 200.0, 200.0
+spercentil = 5
+sqfvalues = 10, 20
+
+
+
+[000wxt_header_0000]
+Date = Date
+Time = Time
+Winddirection  [°] = WD
+Windspeed    [m/s] = WV
+Temperature   [°C] = Ta_200
+Rel.humidity   [%] = rH_200
+Barom. prs   [hPa] = p_200
+Rain          [mm] = P_container_RT
+VoltageHiImp  [mV] = SWDR_300_U
+VoltageHiImp  [mV] = SWUR_300_U
+Voltage DVM   [mV] = LWDR_300_U
+Voltage DVM   [mV] = LWUR_300_U
+Temper. PT100 [°C] = T_CNR
+Temp. PT1000  [°C] = Ts_10
+Datum = Date
+Zeit = Time
+Windrichtung   [°] = WD
+Windgeschw.  [m/s] = WV
+Temperatur    [°C] = Ta_200
+rel.Feuchte    [%] = rH_200
+Barom.Druck  [hPa] = p_200
+Regenmenge    [mm] = P_container_RT
+Spannung DVM  [mV] = SWDR_300_U
+Spannung DVM  [mV] = SWUR_300_U
+Spannung DVM  [mV] = LWDR_300_U
+Spannung DVM  [mV] = LWUR_300_U
+Temp. PT100   [°C] = T_CNR
+Temp. PT1000  [°C] = Ts_10
+
+[000wxt_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200,
+              Ts_10,
+              SWDR_300,
+              SWUR_300,
+              LWDR_300,
+              LWUR_300,
+              WD,
+              WV,
+              p_200,
+              P_RT_NRT,
+              P_container_RT,
+              SWDR_300_U,
+              SWUR_300_U,
+              LWDR_300_U,
+              LWUR_300_U,
+              T_CNR
+              
+[000wxt_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200,
+              Ts_10,
+              SWDR_300,
+              SWUR_300,
+              LWDR_300,
+              LWUR_300,
+              WD,
+              WV,
+              p_200,
+              P_RT_NRT
+
+[000wxt_quality_settings]
+quality_parameter = Ta_200,
+                    rH_200,
+                    Ts_10,
+                    SWDR_300,
+                    SWUR_300,
+                    LWDR_300,
+                    LWUR_300,
+                    WD,
+                    WV,
+                    p_200,
+                    P_RT_NRT                    
+qfpos = 2, 5, 8,
+        11, 14, 17, 20,
+        23, 26,
+        29, 32
+rthv_min = -30.0, 0.0, -30.0,
+           0.0, 0.0, 0.0, 0.0,
+           0.0, 0.0,
+           800.0, 0.0
+           
+rthv_max =  55.0, 100.0, 55.0,
+            1250.0, 400.0, 700.0, 700.0,
+            360.0, 50.0,
+            1024.0, 200.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0,
+            0.0, 0.0 
+slmts_max = 0.8, 1.0, 0.8,
+            50.0, 50.0, 50.0, 50.0,
+            360.0, 50.0,
+            10.0, 200.0
+spercentil = 5
+sqfvalues = 10, 20
+
+
+
+[000rad_header_0000]
+Date = Date
+Time = Time
+Temperature   [°C] = Ta_200
+Rel.humidity   [%] = rH_200
+Datum = Date
+Zeit = Time
+Temperatur    [°C] = Ta_200
+rel.Feuchte    [%] = rH_200
+Voltage DVM   [mV] = radx
+
+[000rad_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200,
+              par_01,
+              par_02,
+              par_03,
+              par_04,
+              par_05,
+              par_06,
+              par_07,
+              par_08,
+              par_09,
+              par_10,
+              par_11,
+              par_12,
+              swdr_13,
+              swdr_14,
+              swdr_15,
+              swdr_16,
+              swdr_17,
+              swdr_18,
+              swdr_19,
+              swdr_20,
+              swdr_21,
+              swdr_22,
+              swdr_23,
+              swdr_24
+
+[000rad_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              Ta_200,
+              rH_200,
+              par_01,
+              par_02,
+              par_03,
+              par_04,
+              par_05,
+              par_06,
+              par_07,
+              par_08,
+              par_09,
+              par_10,
+              par_11,
+              par_12,
+              swdr_13,
+              swdr_14,
+              swdr_15,
+              swdr_16,
+              swdr_17,
+              swdr_18,
+              swdr_19,
+              swdr_20,
+              swdr_21,
+              swdr_22,
+              swdr_23,
+              swdr_24
+
+[000rad_quality_settings]
+quality_parameter = Ta_200,
+                    rH_200,
+                    par_01,
+                    par_02,
+                    par_03,
+                    par_04,
+                    par_05,
+                    par_06,
+                    par_07,
+                    par_08,
+                    par_09,
+                    par_10,
+                    par_11,
+                    par_12,
+                    swdr_13,
+                    swdr_14,
+                    swdr_15,
+                    swdr_16,
+                    swdr_17,
+                    swdr_18,
+                    swdr_19,
+                    swdr_20,
+                    swdr_21,
+                    swdr_22,
+                    swdr_23,
+                    swdr_24
+qfpos = 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38,
+        41, 44, 47, 50, 53, 56, 59, 62, 65, 68, 71, 74, 77
+rthv_min = -30.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+           0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+rthv_max =  55.0, 100.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 
+            500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0,
+            500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0
+rqfvalues = 1, 2
+slmts_min = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 
+slmts_max = 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0,
+            100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0,
+             100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0
+spercentil = 5
+sqfvalues = 10, 20
+
+[000tfi_header_0000]
+Date = Date
+Time = Time
+B_01 = B_01
+B_02 = B_02
+B_03 = B_03
+B_04 = B_04
+B_05 = B_05
+B_06 = B_06
+B_07 = B_07
+B_08 = B_08
+B_09 = B_09
+B_10 = B_10
+B_11 = B_11
+B_12 = B_12
+B_13 = B_13
+B_14 = B_14
+B_15 = B_15
+B_16 = B_16
+B_17 = B_17
+B_18 = B_18
+B_19 = B_19
+B_20 = B_20
+B_21 = B_21
+B_22 = B_22
+B_23 = B_23
+B_24 = B_24
+B_25 = B_25
+B_26 = B_26
+B_27 = B_2
+B_28 = B_28
+B_29 = B_29
+B_30 = B_30
+Fog = Fog
+Rainfall = Rainfall
+
+[000tfi_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              B_01,
+              B_02,
+              B_03,
+              B_04,
+              B_05,
+              B_06,
+              B_07,
+              B_08,
+              B_09,
+              B_10,
+              B_11,
+              B_12,
+              B_13,
+              B_14,
+              B_15,
+              B_16,
+              B_17,
+              B_18,
+              B_19,
+              B_20,
+              B_21,
+              B_22,
+              B_23,
+              B_24,
+              B_25,
+              B_26,
+              B_27,
+              B_28,
+              B_29,
+              B_30,
+              Fog,
+              Rainfall 
+
+[000tfi_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              B_01,
+              B_02,
+              B_03,
+              B_04,
+              B_05,
+              B_06,
+              B_07,
+              B_08,
+              B_09,
+              B_10,
+              B_11,
+              B_12,
+              B_13,
+              B_14,
+              B_15,
+              B_16,
+              B_17,
+              B_18,
+              B_19,
+              B_20,
+              B_21,
+              B_22,
+              B_23,
+              B_24,
+              B_25,
+              B_26,
+              B_27,
+              B_28,
+              B_29,
+              B_30,
+              Fog,
+              Rainfall 
+              
+[000tfi_quality_settings]
+quality_parameter =  B_01,
+                     B_02,
+                     B_03,
+                     B_04,
+                     B_05,
+                     B_06,
+                     B_07,
+                     B_08,
+                     B_09,
+                     B_10,
+                     B_11,
+                     B_12,
+                     B_13,
+                     B_14,
+                     B_15,
+                     B_16,
+                     B_17,
+                     B_18,
+                     B_19,
+                     B_20,
+                     B_21,
+                     B_22,
+                     B_23,
+                     B_24,
+                     B_25,
+                     B_26,
+                     B_27,
+                     B_28,
+                     B_29,
+                     B_30,
+                     Fog,
+                     Rainfall 
+qfpos = 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38,
+        41, 44, 47, 50, 53, 56, 59, 62, 65, 68, 71, 74, 77,
+        80, 83, 86, 89, 92, 95
+rthv_min = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+           0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+           0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+rthv_max = 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 
+           10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0,
+           10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 
+           10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0,
+           10000.0, 10000.0, 10000.0, 10000.0
+rqfvalues = 1, 2
+slmts_min = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+           0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+           0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+slmts_max = 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 
+           10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0,
+           10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 
+           10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0,
+           10000.0, 10000.0, 10000.0, 10000.0
+spercentil = 5
+sqfvalues = 10, 20
+
+
+[000gp1_header_0000]
+Date=Date
+Time=Time
+Resistance=WD_R
+Current=WV_I
+
+[000gp1_header_0005]
+header_0005 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              WD_R,
+              WV_I,
+              WD,
+              WV
+
+[000gp1_header_0050]
+header_0050 = Datetime, 
+              Timezone,
+              Aggregationtime,
+              PlotId,
+              EpPlotId,
+              StationId,
+              Processlevel,
+              Qualityflag,
+              WD,
+              WV
+
+[000gp1_quality_settings]
+quality_parameter = WD,
+                    WV
+qfpos = 2, 5
+rthv_min = 0.0, 0.0
+rthv_max = 360.0, 100.0                                
+rqfvalues = 1, 2
+slmts_min = 0.0, 0.0 
+slmts_max = 360.0, 100.0
+spercentil = 5
+sqfvalues = 10, 20
