@@ -25,7 +25,3 @@ level_0005_timezone = eat
 [general]
 level0050_standards = ki_config_level0050_standards.cnf
 r_filepath = /home/eikistations/ei_data_kilimanjaro/scripts/julendat/src/julendat/rmodules
-<<<<<<< local
-
-=======
->>>>>>> other

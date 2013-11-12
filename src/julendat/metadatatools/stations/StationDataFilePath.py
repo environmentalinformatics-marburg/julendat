@@ -303,10 +303,16 @@ class StationDataFilePath(StationDataFile):
             level_0290_startdatetime[0:4] + "-01-01 00:00:00"
         self.filename_dictionary['level_0290_enddatetime'] =  \
             level_0290_enddatetime[0:4] + "-12-31 23:00:00"
-        self.filename_dictionary['level_0290_wildcard'] =  "*" + \
-            self.get_station_id() + "*" + level_0290_startdatetime + "*" + \
-            calibration_level + "_" + self.get_aggregation() + "_" + \
-            processing + "." + extension
+        if self.get_project_id() == "ki":
+            self.filename_dictionary['level_0290_wildcard'] =  "*" + \
+                self.get_station_id() + "*" + level_0290_startdatetime + "*" + \
+                calibration_level + "_" + self.get_aggregation() + "_" + \
+                processing + "." + extension
+        else:
+            self.filename_dictionary['level_0290_wildcard'] =  "*" + \
+                "00*EMU" + "*" + level_0290_startdatetime + "*" + \
+                calibration_level + "_" + self.get_aggregation() + "_" + \
+                processing + "." + extension
         self.filename_dictionary['level_0290_wildcard_rug'] =  "*" + \
             "rug" + "*" + level_0290_startdatetime + "*" + \
             calibration_level + "_" + self.get_aggregation() + "_" + \
