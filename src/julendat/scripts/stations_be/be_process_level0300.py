@@ -103,25 +103,24 @@ def main():
     loggers = ["CEMU"]
     parameters = ["Ta_200","rH_200", \
                   "Ta_10","Ts_5","Ts_10","Ts_20","Ts_50", \
-                  "SM_10","SM_15","SM_20","SM_30","SM_40","SM_50", \
-                  "PAR_200"]
+                  "SM_10","SM_15","SM_20","SM_30","SM_40","SM_50"]
     #parameters = ["Ts_10"]
     pids = ['NA',"Ta_200",
             'NA','NA','NA','NA','NA', \
-            'NA','NA','NA','NA','NA','NA', \
-            'NA',]
+            'NA','NA','NA','NA','NA','NA']
     #pids = ['NA']
     # Modified by Spaska Forteva
     # exploratories = ["AEG", "AEW", "HEG", "HEW", "SEG", "SEW"]
     
     # for exploratory in exploratories:
 
-    station_dataset=locate("*"  + options.year + "*.dat", 
+    station_dataset=locate("*.dat", 
                            "*qc25_fah01_0290", input_path)
     for dataset in station_dataset:
         #print " "
         #print " "
         #print "Filling gaps in ", dataset
+        print options.year
         try:
             #print " "
             #print "Filling gaps in ", dataset

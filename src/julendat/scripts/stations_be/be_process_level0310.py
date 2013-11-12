@@ -92,12 +92,12 @@ def main():
     loggers = ["CEMU"]
     parameters = ["Ta_200","rH_200", \
                   "Ta_10","Ts_5","Ts_10","Ts_20","Ts_50", \
-                  "SM_10","SM_15","SM_20","SM_30","SM_40","SM_50", \
-                  "PAR_200"]
+                  "SM_10","SM_15","SM_20","SM_30","SM_40","SM_50"]
+                  #"PAR_200"]
     pids = ['NA',"Ta_200",
             'NA','NA','NA','NA','NA', \
-            'NA','NA','NA','NA','NA','NA', \
-            'NA',]
+            'NA','NA','NA','NA','NA','NA']
+            #'NA',]
     # Modified by Spaska Forteva
     # exploratories = ["AEG", "AEW", "HEG", "HEW", "SEG", "SEW"]
     
