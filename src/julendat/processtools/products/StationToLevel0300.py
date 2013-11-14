@@ -311,6 +311,10 @@ class StationToLevel0300:
         f.close()
         plot_name = input_filepath.split("/")
         plot_name = plot_name [len(plot_name)-3]
-        r_cmd = 'R CMD BATCH ' + r_script  + ' ' + self.tl_data_path +'error_log/0300/' + plot_name + '_' + self.start_datetime + '_' + r_script +'.log'
+        logpath = self.tl_data_path +'error_log/0300/'
+        logfile = logpath + plot_name + '_' + self.start_datetime + '_' + r_script +'.log'
+        if not os.path.exists(logpath):
+            os.makedirs(logpath)
+        r_cmd = 'R CMD BATCH ' + r_script  + ' ' + logfile
         os.system(r_cmd)
         os.chdir(act_wd)
