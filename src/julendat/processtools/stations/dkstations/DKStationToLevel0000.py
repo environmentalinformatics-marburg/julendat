@@ -176,6 +176,8 @@ class DKStationToLevel0000:
         """
         if self.get_run_mode() == "manual":
             pass
+        elif self.get_run_mode() == "no_auto_gui":
+            self.no_auto_gui()
         elif self.get_run_mode() == "auto-gui":
             self.auto_gui()
 
@@ -199,6 +201,57 @@ class DKStationToLevel0000:
                 gui.destroy()        
             else:
                 correct_plot_id = False
+        
+            if correct_plot_id != True:
+                #plot_id_list = ["cof1", "cof2", "cof3", "cof4", "not sure"]
+                plot_id_list = self.inventory.get_plot_id_list()
+                gui = Tkinter.Tk()
+                if auto_plot_selection:
+                    gui.title("Just to be really sure...")
+                    message="ARE YOU SURE?"
+                else:
+                    gui.title("Manual plot selection...")
+                    message="The station/logger serial number has not been " +\
+                            "found in the station inventory file. \n" + \
+                            "Please select the plot from the list. \n" + \
+                            "Please inform us that the station file is not " +\
+                            "up to date."
+                gui.geometry('600x350+50+50')
+                app = GUIManualPlotSelection(gui, plot_id_list,message)
+                gui.mainloop()
+                gui.destroy()
+                manual_plot_id = app.get_correct_plot_id()
+        
+                if self.inventory.get_found_station_inventory() == False:
+                    if manual_plot_id == "not sure":
+                        plot_id = "xx000000"
+                    else:
+                        plot_id = "xx" + manual_plot_id
+                    self.station_id = "xxx"
+                    postexflag = "not_in_inventory"
+                elif manual_plot_id == "not sure":
+                    plot_id = "xx000000"
+                    postexflag = "autoplot_" + self.get_plot_id()
+                elif self.inventory.get_found_station_inventory():
+                    plot_id = "xx" + manual_plot_id
+                    postexflag = "autoplot_" + self.get_plot_id()
+            
+                self.set_level0_filenames(project_id=self.project_id, \
+                    plot_id=plot_id, postexflag=postexflag)
+            
+            else:
+                self.set_level0_filenames(project_id=self.project_id)
+
+            self.main()
+
+    def no_auto_gui(self):
+        """Executes class functions in default auto-gui mode.
+        """
+        auto_plot_selection = self.inventory.get_found_station_inventory()
+            
+        if self.get_run_flag():
+            if auto_plot_selection:
+                correct_plot_id = True
         
             if correct_plot_id != True:
                 #plot_id_list = ["cof1", "cof2", "cof3", "cof4", "not sure"]
