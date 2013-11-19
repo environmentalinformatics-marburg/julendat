@@ -221,7 +221,7 @@ class StationToLevel0200:
         r_plevel = 'plevel =' + self.target_level
         
         if self.project_id == "be":
-            r_scolumn = 'start.column = 10'
+            r_scolumn = 'start.column = 9'
         else:
             r_scolumn = 'start.column = 9'
         
