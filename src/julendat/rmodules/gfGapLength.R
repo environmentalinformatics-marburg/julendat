@@ -81,7 +81,7 @@ gfGapLength <- function(data.dep,
                          "%Y-%m-%d")
   time.difference.hours <- difftime(gap.end.set, gap.end.act, units = units)
   if (time.difference.hours < 0.0) {
-    gap[nrow(gap),2] <- gap[nrow(gap),2] + time.difference.hours
+    gap[nrow(gap),2] <- gap[nrow(gap),2] + (time.difference.hours + 1)
   }
   
   # Calculate gap length
