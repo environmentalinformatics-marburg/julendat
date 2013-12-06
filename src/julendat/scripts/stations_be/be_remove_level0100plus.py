@@ -1,4 +1,4 @@
-"""Remove level 250+ files.
+"""Remove level 100+ files.
 Copyright (C) 2013 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -78,7 +78,7 @@ def main():
     Remove level 0250 and above products.
     """
     print
-    print 'Module: remove_level0250+'
+    print 'Module: remove_level0100+'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
@@ -90,6 +90,18 @@ def main():
     input_path = toplevel_processing_plots_path + project_id
     print input_path
 
+    station_folders=locate_path("*_0100", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+
+    station_folders=locate_path("*_0190", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+
+    station_folders=locate_path("*_0200", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+    
     station_folders=locate_path("*_0250", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
