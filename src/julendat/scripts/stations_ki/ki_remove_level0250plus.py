@@ -76,10 +76,10 @@ def configure(config_file):
     
 def main():
     """Main program function
-    Process data from level 0000 to level 0050.
+    Remove level 0250 and above products.
     """
     print
-    print 'Module: calibration_level0100'
+    print 'Module: remove level 0250 and above products.'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
