@@ -90,31 +90,31 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_folders=locate_path("_0250", input_path)
+    station_folders=locate_path("*_0250", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
 
-    station_folders=locate_path("_0290", input_path)
+    station_folders=locate_path("*_0290", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
 
-    station_folders=locate_path("_0300", input_path)
+    station_folders=locate_path("*_0300", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
 
-    station_folders=locate_path("_0310", input_path)
+    station_folders=locate_path("*_0310", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
     
-    station_folders=locate_path("_0400", input_path)
+    station_folders=locate_path("*_0400", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
         
-    station_folders=locate_path("_0405", input_path)
+    station_folders=locate_path("*_0405", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
         
-    station_folders=locate_path("_0410", input_path)
+    station_folders=locate_path("*_0410", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
         

@@ -1,4 +1,4 @@
-"""Remove level 250+ files.
+"""Remove level 100+ files.
 Copyright (C) 2013 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ import datetime
 import fnmatch
 import os
 import shutil
+from julendat.processtools.products.StationToLevel0200 import StationToLevel0200
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -78,17 +79,28 @@ def main():
     Remove level 0250 and above products.
     """
     print
-    print 'Module: remove_level0250+'
+    print 'Module: remove level 0100 and above products.'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
     print   
     
-    config_file = "be_config.cnf"
+    config_file = "ki_config.cnf"
     toplevel_processing_plots_path, project_id = \
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
-    print input_path
+    
+    station_folders=locate_path("*_0100", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+
+    station_folders=locate_path("*_0190", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+
+    station_folders=locate_path("*_0200", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
 
     station_folders=locate_path("*_0250", input_path)
     for folders in station_folders:
@@ -120,3 +132,4 @@ def main():
         
 if __name__ == '__main__':
     main()
+
