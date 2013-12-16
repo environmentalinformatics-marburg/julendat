@@ -101,7 +101,7 @@ wxt.ki.strip <- function(inputpath,
     xat <- seq.Date(as.Date(datetime_from), as.Date(datetime_to), by = "month")
     xat <- as.integer(julian(xat, origin = as.Date(origin))) + 15
     print(minx[[i]])
-    levelplot(t(strip_z), ylim = c(24.5, -0.5), col.regions = VColList[[i]],
+    levelplot(t(strip_z), ylim = c(24.5, -0.5), col.regions = VColList[[prms[i]]],
               strip = F, ylab = "Hour of day\n", xlab = NULL, asp = "iso",
               at = seq(minx[[i]], maxx[[i]], 0.1),
               strip.left = strip.custom(
