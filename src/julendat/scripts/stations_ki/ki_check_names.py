@@ -1,5 +1,5 @@
-"""Prepare reprocessing of level 0000 to level 0050 files (DFG-Exploratories).
-Copyright (C) 2011 Thomas Nauss, Insa Otte, Falk Haensel
+"""Check processed files if they start with ki_....
+Copyright (C) 2011 Thomas Nauss
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,15 +18,14 @@ Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
 """
 
-__author__ = "Thomas Nauss <nausst@googlemail.com>, Insa Otte, Falk Haensel"
-__version__ = "2012-02-06"
+__author__ = "Thomas Nauss <nausst@googlemail.com>"
+__version__ = "2013-10-16"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
 import fnmatch
 import os
-from julendat.processtools.stations.mntstations.MNTStationToLevel0000 import \
-    MNTStationToLevel0000
+import csv
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -56,8 +55,7 @@ def configure(config_file):
     config = ConfigParser.ConfigParser()
     config.read(config_file)
     return config.get('repository', 'toplevel_processing_plots_path'), \
-           config.get('repository', 'toplevel_temp_path'), \
-           config.get('repository', 'toplevel_processing_logger_path')
+           config.get('project', 'project_id')
 
 
 
@@ -72,18 +70,29 @@ def main():
     print 'License: ' + __license__
     print   
     
-    config_file = "be_config.cnf"
-    toplevel_processing_plots_path, toplevel_temp_path , \
-        toplevel_processing_logger_path = configure(config_file)
-    
-    station_dataset=locate("*.asc*", "*", toplevel_processing_plots_path)
+    config_file = "ki_config.cnf"
+    toplevel_processing_plots_path, project_id = configure(config_file)
+    path = toplevel_processing_plots_path + project_id
+    station_dataset=locate("*.*", "*", path)
     for dataset in station_dataset:
         print " "
-        print "Preparing dataset ", dataset
-        cmd = "mv " + dataset + " " + \
-            os.path.dirname(dataset) + os.sep + \
-            os.path.basename(dataset).split(".asc")[0] + '.asc'
-        os.system(cmd)
-        
+        print "Checking dataset ", dataset
+        act_filepath = os.path.dirname(dataset)
+        act_filename = os.path.basename(dataset)
+        if "ki_" in act_filename:
+            act_filename = act_filename[act_filename.index("ki_"):]
+            os.rename(dataset, act_filepath + os.sep + act_filename)
+
+    print " "
+    print " "
+    print " "
+    station_dataset=locate("*.dat", "*", path)
+    for dataset in station_dataset:
+        act_filepath = os.path.dirname(dataset)
+        act_filename = os.path.basename(dataset)
+        if act_filename.startswith("ki_") == False:
+            print dataset
+
 if __name__ == '__main__':
     main()
+

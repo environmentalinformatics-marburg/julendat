@@ -436,7 +436,35 @@ class StationToLevel0050:
                     except:
                         continue
                 self.level_0000_data.append(act_row)
-        
+
+
+        elif self.filenames.get_station_id().find("gp1") != -1:
+            parameters = ["WD","WV"]
+            calib_coefficient_index_wd = self.calibration_coefficients_headers.index('pu2_1')
+            calib_coefficient_index_wv = self.calibration_coefficients_headers.index('pu2_2')
+            calib_coefficient_wd = float(self.calibration_coefficients[calib_coefficient_index_wd])
+            calib_coefficient_wv = float(self.calibration_coefficients[calib_coefficient_index_wv])
+            self.level_0000_data = []
+            for row in self.level_0000_ascii_file.get_data():
+                act_row = row
+                for parameter in parameters:
+                    try:
+                        if parameter == "WD": 
+                            raw_value_index = self.level_0000_ascii_file.get_column_headers().index(parameter + "_R")
+                            raw_value = float(row[raw_value_index])
+                            param_value = raw_value * calib_coefficient_wd
+                        elif parameter == "WV":
+                            raw_value_index = self.level_0000_ascii_file.get_column_headers().index(parameter + "_I")
+                            raw_value = float(row[raw_value_index])
+                            param_value = raw_value * calib_coefficient_wv
+                        act_row = act_row + [param_value]
+                    except:
+                        continue
+                self.level_0000_data.append(act_row)
+
+            new_header = self.level_0000_ascii_file.get_column_headers() + parameters
+            self.level_0000_ascii_file.set_column_headers(new_header)        
+
         else:
             self.level_0000_data = self.level_0000_ascii_file.get_data()
 

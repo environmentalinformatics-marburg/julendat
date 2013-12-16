@@ -28,6 +28,17 @@ import fnmatch
 import os
 import shutil
 from julendat.processtools.products.StationToLevel0200 import StationToLevel0200
+from optparse import OptionParser
+
+""" Read from the console the year and level to process
+"""
+parser = OptionParser()
+parser.add_option('-y', '--year', 
+                  dest = "year", 
+                  default = "",
+                  )
+
+(options, args) = parser.parse_args()
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -90,15 +101,15 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_folders=locate_path("fc01_*", input_path)
+    station_folders=locate_path("*fc01_*", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
 
-    station_dataset=locate("*.dat", "*qc01_*", input_path)
+    station_dataset=locate("*_" + options.year + "*.dat", "*qc01_*", input_path)
     for dataset in station_dataset:
         print " "
         print "Concatenating dataset ", dataset
-        systemdate = datetime.datetime.now()
+        #systemdate = datetime.datetime.now()
         filepath=dataset
         StationToLevel0200(filepath=filepath, config_file=config_file, \
                                run_mode="concatenate")
@@ -120,15 +131,8 @@ def main():
             print "Exception content: " , inst        
         '''
 
-    station_dataset=locate("*.dat", "*fc01_*", input_path)
+    station_dataset=locate("*_" + options.year + "*.dat", "*fc01_*", input_path)
     for dataset in station_dataset:
-        print " "
-        print "Aggregating dataset ", dataset
-        systemdate = datetime.datetime.now()
-        filepath=dataset
-        StationToLevel0200(filepath=filepath, config_file=config_file, \
-                               run_mode="aggregate_0200")
-        '''
         try:
             print " "
             print "Aggregating dataset ", dataset
@@ -143,7 +147,7 @@ def main():
             print "Exception type: " , type(inst)
             print "Exception args: " , inst.args
             print "Exception content: " , inst        
-      '''
+
 if __name__ == '__main__':
     main()
 

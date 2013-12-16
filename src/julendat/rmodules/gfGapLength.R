@@ -2,6 +2,7 @@ gfGapLength <- function(data.dep,
                         pos.na,
                         gap.limit,
                         end.datetime,
+                        units, 
                         ...) {
 
   ################################################################################
@@ -78,9 +79,11 @@ gfGapLength <- function(data.dep,
                                data.dep@Date$Month[gap[nrow(gap),2]],
                                data.dep@Date$Day[gap[nrow(gap),2]], sep="-"),
                          "%Y-%m-%d")
-  time.difference.hours <- difftime(gap.end.set, gap.end.act, units="hours")
-  if (time.difference.hours < 0.0) {
-    gap[nrow(gap),2] <- gap[nrow(gap),2] + time.difference.hours
+  time.difference.hours <- difftime(gap.end.set, gap.end.act, units = units)
+  if (time.difference.hours < 0.0 & units == "hours") {
+    gap[nrow(gap),2] <- gap[nrow(gap),2] + (time.difference.hours) 
+  } else if (units == "days") {
+    gap[nrow(gap), 2] <- gap[nrow(gap), 1]
   }
   
   # Calculate gap length

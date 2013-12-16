@@ -28,6 +28,17 @@ import fnmatch
 import os
 import shutil
 from julendat.processtools.resampling.stations.StationConcatenation import StationConcatenation
+from optparse import OptionParser
+
+""" Read from the console the year and level to process
+"""
+parser = OptionParser()
+parser.add_option('-y', '--year', 
+                  dest = "year", 
+                  default = "",
+                  )
+
+(options, args) = parser.parse_args()
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -94,7 +105,7 @@ def main():
     for folders in station_folders:
         shutil.rmtree(folders)
 
-    station_dataset=locate("*.dat", "*qc25_*", input_path)
+    station_dataset=locate("*_" + options.year + "*.dat", "*qc25_*", input_path)
     station_dataset = sorted(station_dataset)
     for dataset in station_dataset:
         try:

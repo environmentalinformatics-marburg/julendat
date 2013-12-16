@@ -1,5 +1,5 @@
-"""PProcess data from level 0300 to second-times gap-filled level 0310.
-Copyright (C) 2011 Thomas Nauss, Tim Appelhans
+"""Remove level 100+ files.
+Copyright (C) 2013 Thomas Nauss, Tim Appelhans
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ reports to nausst@googlemail.com
 """
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
-__version__ = "2012-12-17"
+__version__ = "2013-11-30"
 __license__ = "GNU GPL, see http://www.gnu.org/licenses/"
 
 import ConfigParser
@@ -27,7 +27,6 @@ import datetime
 import fnmatch
 import os
 import shutil
-from julendat.processtools.products.StationToLevel0300 import StationToLevel0300
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -76,10 +75,10 @@ def configure(config_file):
     
 def main():
     """Main program function
-    Process data from level 0290 to level 0300.
+    Remove level 0250 and above products.
     """
     print
-    print 'Module: gapfill_level0300'
+    print 'Module: remove_level0100+'
     print 'Version: ' + __version__
     print 'Author: ' + __author__
     print 'License: ' + __license__
@@ -89,41 +88,47 @@ def main():
     toplevel_processing_plots_path, project_id = \
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
-    loggers = ["CEMU"]
-    parameters = ["Ta_200","rH_200", \
-                  "Ta_10","Ts_5","Ts_10","Ts_20","Ts_50", \
-                  "SM_10","SM_15","SM_20","SM_30","SM_40","SM_50"]
-                  #"PAR_200"]
-    pids = ['NA',"Ta_200",
-            'NA','NA','NA','NA','NA', \
-            'NA','NA','NA','NA','NA','NA']
-            #'NA',]
-    # Modified by Spaska Forteva
-    # exploratories = ["AEG", "AEW", "HEG", "HEW", "SEG", "SEW"]
-    
-    # for exploratory in exploratories:
-    station_dataset=locate("*.dat", 
-                               "*gc01_fah01_0300", input_path)
-    for dataset in station_dataset:
-        print " "
-        print " "
-        print "Filling gaps in ", dataset
-        try:
-            print " "
-            print "Filling gaps in ", dataset
-            #systemdate = datetime.datetime.now()
-            filepath=dataset
-            StationToLevel0300(filepath = filepath, config_file = config_file, \
-                               parameters = parameters, level = "0310", 
-                               end_datetime = "2019-12-01")
-        except Exception as inst:
-            print "An error occured with the following dataset."
-            print "Some details:"
-            print "Filename: " + dataset
-            print "Exception type: " , type(inst)
-            print "Exception args: " , inst.args
-            print "Exception content: " , inst        
+    print input_path
 
+    station_folders=locate_path("*_0100", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+
+    station_folders=locate_path("*_0190", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+
+    station_folders=locate_path("*_0200", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+    
+    station_folders=locate_path("*_0250", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+
+    station_folders=locate_path("*_0290", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+
+    station_folders=locate_path("*_0300", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+
+    station_folders=locate_path("*_0310", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+    
+    station_folders=locate_path("*_0400", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+        
+    station_folders=locate_path("*_0405", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+        
+    station_folders=locate_path("*_0410", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+        
 if __name__ == '__main__':
     main()
-

@@ -4,6 +4,7 @@ gfRun <- function(files.dep,
                   quality.levels, 
                   gap.limit,
                   end.datetime,
+                  units, 
                   na.limit,
                   time.window,
                   n.plot,
@@ -80,7 +81,8 @@ gfRun <- function(files.dep,
       pos.na <- gfGapLength(data.dep = ki.data.dep, 
                             pos.na = pos.na, 
                             gap.limit = gap.limit,
-                            end.datetime = end.datetime)
+                            end.datetime = end.datetime, 
+                            units = units)
       
       
       # Impute missing value(s)

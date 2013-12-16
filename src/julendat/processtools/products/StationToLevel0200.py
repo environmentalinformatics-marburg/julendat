@@ -221,7 +221,10 @@ class StationToLevel0200:
         r_plevel = 'plevel =' + self.target_level
         
         if self.project_id == "be":
-            r_scolumn = 'start.column = 10'
+            if aggregation_level == "1h":
+                r_scolumn = 'start.column = 10'
+            else:
+                r_scolumn = 'start.column = 9'
         else:
             r_scolumn = 'start.column = 9'
         
@@ -257,4 +260,5 @@ class StationToLevel0200:
         infile.close()
         outfile = open(file, "w")
         outfile.write(infile_content.replace("-Inf", "NA").replace("Inf", "NA"))
+        outfile.write(infile_content.replace("-9999", "NA").replace("9999", "NA"))
         outfile.close()

@@ -101,7 +101,10 @@ as.ki.data <- function(input_filepath, start.column = 9,
   labs3hupper <- as.character(seq(12, 21, 3))
   labs3hlower <- paste("0", as.character(seq(0, 9 , 3)), sep = "")
   labs3h <- c(labs3hlower, labs3hupper)
-  agg3h <- factor(agg3h, labels = labs3h)
+#   agg3h <- factor(agg3h, labels = labs3h)
+  agg3h <- factor(agg3h, labels = ifelse(length(unique(hour)) == 1, 
+                                         unique(hour), 
+                                         labs3h))
   agg3h <- paste(year, month, day, agg3h, sep = "")
   
   agg6h <- as.numeric(hour)
@@ -109,7 +112,10 @@ as.ki.data <- function(input_filepath, start.column = 9,
   labs6hupper <- as.character(seq(12, 18, 6))
   labs6hlower <- paste("0", as.character(seq(0, 9, 6)), sep = "")
   labs6h <- c(labs6hlower, labs6hupper)
-  agg6h <- factor(agg6h, labels = labs6h)
+#   agg6h <- factor(agg6h, labels = labs6h)
+  agg6h <- factor(agg6h, labels = ifelse(length(unique(hour)) == 1, 
+                                         unique(hour), 
+                                         labs6h))
   agg6h <- paste(year, month, day, agg6h, sep = "")
 
   season <- unlist(lapply(seq(unique(month)), function(i) {

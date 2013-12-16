@@ -4,14 +4,15 @@ logger_time_zone = mez
 station_entries = dk_station_entries.cnf
 
 [repository]
-toplevel_path = /home/dogbert/julendat/
-toplevel_incoming_path = /home/dogbert/julendat/incoming/
-toplevel_check_path = /home/dogbert/julendat/incoming/check/
-toplevel_checked_path = /home/dogbert/julendat/incoming/checked/
-toplevel_processing_plots_path = /home/dogbert/julendat/processing/plots/
-toplevel_processing_logger_path = /home/dogbert/julendat/processing/logger/
-toplevel_vis_path = /home/dogbert/julendat/processing/vis/
-toplevel_temp_path = /home/dogbert/julendat/temp/
+toplevel_path = /home/eikistations/ei_data_kilimanjaro/
+toplevel_check_path = /home/eikistations/ei_data_kilimanjaro/incoming/check/
+toplevel_checked_path = /home/eikistations/ei_data_kilimanjaro/incoming/checked/
+toplevel_incoming_path = /home/eikistations/ei_data_kilimanjaro/incoming/
+toplevel_processing_plots_path = /home/eikistations/ei_data_kilimanjaro/processing/plots/
+toplevel_processing_logger_path = /home/eikistations/ei_data_kilimanjaro/processing/logger/
+toplevel_vis_path = /home/eikistations/ei_data_kilimanjaro/processing/vis/
+toplevel_temp_path = /home/eikistations/ei_data_kilimanjaro/temp/
+
 
 [inventory]
 station_inventory = ki_config_station_inventory.cnf
@@ -23,4 +24,4 @@ level_0005_timezone = eat
 
 [general]
 level0050_standards = ki_config_level0050_standards.cnf
-r_filepath = /home/dogbert/workspace/julendat/src/julendat/rmodules
+r_filepath = /home/eikistations/ei_data_kilimanjaro/scripts/julendat/src/julendat/rmodules
