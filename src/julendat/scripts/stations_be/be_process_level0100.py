@@ -27,6 +27,17 @@ import datetime
 import fnmatch
 import os
 from julendat.processtools.products.StationToLevel0100 import StationToLevel0100
+from optparse import OptionParser
+
+""" Read from the console the year and level to process
+"""
+parser = OptionParser()
+parser.add_option('-y', '--year', 
+                  dest = "year", 
+                  default = "",
+                  )
+
+(options, args) = parser.parse_args()
 
 def locate(pattern, patternpath, root=os.curdir):
     '''Locate files matching filename pattern recursively
@@ -76,12 +87,12 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_dataset=locate("*.dat", "*ca05_*", input_path)
+    station_dataset=locate("*_" + options.year + "*.dat", "*ca05_*", input_path)
 
     for dataset in station_dataset:
         print " "
         print "Processing dataset ", dataset
-        systemdate = datetime.datetime.now()
+        #systemdate = datetime.datetime.now()
         filepath=dataset
         try:
             StationToLevel0100(filepath=filepath, config_file=config_file, 

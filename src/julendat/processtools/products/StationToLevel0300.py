@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Please send any comments, suggestions, criticism, or (for our sake) bug
 reports to nausst@googlemail.com
 """
+#from EpsImagePlugin import split
 
 __author__ = "Thomas Nauss <nausst@googlemail.com>, Tim Appelhans"
 __version__ = "2012-01-18"
@@ -266,7 +267,7 @@ class StationToLevel0300:
         r_fop = 'filepath.output = "' +  output_filepath + '"'
         r_fcp = 'filepath.coords = "' + self.station_master + '"'
         r_ql = 'quality.levels = c(12,22,21)'
-        r_gl = 'gap.limit = 9000'
+        r_gl = 'gap.limit = 89000'
         r_ed = 'end.datetime = "' + \
             self.end_datetime.strftime("%Y-%m-%d") + '"' 
         r_nal = 'na.limit = 0.99'
@@ -308,6 +309,12 @@ class StationToLevel0300:
         f = open(r_script,"w")
         f.write(r_cmd)
         f.close()
-        r_cmd = 'R CMD BATCH ' + r_script  + ' ' + r_script + '.log'
+        plot_name = input_filepath.split("/")
+        plot_name = plot_name [len(plot_name)-3]
+        logpath = self.tl_data_path +'error_log/0300/'
+        logfile = logpath + plot_name + '_' + self.start_datetime + '_' + r_script +'.log'
+        if not os.path.exists(logpath):
+            os.makedirs(logpath)
+        r_cmd = 'R CMD BATCH ' + r_script  + ' ' + logfile
         os.system(r_cmd)
         os.chdir(act_wd)
