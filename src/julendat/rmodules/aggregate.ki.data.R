@@ -221,7 +221,7 @@ aggregate.ki.data <- function(input,
   }
     	                      
   
-  aggdf <- data.frame(Datetime = datetime, 
+  aggdf <- data.frame(Datetime = as.character(datetime), 
                       Timezone = timezone,
                       Aggregationtime = aggregationtime,
                       PlotId = plotid,
