@@ -106,10 +106,6 @@ aggregate.ki.data <- function(input,
     
     lapply(seq(prm.df), function(j) {
       
-      tmp <- prm.ls[[i]][[j]]
-      
-      tmp <- if (all(is.nan(tmp))) rep(NA, length(tmp)) else tmp[! is.na(tmp)]
-      
       list(mean(prm.ls[[i]][[j]], na.rm = T),
            min(prm.ls[[i]][[j]], na.rm = T),
            max(prm.ls[[i]][[j]], na.rm = T),
@@ -117,11 +113,11 @@ aggregate.ki.data <- function(input,
            sd(prm.ls[[i]][[j]], na.rm = T),
            quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.25, names = F),
            quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.75, names = F),
-           sum(tmp, na.rm = FALSE),
+           sum(prm.ls[[i]][[j]], na.rm = T),
            sum(complete.cases(prm.ls[[i]][[j]])),
            length(prm.ls[[i]][[j]]) - sum(complete.cases(prm.ls[[i]][[j]]))
            )
-      
+
     }
     )
 
@@ -132,12 +128,17 @@ aggregate.ki.data <- function(input,
     unlist(agglist[[i]])
   }
   )
-  
+
   names(agglist) <- unique(agglevel)
   
   aggdf <- as.data.frame(do.call("rbind", agglist))
   names(aggdf) <- aggnames
-
+  
+  if (any(names(ki.data@Parameter) == "P_RT_NRT") == TRUE) {
+    pos <- which(names(aggdf) == "P_RT_NRT_sum")
+    aggdf[, pos] <- ifelse(aggdf[, pos + 1] > 0,aggdf[, pos], NA)
+  }
+  
   if (any(names(ki.data@Parameter) == "WD") == TRUE)
   {
     posWD <- grep(glob2rx("WD*"), aggnames)
@@ -207,7 +208,6 @@ aggregate.ki.data <- function(input,
 #   aggdf <- aggdf[, -c(wdmin, wdmax, wdq25, wdq75)]
   
   datetime <- rownames(aggdf)
-  print(datetime)
   if(nchar(datetime) == 6){
     datetime <- paste(datetime, "0101", sep="")
   } 
