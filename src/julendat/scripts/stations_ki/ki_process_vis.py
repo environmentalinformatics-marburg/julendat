@@ -38,7 +38,7 @@ parser.add_option('-y', '--year',
                   )
 parser.add_option('-p', '--pattern', 
                   dest = "pattern", 
-                  default = "*310",
+                  default = "*290",
                   )
 (options, args) = parser.parse_args()
 
@@ -73,7 +73,7 @@ def main():
         configure(config_file=config_file)
     try:
         VISLevel0050(config_file=config_file, pattern="*" + options.pattern + ".dat", \
-                 loggers = ['rug'], start_year = int(options.year))
+                 loggers = ['rug', 'pu1', 'pu2',], start_year = int(options.year))
     except Exception as inst:
         print "An error occured with the following dataset."
         print "Some details:"

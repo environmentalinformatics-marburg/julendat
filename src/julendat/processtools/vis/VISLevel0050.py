@@ -61,7 +61,7 @@ class VISLevel0050:
         else:
             self.start_year = start_year
         if end_year == None: 
-            self.end_year = datetime.datetime.now().year
+            self.end_year = datetime.datetime.now().year + 1
         else:
             self.end_year = end_year
         self.set_run_mode(run_mode)
