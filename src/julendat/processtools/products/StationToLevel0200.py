@@ -260,5 +260,7 @@ class StationToLevel0200:
         infile.close()
         outfile = open(file, "w")
         outfile.write(infile_content.replace("-Inf", "NA").replace("Inf", "NA"))
+        outfile.close()
+        outfile = open(file, "w")
         outfile.write(infile_content.replace("-9999", "NA").replace("9999", "NA"))
         outfile.close()
