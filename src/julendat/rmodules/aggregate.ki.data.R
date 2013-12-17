@@ -23,6 +23,7 @@ aggregate.ki.data <- function(input,
          "6h" = agglevel <- ki.data@AggregationLevels$Agg6h,
          "day" = agglevel <- ki.data@AggregationLevels$AggDay,
          "month" = agglevel <- ki.data@AggregationLevels$AggMonth,
+         "year" = agglevel <- ki.data@AggregationLevels$AggYear,
          "diurnal" = agglevel <- ki.data@Time$Hour,
          "seasonal" = agglevel <- ki.data@Season
          )
@@ -34,6 +35,7 @@ aggregate.ki.data <- function(input,
          "6h" = aggunit <- "h",
          "day" = aggunit <- "d",
          "month" = aggunit <-"m",
+         "year" = aggunit <- "y",
          "diurnal" = aggunit <- "D",
          "seasonal" = aggunit <- "S"
          )
@@ -45,6 +47,7 @@ aggregate.ki.data <- function(input,
          "6h" = aggint <- "06",
          "day" = aggint <- "01",
          "month" = aggint <-"01",
+         "year" = aggint <- "01",
          "diurnal" = aggint <- "01",
          "seasonal" = aggint <- "01"
   )
@@ -211,8 +214,12 @@ aggregate.ki.data <- function(input,
   if(nchar(datetime) == 8){
     datetime <- paste(datetime, "01", sep="")
   } 
-  datetime <- as.POSIXct(strptime(datetime, format = "%Y%m%d%H"), 
-                         origin = ki.data@Origin) 
+  if (level == "year") datetime <- as.(unique(ki.data@AggregationLevels$AggYear)) else {
+  	
+  	datetime <- as.POSIXct(strptime(datetime, format = "%Y%m%d%H"), 
+    	                     origin = ki.data@Origin)
+  }
+    	                      
   
   aggdf <- data.frame(Datetime = datetime, 
                       Timezone = timezone,
