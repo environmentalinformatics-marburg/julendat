@@ -7,7 +7,7 @@ qc_readin <- function(filepath) {
 ################################################################################  
 datalist <- lapply(1:length(filepath), function(i) {
 		read.table(filepath[[i]], header = T, fill = T,
-		           sep = ",", stringsAsFactors = F),
+		           sep = ",", stringsAsFactors = F,
 				   dec = ".",
 				   na.strings = c("nan","NAN","na","NA"))
 								}							
