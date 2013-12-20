@@ -133,11 +133,6 @@ aggregate.ki.data <- function(input,
   aggdf <- as.data.frame(do.call("rbind", agglist))
   names(aggdf) <- aggnames
   
-  if (any(names(ki.data@Parameter) == "P_RT_NRT") == TRUE) {
-    pos <- which(names(aggdf) == "P_RT_NRT_sum")
-    aggdf[, pos] <- ifelse(aggdf[, pos + 1] > 0,aggdf[, pos], NA)
-  }
-  
   if (any(names(ki.data@Parameter) == "WD") == TRUE)
   {
     posWD <- grep(glob2rx("WD*"), aggnames)
@@ -214,11 +209,11 @@ aggregate.ki.data <- function(input,
     datetime <- paste(datetime, "01", sep="")
   } 
   if (level == "year") datetime <- as.character((unique(ki.data@AggregationLevels$AggYear))) else {
-  	
-  	datetime <- as.POSIXct(strptime(datetime, format = "%Y%m%d%H"), 
-    	                     origin = ki.data@Origin)
+    
+     datetime <- as.POSIXct(strptime(datetime, format = "%Y%m%d%H"), 
+                             origin = ki.data@Origin)
   }
-    	                      
+                              
   
   aggdf <- data.frame(Datetime = as.character(datetime), 
                       Timezone = timezone,
