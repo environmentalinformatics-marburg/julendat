@@ -213,7 +213,7 @@ aggregate.ki.data <- function(input,
   if(nchar(datetime) == 8){
     datetime <- paste(datetime, "01", sep="")
   } 
-  if (level == "year") datetime <- as.(unique(ki.data@AggregationLevels$AggYear)) else {
+  if (level == "year") datetime <- as.character((unique(ki.data@AggregationLevels$AggYear))) else {
   	
   	datetime <- as.POSIXct(strptime(datetime, format = "%Y%m%d%H"), 
     	                     origin = ki.data@Origin)
