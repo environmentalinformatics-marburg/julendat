@@ -124,6 +124,9 @@ class StationToLevel0200:
         elif self.get_run_mode() == "aggregate_0405":
             self.target_level = "0405"
             self.aggregate_0405()
+        elif self.get_run_mode() == "aggregate_0420":
+            self.target_level = "0420"
+            self.aggregate_0420()
         else:
             pass
 
@@ -203,6 +206,23 @@ class StationToLevel0200:
         
         print "...finished."
 
+    def aggregate_0420(self):
+        """Aggregate level 0310 station files to level 0420.
+        """
+        aggregation_level = "fad01"
+        self.filenames.build_filename_dictionary(aggregation_level)
+        output_path = self.filenames.get_filename_dictionary()\
+                      ["level_0420_ascii-path"]
+        if not os.path.isdir(output_path):
+            os.makedirs(output_path)
+        aggregation_level = "year"
+        outputfilepath = self.filenames.get_filename_dictionary()[\
+                             'level_0420_ascii-filepath']
+        self.process_aggregation(aggregation_level, outputfilepath)
+        self.remove_inf()
+        
+        print "...finished."
+        
     def process_aggregation(self, aggregation_level, outputfilepath):
         """Process aggragation.
         
@@ -255,6 +275,9 @@ class StationToLevel0200:
         elif self.get_run_mode() == "aggregate_0405":
             file = self.filenames.get_filename_dictionary()[\
                        'level_0405_ascii-filepath'] 
+        elif self.get_run_mode() == "aggregate_0420":
+            file = self.filenames.get_filename_dictionary()[\
+                       'level_0420_ascii-filepath'] 
         infile = open(file, "r")        
         infile_content = infile.read()
         infile.close()
