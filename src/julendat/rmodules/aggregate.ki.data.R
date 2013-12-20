@@ -13,7 +13,6 @@ aggregate.ki.data <- function(input,
   source("wdws2uv.R")
   source("uv2wd.R")
   stopifnot(require(reshape))
-
   ki.data <- as.ki.data(input, start.column = start.column)
 
   switch(level,
