@@ -58,4 +58,26 @@ VColList <- list(
   
   p_200 = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
   
-  P_RT_NRT = colorRampPalette(c("snow", rev(brewer.pal(11, "Spectral")), "grey10")))
+  P_RT_NRT = function(n) {
+    c("grey10", colorRampPalette(c(rev(brewer.pal(11, "Spectral")), "snow"))(n))
+  },
+
+  P_RT_NRT_01 = function(n) {
+    c("grey10", colorRampPalette(c(rev(brewer.pal(11, "Spectral")), "snow"))(n))
+  },
+
+  P_RT_NRT_02 = function(n) {
+    c("grey10", colorRampPalette(c(rev(brewer.pal(11, "Spectral")), "snow"))(n))
+  },
+
+  F_RT_NRT_01 = function(n) {
+    c("grey10", colorRampPalette(c(rev(brewer.pal(11, "Spectral")), "snow"))(n))
+  },
+
+  F_RT_NRT_02 = function(n) {
+    c("grey10", colorRampPalette(c(rev(brewer.pal(11, "Spectral")), "snow"))(n))
+  },
+
+  F_RT_NRT = function(n) {
+    c("grey10", colorRampPalette(c(rev(brewer.pal(11, "Spectral")), "snow"))(n))
+  })
