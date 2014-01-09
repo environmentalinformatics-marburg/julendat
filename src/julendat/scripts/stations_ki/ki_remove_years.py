@@ -92,10 +92,10 @@ def main():
 
     years = ["*_2008*", "*_2009*", "*_2010*", "*_2011*", "*_2012*"]
     for year in years:
-        station_dataset=locate("*.*", year, input_path)
+        print year
+        station_dataset=locate(year, "*", input_path)
         for dataset in station_dataset:
             os.remove(dataset)
-        
+
 if __name__ == '__main__':
     main()
-
