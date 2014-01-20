@@ -77,7 +77,7 @@ def main():
         configure(config_file=config_file)
     try:
         VISLevel0050(config_file=config_file, pattern="*" + options.pattern + ".dat", \
-                 loggers = options.logger, start_year = int(options.year))
+                loggers = ['rug', 'pu1', 'pu2',], start_year = int(options.year))
     except Exception as inst:
         print "An error occured with the following dataset."
         print "Some details:"
