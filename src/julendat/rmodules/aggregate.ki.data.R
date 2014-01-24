@@ -1,9 +1,12 @@
+# setwd("/home/dogbert/workspace/julendat/src/julendat/rmodules/")
+
 aggregate.ki.data <- function(input,
                               level = "1h",
                               plevel = 0000,
                               start.column = 9,
+                              detail,
                               ...) {
-  
+
   Old.TZ <- Sys.timezone()
   Sys.setenv(TZ = "UTC")
 
@@ -50,7 +53,7 @@ aggregate.ki.data <- function(input,
          "diurnal" = aggint <- "01",
          "seasonal" = aggint <- "01"
   )
-  
+
 
   qsplit <- lapply(seq(ki.data@Qualityflag), function(i) {
     substring(ki.data@Qualityflag[i], 
@@ -67,7 +70,7 @@ aggregate.ki.data <- function(input,
   try(
     for (i in seq(qsplitind)) ki.data@Parameter[[i]][qsplitind[[i]]] <- NA
   )
-  
+
   agglevel <- as.character(agglevel)
   
   timezone <- rep(ki.data@Timezone, length.out = length(unique(agglevel)))
@@ -84,42 +87,55 @@ aggregate.ki.data <- function(input,
                      length.out = length(unique(agglevel)))
   
   prm.df <- as.data.frame(ki.data@Parameter, stringsAsFactors = F)
-  
+
   if (any(names(ki.data@Parameter) == "WD"))
     {
     uv <- wdws2uv(prm.df[["WD"]], prm.df[["WV"]])
     prm.df$u <- uv$u
     prm.df$v <- uv$v
   }
- 
+
   names.prm.df <- names(prm.df)
   
-  aggdescr <- c("", "_min", "_max", "_median", "_stdv", 
+  if (detail) {
+    aggdescr <- c("", "_min", "_max", "_median", "_stdv", 
                 "_25", "_75", "_sum", "_n", "_nan")
+  } else {
+    aggdescr <- c("", "_sum")
+  }
   names.prm <- rep(names.prm.df, each = length(aggdescr))
   aggnames <- paste(names.prm, aggdescr, sep = "")
 
   prm.ls <- split(prm.df, agglevel)
-  
+
   agglist <- lapply(seq(prm.ls), function(i) {
     
     lapply(seq(prm.df), function(j) {
-      
-      list(mean(prm.ls[[i]][[j]], na.rm = T),
-           min(prm.ls[[i]][[j]], na.rm = T),
-           max(prm.ls[[i]][[j]], na.rm = T),
-           median(prm.ls[[i]][[j]], na.rm = T),
-           sd(prm.ls[[i]][[j]], na.rm = T),
-           quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.25, names = F),
-           quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.75, names = F),
-           sum(prm.ls[[i]][[j]], na.rm = T),
-           sum(complete.cases(prm.ls[[i]][[j]])),
-           length(prm.ls[[i]][[j]]) - sum(complete.cases(prm.ls[[i]][[j]]))
-           )
-
+      if (detail){
+#         print("detail=true")
+	      list(mean(prm.ls[[i]][[j]], na.rm = T),
+	           min(prm.ls[[i]][[j]], na.rm = T),
+	           max(prm.ls[[i]][[j]], na.rm = T),
+	           median(prm.ls[[i]][[j]], na.rm = T),
+	           sd(prm.ls[[i]][[j]], na.rm = T),
+	           quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.25, names = F),
+	           quantile(prm.ls[[i]][[j]], na.rm = T, probs = 0.75, names = F),
+	           sum(prm.ls[[i]][[j]], na.rm = T),
+	           sum(complete.cases(prm.ls[[i]][[j]])),
+	           length(prm.ls[[i]][[j]]) - sum(complete.cases(prm.ls[[i]][[j]]))
+	           )
+       } else {
+#           print("detail=false")
+         if (any(!is.na(prm.ls[[i]][[j]]))) {
+         	list(mean(prm.ls[[i]][[j]], na.rm = T),
+          		sum(prm.ls[[i]][[j]], na.rm = T)
+          	)
+         } else {
+           list(NA, NA)
+         }
+       }
     }
     )
-
   }
   )
   
@@ -132,9 +148,10 @@ aggregate.ki.data <- function(input,
   
   aggdf <- as.data.frame(do.call("rbind", agglist))
   names(aggdf) <- aggnames
-  
+
   if (any(names(ki.data@Parameter) == "WD") == TRUE)
   {
+
     posWD <- grep(glob2rx("WD*"), aggnames)
     posu <- grep(glob2rx("u*"), aggnames)
     posv <- grep(glob2rx("v*"), aggnames)
@@ -143,10 +160,16 @@ aggregate.ki.data <- function(input,
       uv2wd(aggdf[, posu[i]], aggdf[, posv[i]])
       }
                  )
-    
-    for (i in 1:(length(wd) - 2)) {
-      aggdf[, posWD[i]] <- uv2wd(aggdf[, posu[i]], aggdf[, posv[i]])
+
+    if (detail) {
+      for (i in 1:(length(wd) - 2)) {
+        aggdf[, posWD[i]] <- uv2wd(aggdf[, posu[i]], aggdf[, posv[i]])
       }
+    } else {
+      for (i in 1:(length(wd))) {
+        aggdf[, posWD[i]] <- uv2wd(aggdf[, posu[i]], aggdf[, posv[i]])
+      }
+    }
   
     exuv <- length(ki.data@Parameter) * length(aggdescr)
     aggdf <- aggdf[, 1:exuv]
@@ -190,7 +213,7 @@ aggregate.ki.data <- function(input,
   }
   
   aggdf <- aggdf[, -exsum]
-  
+
 #   wdmin <- grep(glob2rx("WD_min"), names(aggdf))
 #   wdmax <- grep(glob2rx("WD_max"), names(aggdf))
 #   wdq25 <- grep(glob2rx("WD_25"), names(aggdf))
@@ -231,5 +254,10 @@ aggregate.ki.data <- function(input,
 
 }
 
-#    test <- aggregate.ki.data("/home/ede/software/testing/julendat/processing/plots/ki/0000cof3/qc25_fah01_0290/ki_0000cof3_000pu1_201101010000_201112310000_eat_qc25_fah01_0290.dat", "month")
+#   test <-write.aggregate.ki.data(
+#   inputfilepath="/media/dogbert/dev/BE/julendat/processing/plots/be/000AEG01/fc01_fah01_0190/be_000AEG01_00EEMU_200912010000_200912310000_mez_fc01_fah01_0190.dat",
+#   outputfilepath="/media/dogbert/dev/BE/julendat/processing/plots/be/000AEG01/fa01_fah01_0200/be_000AEG01_00EEMU_200912010000_200912310000_mez_fa01_fah01_0200.dat",
+#   level="1h")
+
+#   # test <- aggregate.ki.data("/media/dogbert/dev/BE/julendat/processing/plots/be/000AEG01/fc01_fah01_0190/be_000AEG01_00EEMU_200901010000_200901310000_mez_fc01_fah01_0190.dat", "1h")
 #    str(test)

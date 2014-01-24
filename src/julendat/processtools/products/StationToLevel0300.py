@@ -272,7 +272,7 @@ class StationToLevel0300:
             self.end_datetime.strftime("%Y-%m-%d") + '"' 
         r_nal = 'na.limit = 0.99'
         r_tw = 'time.window = 1000'
-        r_nplot = 'n.plot = 10'
+        r_nplot = 'n.plot = 5'
         r_pdp = 'prm.dep = c('
         for parameter in self.get_parameters():
             r_pdp = r_pdp + '"' + parameter + '", ' 
