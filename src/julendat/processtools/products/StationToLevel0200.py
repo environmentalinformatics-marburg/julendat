@@ -258,7 +258,8 @@ class StationToLevel0200:
                 r_ofp + ',\n' + \
                 r_level + ',\n' + \
                 r_plevel + ',\n' + \
-                r_scolumn + ')\n'
+                r_scolumn + ',\n' + \
+                r_detail + ')\n'
         r_script = "aggregation.rscript" 
         f = open(r_script,"w")
         f.write(r_cmd)
