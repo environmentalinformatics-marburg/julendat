@@ -239,8 +239,12 @@ class StationToLevel0200:
         r_ofp = 'outputfilepath="' + outputfilepath + '"'
         r_level = 'level="' + aggregation_level  + '"'
         r_plevel = 'plevel =' + self.target_level
+        r_detail = 'detail = FALSE'
         
-        if self.project_id == "be":
+	if  self.target_level == "0420" :
+            r_detail = 'detail = TRUE'
+        
+	if self.project_id == "be":
             if aggregation_level == "1h":
                 r_scolumn = 'start.column = 10'
             else:
