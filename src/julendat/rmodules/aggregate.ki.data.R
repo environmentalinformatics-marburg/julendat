@@ -225,6 +225,19 @@ aggregate.ki.data <- function(input,
 #   aggdf <- aggdf[, -c(wdmin, wdmax, wdq25, wdq75)]
   
   datetime <- rownames(aggdf)
+
+# BUG 20.02.2014
+# processing level: 200 
+# File: ki_0000fod2_000pu1_201310010000_201310312355_eat_qc01_cti05_0100
+# Reasens: - datetime was NULL, because exsum = -2 ???
+# Change Start SF ######################################################
+  if (length(datetime) == 0) {
+    aggdf <- as.data.frame(do.call("rbind", agglist))
+    datetime <- rownames(aggdf)
+  }
+# Change End      ######################################################
+
+
   if(nchar(datetime) == 6){
     datetime <- paste(datetime, "0101", sep="")
   } 
