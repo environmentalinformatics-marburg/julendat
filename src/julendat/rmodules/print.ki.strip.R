@@ -8,26 +8,29 @@ print.ki.strip <- function(inputfilepath,
                              pattern,
                              colour = colList$colTa,
 			                 resolution = 400,
-                             ...) {
+			                 project_id = "ki",
+                             ...) 
+{
   
-  source("ki.strip.R")
-  
-  plotname <- paste(Sys.Date(), "Overview", prm, year, arrange, sep = "_")
-  plotname <- paste(plotname, ".png", sep = "")
-  
-  png(paste(outputpath, plotname, sep = "/"), 
-      width = ifelse(arrange == "wide", 1024*8, 768*8), 
-      height = ifelse(arrange == "wide", 768*8, 1024*8),
-      res = resolution)
-  ki.strip(inputfilepath = inputfilepath,
-             prm = prm,
-             arrange = arrange,
-             fun = fun,
-             year = year,
-             range = range,
-             pattern = pattern,
-             colour = colour)
-  dev.off()
+			  source("ki.strip.R")
+			  
+			  plotname <- paste(Sys.Date(), "Overview", prm, year, arrange, sep = "_")
+			  plotname <- paste(plotname, ".png", sep = "")
+			  
+			  png(paste(outputpath, plotname, sep = "/"), 
+			      width = ifelse(arrange == "wide", 1024*8, 768*8), 
+			      height = ifelse(arrange == "wide", 768*8, 1024*8),
+			      res = resolution)
+			  ki.strip(inputfilepath = inputfilepath,
+			             prm = prm,
+			             arrange = arrange,
+			             fun = fun,
+			             year = year,
+			             range = range,
+			             pattern = pattern,
+			             colour = colour,
+			             project_id = project_id,)
+			  dev.off()
 }
 
 # system.time(print.ki.strip("/home/ede/software/testing/julendat/processing/plots/ki/0000cof1/",
