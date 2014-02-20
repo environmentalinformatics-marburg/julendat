@@ -278,6 +278,10 @@ class VISLevel0050:
                     if 'RT_NRT' in parameter:
                         r_fun = 'fun = sum,'
                     r_year = 'year = "' + str(year) + '",'
+                    r_project_id = 'project_id ="' + self.project_id + '",'
+                    '''
+                    Command for R-Script
+                    '''
                     r_cmd = r_source + "\n" + \
                     r_script + "\n" + \
                     r_inputfilepath + "\n" + \
@@ -289,6 +293,7 @@ class VISLevel0050:
                     r_pattern + " \n" + \
                     r_colour + " \n" + \
                     r_year + " \n" + \
+                    r_project_id + " \n" + \
                     r_resolution + ")\n"
         
                     script = "vis0050.rscript" 
