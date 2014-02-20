@@ -8,6 +8,7 @@ ki.strip <- function(inputfilepath,
                        colour = colorRampPalette(c("darkblue", "aquamarine", 
                                                    "gold", "red2"),
                                                  interpolate = "linear"),
+                       project_id,
                        ...) {
   
 ################################################################################
@@ -77,7 +78,8 @@ ki.strip <- function(inputfilepath,
   
   flist <- inputfilepath
   #list.files(inputpath, recursive = T, pattern = glob2rx(pattern))
-  
+  test <- c(strsplit(inputfilepath, "/"))
+  print (str(test))
   ki.data.list <- lapply(seq(flist), 
                          function(i) as.ki.data(flist[i]))
 
@@ -103,7 +105,12 @@ ki.strip <- function(inputfilepath,
   maxx <- if (missing(range)) max(as.numeric(df2$x), na.rm = TRUE) else range[2]
 
   condims <- as.character(unique(na.exclude(df2$plotid)))
-
+  
+  #Change for the station name for bexis
+  if ( project_id == "be" ) {
+  	condims <- as.character(unique(na.exclude(substr(df2$plotid, 4, 8))))
+  }
+  print (project_id)
   xlist <- split(df2, df2$plotid, drop = T)
 
   ls <- lapply(seq(xlist), function(i) {
@@ -161,7 +168,7 @@ ki.strip <- function(inputfilepath,
                             y = list(at = c(18, 12, 6))),
               colorkey = list(space = "top", width = 1, height = 0.7,
                               at = seq(minx, maxx, 0.1)), 
-              main = paste("overview", prm, year, sep = " "),
+              main = paste("overview", ifelse(project_id=="be", paste(substr(condims[1], 1,3)), ""), prm, year, sep = " "),
               panel = function(x, ...) {
                 grid.rect(gp=gpar(col=NA, fill="grey50"))
                 panel.levelplot(x, ...)
