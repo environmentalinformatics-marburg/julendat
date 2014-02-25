@@ -19,7 +19,8 @@ station_master = be_station_master.csv
 
 [project]
 project_id = be
-level_0005_timezone = mez 
+level_0005_timezone = mez
+station_name = heg 
 
 [general]
 level0050_standards = be_config_level0050_standards.cnf
