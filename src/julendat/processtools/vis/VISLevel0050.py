@@ -68,7 +68,7 @@ class VISLevel0050:
         self.configure(config_file)
         self.get_level0050_settings()
         self.input_path = self.tl_data_path + self.project_id
-        self.output_path = self.toplevel_vis_path + self.project_id
+        self.output_path = self.toplevel_vis_path + self.project_id + '/' + self.station_name
         if not os.path.isdir(self.output_path):
             os.makedirs(self.output_path)
         self.run_flag = True
@@ -113,9 +113,10 @@ class VISLevel0050:
         self.tl_data_path = config.get('repository', 'toplevel_processing_plots_path')
         self.toplevel_vis_path = config.get('repository', 'toplevel_vis_path')
         self.project_id = config.get('project','project_id')
+        self.station_name = config.get('project','station_name')
         self.level0050_standards = config.get('general','level0050_standards')
         self.r_filepath = config.get('general','r_filepath')
-        self.tl_processing_path = self.tl_data_path +  self.project_id
+        self.tl_processing_path = self.tl_data_path +  self.project_id 
 
 
     def get_level0050_settings(self):
@@ -170,7 +171,7 @@ class VISLevel0050:
         os.chdir(self.r_filepath)
         r_source = 'source("print.ki.strip.R")'
         r_script = 'print.ki.strip('
-        r_outputpath = 'outputpath = "' + self.output_path + '",'
+        r_outputpath = 'outputpath = "' + self.output_path  + '",'
         r_arrange = 'arrange = "long",'
         r_pattern = 'pattern  = "' + self.pattern + '",'
         r_year = 'year = "2011"'
@@ -385,3 +386,4 @@ class VISLevel0050:
             level0005_standard.get_level0005_column_headers()
         self.level0050_column_headers = \
             level0005_standard.get_level0050_column_headers()
+
