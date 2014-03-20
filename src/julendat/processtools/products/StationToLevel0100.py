@@ -131,11 +131,11 @@ class StationToLevel0100:
     def auto(self):
         """Executes class functions in default auto mode.
         """
-        
-        if not os.path.isfile(self.ascii_filepath):
-            self.main()
-        else:
-            pass
+        # BUG - write 100 250 SF 20140320
+        #if not os.path.isfile(self.ascii_filepath):
+        self.main()
+        #else:
+            #pass
 
     def main(self):
         """Processes level 0050 station files to level 0100.
