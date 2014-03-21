@@ -209,7 +209,7 @@ class StationToLevel0200:
     def aggregate_0420(self):
         """Aggregate level 0310 station files to level 0420.
         """
-        aggregation_level = "fad01"
+        aggregation_level = "faa01"
         self.filenames.build_filename_dictionary(aggregation_level)
         output_path = self.filenames.get_filename_dictionary()\
                       ["level_0420_ascii-path"]
