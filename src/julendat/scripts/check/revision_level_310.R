@@ -9,19 +9,17 @@ if(compute.thv){
   compute.revision <- TRUE
 }
 
-location = "AEG"
-station = "CEMU"
+location = "SEW"
 
 setwd(paste("/media/jsonne/Volume/bexis/revision_level_310/310", location, 
             sep = "/"))
-thvs.file <- paste("thvs_", location, "_", station, ".dat", sep = "")
+thvs.file <- paste("thvs_", location, "_CEMU.dat", sep = "")
 
 
 # Compute THVs
 if(compute.thv){
   files <- list.files(path = paste(location, "original", sep = "_"), 
-                      pattern = glob2rx(paste("*", station, "*_0310.dat", 
-                                              sep = "")),
+                      pattern = glob2rx("*CEMU*_0310.dat"),
                       full.names = TRUE, recursive = TRUE)
   datasets <- lapply(files, function(x){
     act.file <- x
@@ -31,29 +29,71 @@ if(compute.thv){
   
   if(location == "AEG"){
     thvs.prob.t <- c(0.01, 0.995)
+    thvs.prob.t10 <- c(0.01, 0.99)
     thvs.prob.r <- c(0.02, 0.60)
     thvs.prob.ts <- c(0.01, 0.995)
+    thvs.prob.sm <- c(0.01, 0.99)
   } else if (location == "AEW") {
     thvs.prob.t <- c(0.003, 0.995)
+    thvs.prob.t10<- c(0.0001, 0.995)
     thvs.prob.r <- c(0.02, 0.80)
     thvs.prob.ts <- c(0.0008, 0.995)
+    thvs.prob.sm <- c(0.01, 0.99)
+  } else if (location == "HEG") {
+    thvs.prob.t <- c(0.003, 0.995)
+    thvs.prob.t10<- c(0.0032, 0.995)
+    thvs.prob.r <- c(0.02, 0.80)
+    thvs.prob.ts <- c(0.002, 0.995)
+    thvs.prob.sm <- c(0.01, 0.99)
+  } else if (location == "HEW") {
+    thvs.prob.t <- c(0.0001, 0.999)
+    thvs.prob.t10<- c(0.002, 0.995)
+    thvs.prob.r <- c(0.02, 0.60)
+    thvs.prob.ts <- c(0.001, 0.99)
+    thvs.prob.sm <- c(0.01, 0.99)
+  } else if (location == "SEG") {
+    thvs.prob.t <- c(0.00001, 0.9999)
+    thvs.prob.t10<- c(0.00015, 0.99)
+    thvs.prob.r <- c(0.02, 0.70)
+    thvs.prob.ts <- c(0.01, 0.992)
+    thvs.prob.sm <- c(0.01, 0.999)
+  } else if (location == "SEW") {
+    thvs.prob.t <- c(0.0001, 0.999)
+    thvs.prob.t10<- c(0.00035, 0.995)
+    thvs.prob.r <- c(0.02, 0.70)
+    thvs.prob.ts <- c(0.0075, 0.99)
+    thvs.prob.sm <- c(0.05, 0.999)
   } 
-  thvs.ta_200 <- quantile(data$Ta_200, probs = thvs.prob.t, na.rm = TRUE)
-  thvs.rh_200 <- quantile(data$rH_200, probs = thvs.prob.r, na.rm = TRUE)
+  thvs.Ta_200 <- quantile(data$Ta_200, probs = thvs.prob.t, na.rm = TRUE)
+  thvs.Ta_10 <- quantile(data$Ta_10, probs = thvs.prob.t10, na.rm = TRUE)
+  thvs.rH_200 <- quantile(data$rH_200, probs = thvs.prob.r, na.rm = TRUE)
   thvs.Ts_5 <- quantile(data$Ts_5, probs = thvs.prob.ts, na.rm = TRUE)
   thvs.Ts_10 <- quantile(data$Ts_10, probs = thvs.prob.ts, na.rm = TRUE)
   thvs.Ts_20 <- quantile(data$Ts_20, probs = thvs.prob.ts, na.rm = TRUE)
   thvs.Ts_50 <- quantile(data$Ts_50, probs = thvs.prob.ts, na.rm = TRUE)
+  thvs.SM_10 <- quantile(data$SM_10, probs = thvs.prob.sm, na.rm = TRUE)
+  thvs.SM_15 <- quantile(data$SM_15, probs = thvs.prob.sm, na.rm = TRUE)
+  thvs.SM_20 <- quantile(data$SM_20, probs = thvs.prob.sm, na.rm = TRUE)
+  thvs.SM_30 <- quantile(data$SM_30, probs = thvs.prob.sm, na.rm = TRUE)
+  thvs.SM_40 <- quantile(data$SM_40, probs = thvs.prob.sm, na.rm = TRUE)
+  thvs.SM_50 <- quantile(data$SM_50, probs = thvs.prob.sm, na.rm = TRUE)
   thvs.Ts_10 <- thvs.Ts_5
   thvs.Ts_20 <- thvs.Ts_5
   thvs.Ts_50 <- thvs.Ts_5
   
-  thvs <- data.frame(Ta_200 = thvs.ta_200,
-                     rH_200 = thvs.rh_200,
+  thvs <- data.frame(Ta_200 = thvs.Ta_200,
+                     rH_200 = thvs.rH_200,
+                     Ta_10 = thvs.Ta_10,
                      Ts_5 = thvs.Ts_5,
                      Ts_10 = thvs.Ts_10,
                      Ts_20 = thvs.Ts_20,
-                     Ts_50 = thvs.Ts_50)
+                     Ts_50 = thvs.Ts_50,
+                     SM_10 = thvs.SM_10,
+                     SM_15 = thvs.SM_15,
+                     SM_20 = thvs.SM_20,
+                     SM_30 = thvs.SM_30,
+                     SM_40 = thvs.SM_40,
+                     SM_50 = thvs.SM_50)
   
   write.table(thvs, thvs.file, sep = ",", row.names = FALSE)
 }
@@ -62,9 +102,8 @@ if(compute.thv){
 if(compute.revision){
   thvs <- read.table(thvs.file, sep = ",", header = TRUE)
   files <- list.files(path = paste(location, "revised", sep = "_"), 
-                      pattern = glob2rx(paste("*", station, "*_0310.dat", 
-                                              sep = "")),
-                      full.names = TRUE, recursive = TRUE)
+                      pattern = "_0310.dat", full.names = TRUE, 
+                      recursive = TRUE)
   sapply(files, function(x){
     act.file <- x
     print(act.file)
