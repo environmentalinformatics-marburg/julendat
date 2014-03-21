@@ -90,7 +90,7 @@ def main():
         configure(config_file=config_file)
     input_path = toplevel_processing_plots_path + project_id
     
-    station_folders=locate_path("gc02_fam01*", input_path)
+    station_folders=locate_path("gc02_faa01*", input_path)
     for folders in station_folders:
         shutil.rmtree(folders)
 
