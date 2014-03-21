@@ -241,7 +241,7 @@ class StationToLevel0200:
         r_plevel = 'plevel =' + self.target_level
         r_detail = 'detail = FALSE'
         
-	if  self.target_level == "0420" :
+	if  self.target_level == "0400" or self.target_level == "0405" or self.target_level == "0420" :
             r_detail = 'detail = TRUE'
         
 	if self.project_id == "be":
