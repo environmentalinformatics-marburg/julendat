@@ -141,6 +141,10 @@ ki.strip <- function(inputfilepath,
     datetime_x <- paste(datetime_x, hour_x, sep = " ")
     datetime_x <- paste(datetime_x, "00", sep = ":")
 
+    # tnauss: if x consits only of NaNs, replace NaNs with -9999.0
+    if(sum(is.na(x)) == length(x)){
+      x <- rep(-9999.0, length(x))
+    }
     z_x <- aggregate(x ~ datetime_x, FUN = fun)
 
     index_hour <- substr(z_x$datetime_x, 12, 13)
