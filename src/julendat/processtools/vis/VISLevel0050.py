@@ -231,8 +231,11 @@ class VISLevel0050:
                      'par': [0, 5000], \
                      'swdr_xxxx': [0, 5000]}
 	if self.project_id == "be" :
-		par_range = {'Ta': [-10,50],\
-                     'Ts': [-10, 50], \
+		  par_range = {'Ta': [-30,35],'rH': [35,100], \
+                     'SWDR': [0,1400], \
+                     'LWDR': [200,500], \
+                     'WD': [0,360], 'WV': [0,10], \
+                     'Ts': [-25, 35], \
                      'SM': [0, 100], \
                      }
         #Get parameter list without min/max
