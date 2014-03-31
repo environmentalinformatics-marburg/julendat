@@ -3,8 +3,8 @@ library(lattice)
 
 setwd("/media/jsonne/Volume/bexis/temp/mannualy_corrected_420_final")
 files <- list.files(path = "data/", pattern = "csv",
-                    full.names = TRUE)
-# in list.files habe ich das "recursive=T" entfernt
+                    recursive=T, full.names = TRUE)
+
 sapply(files, function(z){
   act.file = z
   print(act.file)
