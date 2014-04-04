@@ -1,7 +1,7 @@
 rm(list=ls())
 library(lattice)
 # Set path environment
-wdpath <- "/media/jsonne/Volume/bexis/revised_reloaded_level_0400_plus"
+wdpath <- "/media/permanent/active/bexis/processing/revised_reloaded_level_0400_plus"
 setwd(wdpath)
 
 level = "_0420"
