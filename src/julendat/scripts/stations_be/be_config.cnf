@@ -3,14 +3,14 @@ initial_logger_file = noname.bin
 logger_time_zone = mez
 
 [repository]
-toplevel_path = /home/eibestations/ei_data_exploratories/
-toplevel_incoming_path = /home/eibestations/ei_data_exploratories/incoming/
-toplevel_check_path = /home/eibestations/ei_data_exploratories/incoming/check/
-toplevel_checked_path = /home/eibestations/ei_data_exploratories/incoming/checked/
-toplevel_processing_plots_path = /home/eibestations/ei_data_exploratories/processing/plots/
-toplevel_processing_logger_path = /home/eibestations/ei_data_exploratories/processing/logger/
-toplevel_vis_path = /home/eibestations/ei_data_exploratories/processing/vis/
-toplevel_temp_path = /home/eibestations/ei_data_exploratories/temp/
+toplevel_path = /media/permanent/development/test/julendat/
+toplevel_incoming_path = /media/permanent/development/test/julendat/incoming/
+toplevel_check_path = /media/permanent/development/test/julendat/incoming/check/
+toplevel_checked_path = /media/permanent/development/test/julendat/incoming/checked/
+toplevel_processing_plots_path = /media/permanent/development/test/julendat/processing/HEG/
+toplevel_processing_logger_path = /media/permanent/development/test/julendat/processing/logger/
+toplevel_vis_path = /media/permanent/development/test/julendat/processing/vis/
+toplevel_temp_path = /media/permanent/development/test/julendat/temp/
 
 
 [inventory]
@@ -24,4 +24,4 @@ station_name = heg
 
 [general]
 level0050_standards = be_config_level0050_standards.cnf
-r_filepath = /home/eibestations/ei_data_exploratories/scripts/julendat/src/julendat/rmodules
+r_filepath = /media/permanent/development/released/googlecode/julendat/src/julendat/rmodules

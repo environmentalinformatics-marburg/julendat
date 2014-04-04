@@ -144,16 +144,85 @@ class StationToLevel0200:
                       ["level_0190_ascii-path"]
         if not os.path.isdir(output_path):
             os.makedirs(output_path)
-        infile = open(self.filenames.get_filepath(), "r")
-        if os.path.isfile(self.filenames.get_filename_dictionary()\
-                      ["level_0190_ascii-filepath"]):
-            infile.readline()
-        infile_content = infile.read()
-        infile.close()
-        outfile = open(self.filenames.get_filename_dictionary()\
-                      ["level_0190_ascii-filepath"], "a")
-        outfile.write(infile_content)
-        outfile.close()
+
+        if self.project_id != "be":
+            infile = open(self.filenames.get_filepath(), "r")
+            if os.path.isfile(self.filenames.get_filename_dictionary()\
+                          ["level_0190_ascii-filepath"]):
+                infile.readline()
+            infile_content = infile.read()
+            infile.close()
+            outfile = open(self.filenames.get_filename_dictionary()\
+                          ["level_0190_ascii-filepath"], "a")
+            outfile.write(infile_content)
+            outfile.close()
+        else:
+            self.get_level0050_standards()
+            self.reorder_station_coloumn_entries(\
+                self.level0050_column_headers, \
+                self.level0200_column_headers)
+            
+            station_input =[]
+            header = True
+            infile = open(self.filenames.get_filepath(), "r")
+            if os.path.isfile(self.filenames.get_filename_dictionary()\
+                          ["level_0190_ascii-filepath"]):
+                infile.readline()
+                header = False
+            for row in infile:
+                station_input.append(str.split(row, ","))
+            infile.close()
+            print self.reorder
+            out = []
+            station_counter = 0
+            for row in station_input:
+                act_out = station_input[station_counter][0:7]
+                if header == True:
+                    act_out = act_out + \
+                        [station_input[station_counter][7]]
+                else:
+                    act_out = act_out + \
+                        [station_input[station_counter][7][0:((len(self.level0200_column_headers)-8)*3+2)] + '"']
+                for i in range(9, max(self.reorder)+1):
+                    index =  self.reorder.index(i)
+                    act_out = act_out + [station_input[station_counter][index].strip()]
+                out.append(act_out)
+                station_counter = station_counter + 1            
+            outfile = open(self.filenames.get_filename_dictionary()\
+                           ["level_0190_ascii-filepath"], "a")
+            for row in out:
+                outfile.write(",".join(row) + "\n")
+                #outfile.write(",".join(row) + "\n")
+            outfile.close()
+            
+        
+    def reorder_station_coloumn_entries(self,input_headers,output_headers):
+        """Reorder station column entries to match the level 1 standards.
+        """
+        reorder = []
+        for entry_sce in range (0,len(input_headers)):
+            match = False
+            for entry_lce in range(0,len(output_headers)):
+                if string.strip(output_headers[entry_lce]) ==  \
+                    string.strip(input_headers[entry_sce]):
+                        reorder.append(entry_lce+1)
+                        match = True
+            if match == False:
+                reorder.append(-1)
+        self.reorder = reorder        
+
+
+    def get_level0050_standards(self):
+        """Sets format standards for level 1 station data files
+        """
+        level0050_standard = Level01Standards(\
+            filepath=self.level0050_standards, \
+            station_id=self.filenames.get_station_id())
+        self.level0050_column_headers = \
+            level0050_standard.get_level0050_column_headers()
+        self.level0200_column_headers = \
+            level0050_standard.get_level0200_column_headers()
+
 
     def aggregate_0200(self):
         """Aggregate level 0100 station files to level 0200.
@@ -240,13 +309,14 @@ class StationToLevel0200:
         r_level = 'level="' + aggregation_level  + '"'
         r_plevel = 'plevel =' + self.target_level
         r_detail = 'detail = FALSE'
+        r_project = 'project ="' + self.project_id   + '"'
         
 	if  self.target_level == "0400" or self.target_level == "0405" or self.target_level == "0420" :
             r_detail = 'detail = TRUE'
-        
+
 	if self.project_id == "be":
             if aggregation_level == "1h":
-                r_scolumn = 'start.column = 10'
+                r_scolumn = 'start.column = 9'
             else:
                 r_scolumn = 'start.column = 9'
         else:
@@ -259,7 +329,9 @@ class StationToLevel0200:
                 r_level + ',\n' + \
                 r_plevel + ',\n' + \
                 r_scolumn + ',\n' + \
-                r_detail + ')\n'
+                r_detail + ',\n' + \
+                r_project + ')\n'
+                 
         r_script = "aggregation.rscript" 
         f = open(r_script,"w")
         f.write(r_cmd)

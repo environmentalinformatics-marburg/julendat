@@ -3,6 +3,7 @@ write.aggregate.ki.data <- function(inputfilepath,
                                     level = "1h",
                                     start.column = 9,
                                     detail = FALSE,
+                                    project = "ki",
                                     ...) 
 {
 
@@ -12,6 +13,7 @@ write.aggregate.ki.data <- function(inputfilepath,
                            level = level,
                            start.column = start.column,
                            detail = detail, 
+                           project = project,
                            ...)
   
  # print(str(out))

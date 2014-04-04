@@ -5,6 +5,7 @@ aggregate.ki.data <- function(input,
                               plevel = 0000,
                               start.column = 9,
                               detail,
+                              project = "ki",
                               ...) {
 
   Old.TZ <- Sys.timezone()
@@ -177,13 +178,17 @@ aggregate.ki.data <- function(input,
   
   exsum <- grep(glob2rx("*_sum"), names(aggdf))
   
-  if (any(names(ki.data@Parameter) == "P_RT_NRT") == TRUE)
+  if (any(names(ki.data@Parameter) == "P_RT_NRT") == TRUE & project == "be" & level == "1h")
+  {
+    prmean <- grep(glob2rx("P_RT_NRT"), names(aggdf))
+    aggdf[, prmean] <- aggdf[, prmean] * 60.0
+  } else if (any(names(ki.data@Parameter) == "P_RT_NRT") == TRUE)
   {
     prsum <- grep(glob2rx("P_RT_NRT_sum"), names(aggdf))
     prmean <- grep(glob2rx("P_RT_NRT"), names(aggdf))
     aggdf[, prmean] <- aggdf[, prsum]
-  }
-  
+  } 
+    
   if (any(names(ki.data@Parameter) == "P_RT_NRT_01") == TRUE)
   {
     prsum <- grep(glob2rx("P_RT_NRT_01_sum"), names(aggdf))
@@ -219,7 +224,7 @@ aggregate.ki.data <- function(input,
 #   wdq25 <- grep(glob2rx("WD_25"), names(aggdf))
 #   wdq75 <- grep(glob2rx("WD_75"), names(aggdf))
   
-  aggdf <- round(aggdf, 2)
+  aggdf <- round(aggdf, 3)
 
   #aggdf[, c(wdmin, wdmax, wdq25, wdq75)] <- NA
 #   aggdf <- aggdf[, -c(wdmin, wdmax, wdq25, wdq75)]
