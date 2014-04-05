@@ -169,8 +169,7 @@ class StationToLevel0100:
                 p_index = list(self.level0100_quality_settings['quality_parameter']).index("P_RT_NRT")
                 rthv_max[p_index] = str(float(rthv_max[p_index]) * 60.0)
             except:
-                continue
-
+                None
         rthv_max = [float(x) for x in rthv_max]
         rthv_max =   ', '.join(map(str,rthv_max))
         
@@ -233,7 +232,7 @@ class StationToLevel0100:
                 p_index = list(self.level0100_quality_settings['quality_parameter']).index("P_RT_NRT")
                 slmts_max[p_index] = str(float(slmts_max[p_index]) * 60.0)
             except:
-                continue
+                None
         slmts_max = [float(x) for x in slmts_max]
         slmts_max =   ', '.join(map(str,slmts_max))
 
