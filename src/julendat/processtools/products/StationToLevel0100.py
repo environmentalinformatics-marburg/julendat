@@ -161,6 +161,21 @@ class StationToLevel0100:
         if not os.path.isdir(self.ascii_path):
             os.makedirs(self.ascii_path)
         
+        
+        rthv_max = self.level0100_quality_settings['rthv_max']
+        print ', '.join(rthv_max)
+        rthv_max = [x.split(",") for x in rthv_max]
+        rthv_max = [item for sublist in rthv_max for item in sublist]
+        print rthv_max 
+        if self.get_run_mode() == "0250":
+            p_index = list(self.level0100_quality_settings['quality_parameter']).index("P_RT_NRT")
+            print rthv_max[p_index]
+            rthv_max[p_index] = str(float(rthv_max[p_index]) * 60.0)
+            print rthv_max[p_index]
+            #rthv_max = str(rthv_max).strip('[]')
+            rthv_max = [float(x) for x in rthv_max]
+            rthv_max =   ', '.join(map(str,rthv_max))
+        
         output_filepath = self.ascii_filepath
         
         r_source = 'source("' + self.r_filepath + os.sep + \
@@ -173,8 +188,7 @@ class StationToLevel0100:
              + '")'
         r_thvi = 'thv_min=c(' + \
             ', '.join(self.level0100_quality_settings['rthv_min']) + ')'
-        r_thva = 'thv_max=c(' + \
-            ', '.join(self.level0100_quality_settings['rthv_max']) + ')'
+        r_thva = 'thv_max=c(' + rthv_max + ')'
         r_qfpos = 'qfpos=c(' + \
             ', '.join(self.level0100_quality_settings['qfpos']) + ')'
         r_qvalues = 'qfvalues=c(' + \
@@ -182,6 +196,8 @@ class StationToLevel0100:
         r_flag_col = 'flag_col="Qualityflag"'
         r_plevel = 'plevel = ' + self.target_level
 
+        print r_thva
+        
         act_wd = os.getcwd()
         os.chdir(self.r_filepath)
         r_cmd = r_source + '\n' + \
@@ -211,6 +227,18 @@ class StationToLevel0100:
         if not os.path.isdir(self.ascii_path):
             os.makedirs(self.ascii_path)
         
+        
+        slmts_max = self.level0100_quality_settings['slmts_max']
+        slmts_max = [x.split(",") for x in slmts_max]
+        slmts_max = [item for sublist in slmts_max for item in sublist]
+        print slmts_max 
+        if self.get_run_mode() == "0250":
+            p_index = list(self.level0100_quality_settings['quality_parameter']).index("P_RT_NRT")
+            print slmts_max[p_index]
+            slmts_max[p_index] = str(float(slmts_max[p_index]) * 60.0)
+            slmts_max = [float(x) for x in slmts_max]
+            slmts_max =   ', '.join(map(str,slmts_max))
+
         output_filepath = self.ascii_filepath
         
         r_source = 'source("' + self.r_filepath + os.sep + \
@@ -232,10 +260,11 @@ class StationToLevel0100:
         r_flag_col = 'flag_col="Qualityflag"'
         r_lmts = 'lmts=data.frame(min=c(' + \
             ', '.join(self.level0100_quality_settings['slmts_min']) + \
-            '), max=c(' + \
-            ', '.join(self.level0100_quality_settings['slmts_max']) + '))'
+            '), max=c(' + slmts_max + '))'
         r_plevel = 'plevel = ' + self.target_level
-
+        
+        print r_lmts
+        
         act_wd = os.getcwd()
         os.chdir(self.r_filepath)
         r_cmd = r_source + '\n' + \
