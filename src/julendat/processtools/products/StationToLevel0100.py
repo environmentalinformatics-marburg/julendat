@@ -161,20 +161,14 @@ class StationToLevel0100:
         if not os.path.isdir(self.ascii_path):
             os.makedirs(self.ascii_path)
         
-        
         rthv_max = self.level0100_quality_settings['rthv_max']
-        print ', '.join(rthv_max)
         rthv_max = [x.split(",") for x in rthv_max]
         rthv_max = [item for sublist in rthv_max for item in sublist]
-        print rthv_max 
         if self.get_run_mode() == "0250":
             p_index = list(self.level0100_quality_settings['quality_parameter']).index("P_RT_NRT")
-            print rthv_max[p_index]
             rthv_max[p_index] = str(float(rthv_max[p_index]) * 60.0)
-            print rthv_max[p_index]
-            #rthv_max = str(rthv_max).strip('[]')
-            rthv_max = [float(x) for x in rthv_max]
-            rthv_max =   ', '.join(map(str,rthv_max))
+        rthv_max = [float(x) for x in rthv_max]
+        rthv_max =   ', '.join(map(str,rthv_max))
         
         output_filepath = self.ascii_filepath
         
@@ -227,17 +221,14 @@ class StationToLevel0100:
         if not os.path.isdir(self.ascii_path):
             os.makedirs(self.ascii_path)
         
-        
         slmts_max = self.level0100_quality_settings['slmts_max']
         slmts_max = [x.split(",") for x in slmts_max]
         slmts_max = [item for sublist in slmts_max for item in sublist]
-        print slmts_max 
         if self.get_run_mode() == "0250":
             p_index = list(self.level0100_quality_settings['quality_parameter']).index("P_RT_NRT")
-            print slmts_max[p_index]
             slmts_max[p_index] = str(float(slmts_max[p_index]) * 60.0)
-            slmts_max = [float(x) for x in slmts_max]
-            slmts_max =   ', '.join(map(str,slmts_max))
+        slmts_max = [float(x) for x in slmts_max]
+        slmts_max =   ', '.join(map(str,slmts_max))
 
         output_filepath = self.ascii_filepath
         
