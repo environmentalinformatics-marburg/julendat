@@ -130,6 +130,10 @@ def main():
     for folders in station_folders:
         shutil.rmtree(folders)
         
+    station_folders=locate_path("*_0420", input_path)
+    for folders in station_folders:
+        shutil.rmtree(folders)
+        
 if __name__ == '__main__':
     main()
 
