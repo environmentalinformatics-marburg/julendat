@@ -29,7 +29,12 @@ gfRun <- function(files.dep,
   # Import plot coordinates
   if (!is.null(filepath.coords)) {
     data.coords <- read.csv(filepath.coords, header=TRUE)
-    data.coords <- data.coords[,c("PlotID", "Lon", "Lat")]
+    
+    if ("EP_Plotid" %in% names(data.coords)) {
+      data.coords <- data.coords[, c("EP_Plotid", "Lon", "Lat")]
+    } else {
+      data.coords <- data.coords[, c("PlotID", "Lon", "Lat")]
+    }
   } else {
     data.coords <- NULL
   }

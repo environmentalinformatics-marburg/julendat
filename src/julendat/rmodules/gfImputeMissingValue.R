@@ -155,10 +155,10 @@ gfImputeMissingValue <- function(data.dep,
       ## Calculate distance between independent plots and dependent plot if desired
       if (!is.null(data.coords)) {
         data.indep.avl[,3] <- unlist(lapply(seq(data.indep.avl[,1]), function(k) {
-          geodist(Nfrom=data.coords[which(data.coords[,1] == data.dep@PlotId$Unique),"Lat"], 
-                  Efrom=data.coords[which(data.coords[,1] == data.dep@PlotId$Unique),"Lon"], 
-                  Nto=data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lat"], 
-                  Eto=data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lon"])
+          geodist(Nfrom = data.coords[which(data.coords[,1] == data.dep@PlotId$Unique), "Lat"], 
+                  Efrom = data.coords[which(data.coords[,1] == data.dep@PlotId$Unique), "Lon"], 
+                  Nto = data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lat"], 
+                  Eto = data.coords[which(data.coords[,1] == data.indep.avl[k,1]), "Lon"])
         }))
         
         # Order independent stations by distance from the dependent plot

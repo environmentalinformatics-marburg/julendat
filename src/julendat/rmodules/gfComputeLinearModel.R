@@ -99,25 +99,33 @@ gfComputeLinearModel <- function(data = NULL,
   r.squ <- cor(data.cc[,prm.dep], predict(model))^2 
   
   # Formula for imputation of missing value
-  lm.formula <- sapply(list(2:length(model$coefficients)), function(i) {
-    paste(model$coefficients[1], 
-          paste(model$coefficients[i], " * data$", names(model$coefficients[i]), "[pos.na]", sep="", collapse=" + "), sep=" + ")
+  cf <- model$coefficients[2:length(model$coefficients)]
+  cf <- cf[which(!is.na(cf))]
+  
+#   lm.formula <- sapply(list(2:length(model$coefficients)), function(i) {
+  lm.formula <- sapply(list(cf), function(i) {
+      paste(model$coefficients[1], 
+          paste(i, " * data$", names(i), "[pos.na]", sep="", collapse=" + "), sep=" + ")
   })
   
   # Loop through single NA values 
   lm.fitted <- lapply(seq(time.window.pre.span + 1, time.window.pre.span + pos.na[3]), function(h) {
-    # Fitted value at pos.na
-    fitted.value <- sum(unlist(sapply(list(2:length(model$coefficients)), function(i) {
-      model$coefficients[i] * data[h,names(model$coefficients[i])]
+#   lm.fitted <- for (h in seq(time.window.pre.span + 1, time.window.pre.span + pos.na[3])) {
+      # Fitted value at pos.na
+#     fitted.value <- sum(unlist(sapply(list(2:length(model$coefficients)), function(i) {
+    fitted.value <- sum(unlist(sapply(list(cf), function(i) {
+      i * data[h, names(i)]
     }))) + model$coefficients[1]
     
-    if (prm.dep %in% c("rH_200", "rH_200_min", "rH_200_max") & fitted.value < 0) {
+    ###############################################################################
+    if (!is.na(fitted.value) & prm.dep %in% c("rH_200", "rH_200_min", "rH_200_max") & fitted.value < 0) {
       fitted.value = NA
-    } else if (prm.dep %in% c("rH_200", "rH_200_min", "rH_200_max") & fitted.value > 102.5) {
+    } else if (!is.na(fitted.value) & prm.dep %in% c("rH_200", "rH_200_min", "rH_200_max") & fitted.value > 102.5) {
       fitted.value = NA
-    } else {
-      return(fitted.value)
-    }
+    } 
+    
+    return(fitted.value)
+    ####################################################
   })
   
   # Reassign n.plot in case number of valid plots < n.plot

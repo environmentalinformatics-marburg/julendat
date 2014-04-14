@@ -165,29 +165,36 @@ class MNTStationToLevel0050:
     def get_station_inventory_information(self):
         """Get meta-information from station inventory.
         """
-        inventory = StationInventory(filepath=self.station_inventory, \
-            logger_start_time = self.level_0000_ascii_file.get_start_datetime(), \
-            logger_end_time = self.level_0000_ascii_file.get_end_datetime(), \
-            plot_id = self.filenames.get_plot_id())
-        if inventory.found_station_inventory != True:
-            raise Exception, "Serial number has not been found in station inventory"
-        self.level_0000_ascii_file.set_header_line(inventory.get_header_line())
-        self.level_0000_ascii_file.set_first_data_line(inventory.get_first_data_line())
-        self.calibration_coefficients_headers = \
-            inventory.get_calibration_coefficients_headers()
-        self.calibration_coefficients = inventory.get_calibration_coefficients()
-        if self.filenames.get_raw_plot_id() != inventory.get_plot_id():
-            print "Error: plot-id does not match"
-            print "File:       ", self.filenames.get_raw_plot_id()
-            print "Inventory:, ", inventory.get_plot_id()
-            raise Exception, "Error: plot-id does not match."
-            self.run_flag = False
-            
-        elif self.filenames.get_station_id() != inventory.get_station_id():
-            print "Error: station-id does not match"
-            self.run_flag = False
-            raise Exception, "Error: station-id does not match."
-
+        try:
+            inventory = StationInventory(filepath=self.station_inventory, \
+                logger_start_time = self.level_0000_ascii_file.get_start_datetime(), \
+                logger_end_time = self.level_0000_ascii_file.get_end_datetime(), \
+                plot_id = self.filenames.get_plot_id())
+            if inventory.found_station_inventory != True:
+                raise Exception, "Serial number has not been found in station inventory"
+            self.level_0000_ascii_file.set_header_line(inventory.get_header_line())
+            self.level_0000_ascii_file.set_first_data_line(inventory.get_first_data_line())
+            self.calibration_coefficients_headers = \
+                inventory.get_calibration_coefficients_headers()
+            self.calibration_coefficients = inventory.get_calibration_coefficients()
+            if self.filenames.get_raw_plot_id() != inventory.get_plot_id():
+                print "Error: plot-id does not match"
+                print "File:       ", self.filenames.get_raw_plot_id()
+                print "Inventory:, ", inventory.get_plot_id()
+                raise Exception, "Error: plot-id does not match."
+                self.run_flag = False
+                
+            elif self.filenames.get_station_id() != inventory.get_station_id():
+                print "Error: station-id does not match"
+                self.run_flag = False
+                raise Exception, "Error: station-id does not match."
+        except Exception as inst:
+                print "An error occured with the following dataset."
+                print "Some details:"
+                print "Exception type: " , type(inst)
+                print "Exception args: " , inst.args
+                print "Exception content: " , inst    
+                    
     def calibration_level_0005(self):
         """Process level 0000 to level 0005 data set
         """
@@ -259,56 +266,62 @@ class MNTStationToLevel0050:
         """Write level 0005 dataset.
         """
         self.level_0000_data = self.level_0000_ascii_file.get_data()
-        output=[]
-        for row in self.level_0000_data:
-            if len(row[0]) == 16:
-                act_time = time_utilities.convert_timezone( \
-                    datetime.datetime.strptime(row[0],"%d.%m.%Y %H:%M"), \
-                    self.level_0005_timezone).strftime("%Y-%m-%d %H:%M:%S")
-            else:
-                act_time = time_utilities.convert_timezone( \
-                    datetime.datetime.strptime(row[0],"%d.%m.%Y %H:%M:%S"), \
-                    self.level_0005_timezone).strftime("%Y-%m-%d %H:%M:%S")
-            try:
-                act_out=      [act_time, \
-                               self.level_0005_timezone, \
-                               self.filenames.get_aggregation(), \
-                               self.filenames.get_plot_id(), \
-                               'xxx', \
-                               self.filenames.get_station_id(), \
-                               self.filenames.get_filename_dictionary()['level_0005_processing'], \
-                               #self.filenames.get_filename_dictionary()['level_0005_processing']]
-                               'q' + '000' * (len(self.level0005_column_headers)-9)]
-                               
-                for i in range(9, max(self.reorder)+1):
-                    try:
-                        index =  self.reorder.index(i)
-                        act_out = act_out + [float(row[index].replace(',','.'))]
-                    except:
-                        act_out = act_out + [float('nan')]
-
-                if len(act_out) < len(self.level0005_column_headers):
-                    act_out = act_out + [float('nan')]*(len(self.level0005_column_headers)-len(act_out))
+        try:
+            output=[]
+            for row in self.level_0000_data:
+                if len(row[0]) == 16:
+                    act_time = time_utilities.convert_timezone( \
+                        datetime.datetime.strptime(row[0],"%d.%m.%Y %H:%M"), \
+                        self.level_0005_timezone).strftime("%Y-%m-%d %H:%M:%S")
+                else:
+                    act_time = time_utilities.convert_timezone( \
+                        datetime.datetime.strptime(row[0],"%d.%m.%Y %H:%M:%S"), \
+                        self.level_0005_timezone).strftime("%Y-%m-%d %H:%M:%S")
+                try:
+                    act_out=      [act_time, \
+                                   self.level_0005_timezone, \
+                                   self.filenames.get_aggregation(), \
+                                   self.filenames.get_plot_id(), \
+                                   'xxx', \
+                                   self.filenames.get_station_id(), \
+                                   self.filenames.get_filename_dictionary()['level_0005_processing'], \
+                                   #self.filenames.get_filename_dictionary()['level_0005_processing']]
+                                   'q' + '000' * (len(self.level0005_column_headers)-9)]
+                                   
+                    for i in range(9, max(self.reorder)+1):
+                        try:
+                            index =  self.reorder.index(i)
+                            act_out = act_out + [float(row[index].replace(',','.'))]
+                        except:
+                            act_out = act_out + [float('nan')]
+    
+                    if len(act_out) < len(self.level0005_column_headers):
+                        act_out = act_out + [float('nan')]*(len(self.level0005_column_headers)-len(act_out))
+                    
+                    output.append(act_out)
                 
-                output.append(act_out)
+                except:
+                    continue
             
-            except:
-                continue
-        
-        output_path = self.filenames.get_filename_dictionary()\
-                      ["level_0005_ascii-path"]
-        if not os.path.isdir(output_path):
-            os.makedirs(output_path)
-
-        outfile = open(self.filenames.get_filename_dictionary()\
-                       ["level_0005_ascii-filepath"],"w")
-        
-        outfile.write(', '.join(str(i) for i in self.level0005_column_headers) + '\n')
-        writer = csv.writer(outfile,delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
-        for row in output:
-            writer.writerow(row)
-        outfile.close()
-
+            output_path = self.filenames.get_filename_dictionary()\
+                          ["level_0005_ascii-path"]
+            if not os.path.isdir(output_path):
+                os.makedirs(output_path)
+    
+            outfile = open(self.filenames.get_filename_dictionary()\
+                           ["level_0005_ascii-filepath"],"w")
+            
+            outfile.write(', '.join(str(i) for i in self.level0005_column_headers) + '\n')
+            writer = csv.writer(outfile,delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
+            for row in output:
+                writer.writerow(row)
+            outfile.close()
+        except Exception as inst:
+                print "An error occured with the following dataset."
+                print "Some details:"
+                print "Exception type: " , type(inst)
+                print "Exception args: " , inst.args
+                print "Exception content: " , inst        
             
     def calibration_level_0050(self):
         """Compute level 1.0 station data sets
