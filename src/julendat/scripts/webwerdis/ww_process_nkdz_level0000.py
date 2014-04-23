@@ -45,7 +45,7 @@ def main():
         "usage: %prog [options] data_file_01 " + \
         "data_file_02")
     parser.add_option("-s","--sdt", dest="start_datetime",  \
-        default = "2010", \
+        default = "1900", \
         help="Start year of the output time series (YYYY).", \
         metavar="integer", type="int")
     parser.add_option("-e","--edt", nargs=1, dest="end_datetime",  \
@@ -53,11 +53,11 @@ def main():
         help="End year of the output time series (YYYY)", \
         metavar="integer", type="int")
     parser.add_option("-p", "--pla", dest="top_level_station_path", \
-        default = "/media/dogbert/dev/WebWerdis/Explo", \
+        default = "/home/dogbert/workspace/Explo_split/", \
         help = "Name of top level station path", \
         metavar="string", type="str")
     parser.add_option("-o", "--out", dest="output_path", \
-        default = "/media/dogbert/dev/WebWerdis", \
+        default = "/home/dogbert/workspace/", \
         help = "Name of output path", \
         metavar="string", type="str")
     parser.set_description('Options for module timeseries.')
@@ -107,8 +107,8 @@ def main():
             data_3 = open(act_file_3, 'r')
        
         # Open files
-        header =  "Datetime, Aggregationtime, Station, Lat, Lon, " + \
-                  "Alt, Qualityflag, Ta_200, P_container_NRT, SD"
+        header =  "Datetime, Aggregationtime, Station, lat, lon, " + \
+                  "alt, Qualityflag, Ta_200, P_RT_NRT, SD"
         
         first_row = False
         lat = False
