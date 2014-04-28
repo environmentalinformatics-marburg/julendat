@@ -15,12 +15,14 @@ for (activ_file in dat.list){
 
   plotId.head <- substr(activ_file$PlotId[1], 4,6)
   plotId.numbers <- substr(activ_file$PlotId, 7,8)
-  plotId.checks <- substr(activ_file$PlotId[1], 7,7) 
+  plotId.checks <- substr(activ_file$PlotId[1], 7,7)
+  stationId <- substr(activ_file$StationId[1], 3,6)
+    
   if(plotId.checks == "0"){
     plotId.numbers<- substr(activ_file$PlotId, 8,8)
   }
   activ_file$PlotId <- paste0(plotId.head, plotId.numbers)
-  write.csv(activ_file, paste("/media/dogbert/dev/be/julendat/processing/", paste0(plotId.head, plotId.numbers[1],"_",level,"_", year,".csv"), sep=""), row.names=F, na="nan")
+  write.csv(activ_file, paste("/media/dogbert/dev/be/julendat/processing/", paste0(plotId.head, plotId.numbers[1],"_",level,"_",stationId, year,".txt"), sep=""), row.names=F, na="NA")
   
 }
 
