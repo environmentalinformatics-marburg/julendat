@@ -1,7 +1,9 @@
 setwd("/media/dogbert/dev/be/julendat/processing/plots/")
 
 level = "0400"
-files <- list.files("/media/dogbert/dev/be/julendat/processing/plots/", pattern=glob2rx(paste0("*", level,".dat")), recursive=TRUE, full.names=TRUE)
+scr_path = "/media/dogbert/dev/be/julendat/processing/"
+new_path ="/media/dogbert/dev/be/julendat/processing/"
+files <- list.files(paste0(path,"plots/"), pattern=glob2rx(paste0("*", level,".dat")), recursive=TRUE, full.names=TRUE)
 
 
 dat.list <- lapply(files, function(i) {
@@ -22,7 +24,7 @@ for (activ_file in dat.list){
     plotId.numbers<- substr(activ_file$PlotId, 8,8)
   }
   activ_file$PlotId <- paste0(plotId.head, plotId.numbers)
-  write.csv(activ_file, paste("/media/dogbert/dev/be/julendat/processing/", paste0(plotId.head, plotId.numbers[1],"_",level,"_",stationId, year,".txt"), sep=""), row.names=F, na="NA")
+  write.csv(activ_file, paste(new_path, paste0(plotId.head, plotId.numbers[1],"_",level,"_",stationId,"_", year,".txt"), sep=""), row.names=F, na="NA")
   
 }
 
