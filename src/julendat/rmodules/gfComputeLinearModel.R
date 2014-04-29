@@ -113,17 +113,20 @@ gfComputeLinearModel <- function(data = NULL,
 #   lm.fitted <- for (h in seq(time.window.pre.span + 1, time.window.pre.span + pos.na[3])) {
       # Fitted value at pos.na
 #     fitted.value <- sum(unlist(sapply(list(2:length(model$coefficients)), function(i) {
-    fitted.value <- sum(unlist(sapply(list(cf), function(i) {
-      i * data[h, names(i)]
-    }))) + model$coefficients[1]
+    if (length(cf) > 0) {
+      fitted.value <- sum(unlist(sapply(list(cf), function(i) {
+        i * data[h, names(i)]
+      }))) + model$coefficients[1]
+    } else {
+      fitted.value <- NA
+    }
     
     ###############################################################################
-    if (!is.na(fitted.value) & prm.dep %in% c("rH_200", "rH_200_min", "rH_200_max") & fitted.value < 0) {
-      fitted.value = NA
-    } else if (!is.na(fitted.value) & prm.dep %in% c("rH_200", "rH_200_min", "rH_200_max") & fitted.value > 102.5) {
-      fitted.value = NA
-    } 
-    
+      if (!is.na(fitted.value) & prm.dep %in% c("rH_200", "rH_200_min", "rH_200_max") & fitted.value < 0) {
+        fitted.value = NA
+      } else if (!is.na(fitted.value) & prm.dep %in% c("rH_200", "rH_200_min", "rH_200_max") & fitted.value > 102.5) {
+        fitted.value = NA
+      } 
     return(fitted.value)
     ####################################################
   })
