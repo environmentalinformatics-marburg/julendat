@@ -11,15 +11,13 @@ if(compute.thv){
 
 location = "SEW"
 
-setwd(paste("/media/jsonne/Volume/bexis/revision_level_310/310", location, 
-            sep = "/"))
+setwd("/media/memory01/ei_data_pastprocessing/processing/plots/SEW")
 thvs.file <- paste("thvs_", location, "_CEMU.dat", sep = "")
 
 
 # Compute THVs
 if(compute.thv){
-  files <- list.files(path = paste(location, "original", sep = "_"), 
-                      pattern = glob2rx("*CEMU*_0310.dat"),
+  files <- list.files(pattern = glob2rx("*CEMU*_0310.dat"),
                       full.names = TRUE, recursive = TRUE)
   datasets <- lapply(files, function(x){
     act.file <- x
@@ -101,8 +99,7 @@ if(compute.thv){
 # Compute revision
 if(compute.revision){
   thvs <- read.table(thvs.file, sep = ",", header = TRUE)
-  files <- list.files(path = paste(location, "revised", sep = "_"), 
-                      pattern = "_0310.dat", full.names = TRUE, 
+  files <- list.files(pattern = "_0310.dat", full.names = TRUE, 
                       recursive = TRUE)
   sapply(files, function(x){
     act.file <- x

@@ -1,9 +1,10 @@
 rm(list=ls())
 
 # Set path environment
-location = "SEG"
-setwd("/media/jsonne/Volume/bexis/level_0310_hourly_reloaded/manual/")
-revision.file <- paste(location, "_revised_reloaded.csv",sep = "")
+location = "HEW"
+revision.file <- tolower(paste0(getwd(), "/", location, "_revised_reloaded.csv"))
+path.prefix <- "/media/memory01/ei_data_pastprocessing/processing/plots/"
+setwd(paste0(path.prefix))
 
 # Functions
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
@@ -23,9 +24,9 @@ sapply(act.files, function(x){
 
 # Read revision information
 revision.info <- read.csv(revision.file, header = TRUE, sep = ",")
-#revision.info <- subset(revision.info, revision.info$PlotId == "AEG34")
+revision.info <- subset(revision.info, revision.info$PlotId != "AEG35")
+print(revision.info)
 # Revise data
-#x<-1
 sapply(seq(1, nrow(revision.info)), function(x){
   act.plotid <- paste("000", revision.info$PlotId[x], sep = "")
   act.parameter <- as.character(revision.info$Parameter[x])
@@ -52,13 +53,19 @@ sapply(seq(1, nrow(revision.info)), function(x){
 #     dir.create(dirname(out.file), recursive = TRUE, showWarnings = TRUE)
 #     file.copy(act.file, out.file)
 #   }
-  act.data <- read.csv(act.file, header = TRUE, sep = ",")
-  act.col <- which(colnames(act.data) == act.parameter)
-  for(i in seq(1, length(act.range))){
-    act.datetime <- paste(act.year, sprintf("%02d", act.range[i]), sep = "-")
-    act.data[grep(act.datetime, act.data$Datetime), ][, act.col] <- NaN
-  }
-  write.table(act.data, act.file, sep = ",", row.names = FALSE)
+  sapply(act.file, function(x){
+    if(file.exists(x)){
+      act.data <- read.csv(x, header = TRUE, sep = ",")
+      act.col <- which(colnames(act.data) == act.parameter)
+      for(i in seq(1, length(act.range))){
+      act.datetime <- paste(act.year, sprintf("%02d", act.range[i]), sep = "-")
+      act.data[grep(act.datetime, act.data$Datetime), ][, act.col] <- NaN
+      }
+      write.table(act.data, x, sep = ",", row.names = FALSE)
+    } else {
+      print(paste0("Non existing file: ", x))
+    }
+  })
 })
 
 
