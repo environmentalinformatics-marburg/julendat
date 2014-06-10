@@ -239,7 +239,7 @@ aggregate.ki.data <- function(input,
 #   if (length(datetime) == 0) {
 #     aggdf <- as.data.frame(do.call("rbind", agglist))
 #     datetime <- rownames(aggdf)
-  }
+#   }
 # Change End      ######################################################
 
 
