@@ -161,6 +161,11 @@ ki.strip <- function(inputfilepath,
     xat <- seq.Date(as.Date(datetime_from), as.Date(datetime_to), by = "month")
     xat <- as.integer(julian(xat, origin = as.Date(origin))) + 15
     
+    # sforteva: the processlevel into header
+    temp <- regexpr('\\d.*\\d', pattern, perl=TRUE)
+    level <-regmatches(pattern,temp)
+    
+    
     levelplot(t(strip_z), ylim = c(24.5, -0.5), col.regions = colour,
               strip = F, ylab = "Hour of day", xlab = NULL, asp = "iso",
               at = seq(minx, maxx, 0.1),
@@ -172,7 +177,7 @@ ki.strip <- function(inputfilepath,
                             y = list(at = c(18, 12, 6))),
               colorkey = list(space = "top", width = 1, height = 0.7,
                               at = seq(minx, maxx, 0.1)), 
-              main = paste("overview", ifelse(project_id=="be", paste(substr(condims[1], 1,3)), ""), prm, year, sep = " "),
+              main = paste("overview", ifelse(project_id=="be", paste(substr(condims[1], 1,3), "level -", level), ""), prm, year, sep = " "),
               panel = function(x, ...) {
                 grid.rect(gp=gpar(col=NA, fill="grey50"))
                 panel.levelplot(x, ...)
