@@ -1,9 +1,7 @@
-
 # only VIP-stations
 
 rm(list=ls())
-setwd("/media/permanent/active/bexis/processing/revised_reloaded_level0420")
-filepath.data <- "/media/permanent/active/bexis/processing/revised_reloaded_level0420"
+setwd("/media/memory01/ei_data_exploratories/processing/plots/revised_reloaded_0400plus/level0420_annual/")
 
 subfolders <- c("AEG","HEG","SEG")
 datlist <- lapply(seq(subfolders), function(i) {
@@ -20,7 +18,8 @@ dat <- lapply(seq(datlist), function(i) {
 
 regions <- c("AEG", "HEG", "SEG")
 lapply(seq(dat), function(i) {
-  write.table(dat[[i]], file=paste("/media/permanent/active/bexis/processing/revised_reloaded_level0420", regions[i], "_420_VIP.csv", sep = ""), na="NA", sep=";", row.names=F)
+  write.table(dat[[i]], file=paste("/media/memory01/ei_data_exploratories/processing/plots/revised_reloaded_0400plus/",
+  regions[i], "_420_VIP.csv", sep = ""), na="NA", sep=";", row.names=F)
 })
 
 #################################################################################
@@ -28,10 +27,9 @@ lapply(seq(dat), function(i) {
 # CEMU-stations
 
 rm(list=ls())
-setwd("/media/permanent/active/bexis/processing/revised_reloaded_level0420")
-filepath.data <- "/media/permanent/active/bexis/processing/revised_reloaded_level0420"
+setwd("/media/memory01/ei_data_exploratories/processing/plots/revised_reloaded_0400plus/level0420_annual/")
 
-subfolders <- list.dirs(filepath.data, recursive=F)
+subfolders <- c("AEG", "AEW", "HEG", "HEW", "SEG", "SEW")
 datlist <- lapply(seq(subfolders), function(i) {
   list.files(subfolders[i], recursive=T, pattern="CEMU", full.names=T)
 })
@@ -48,7 +46,8 @@ dat <- lapply(seq(datlist), function(i) {
 
 regions <- c("AEG", "AEW", "HEG", "HEW", "SEG", "SEW")
 lapply(seq(dat), function(i) {
-  write.table(dat[[i]], file=paste("/media/permanent/active/bexis/processing/revised_reloaded_level0420/", regions[i], "_420_CEMU.csv", sep = ""), na="NA", sep=";", row.names=F)
+  write.table(dat[[i]], file=paste("/media/memory01/ei_data_exploratories/processing/plots/revised_reloaded_0400plus/",
+  regions[i], "_420_CEMU.csv", sep = ""), na="NA", sep=";", row.names=F)
 })
 
 
