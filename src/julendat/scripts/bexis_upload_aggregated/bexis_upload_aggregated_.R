@@ -1,10 +1,12 @@
 rm(list=ls())
 
-# just adjust the following four parameters and, in case of editing level 0420, uncomment line 25
-level = "0420" # "0400", "0405" or "0420"
-region = "ALB" # "ALB", "HAI" or "SCH"
-station = "AEMU_EEMU" # "CEMU" or "AEMU_EEMU"
-date = "20140811" # date of today
+# just adjust the following four parameters and
+# in case of editing level 0420 uncomment line 28
+# in case of editing level 0310 comment line 23
+level = "0310" # "0310", "0400", "0405" or "0420"
+region = "SCH" # "ALB", "HAI" or "SCH"
+station = "CEMU" # "CEMU" or "AEMU_EEMU"
+date = "20140812" # date of today
 
 setwd(paste("/media/dogbert/DEV/ready_for_bexis/eipastprocessing/", level, "/", region, "_",
             station, "_",level, "_original", sep=""))
@@ -18,11 +20,12 @@ files <- list.files(pattern=paste("_", level ,".dat" ,sep=""), recursive=TRUE, f
 dat.list <- lapply(files, function(i) {
   dat <- read.table(i, header = T, sep = ",", stringsAsFactors = F)
   dat <- (dat[, -grep("EpPlotId", names(dat)),])
-  return(dat[, -grep("Qualityflag", names(dat)),])
+  dat <- (dat[, -grep("Qualityflag", names(dat)),]) # not needed for level 0310
+  return(dat)
 })
 
 for (activ_file in dat.list){
-  #activ_file$Datetime <- paste(activ_file$Datetime, "-01-01 01:00:00", sep="") # only for level 0420
+  #activ_file$Datetime <- paste(activ_file$Datetime, "-01-01 01:00:00", sep="") # only needed for level 0420
   year <- substr(as.Date(activ_file$Datetime[1]), 1,4)
 
   plotId.head <- substr(activ_file$PlotId[1], 4,6)
@@ -37,6 +40,7 @@ for (activ_file in dat.list){
   write.csv(activ_file, paste(new_path, paste0("/", plotId.head, plotId.numbers[1],"_",level,"_",stationId,"_", year,".txt"),
                               sep=""), row.names=F, na="NA")
 }
+
 
 
   
