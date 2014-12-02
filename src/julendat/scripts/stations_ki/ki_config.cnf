@@ -1,4 +1,4 @@
-[logger]
+logger]
 initial_logger_file = noname.bin
 logger_time_zone = mez
 station_entries = dk_station_entries.cnf
@@ -20,8 +20,13 @@ station_master = station_master.csv
 
 [project]
 project_id = ki
-level_0005_timezone = eat 
+level_0005_timezone = eat
 
 [general]
 level0050_standards = ki_config_level0050_standards.cnf
 r_filepath = /home/eikistations/ei_data_kilimanjaro/scripts/julendat/src/julendat/rmodules
+
+[zip4server]
+toplevel_zip_path = C:\Users\kili\Desktop\Upload-to-Marburg
+taskbook_path = C:\ki_stations\metadata\task_book_red.ods
+
